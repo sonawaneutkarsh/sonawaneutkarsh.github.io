@@ -4,10 +4,11 @@ import { motion, useReducedMotion } from "framer-motion";
 import { achievements } from "@/data/achievements";
 import { education } from "@/data/education";
 import { projects } from "@/data/projects";
+import { contact } from "@/data/contact";
 import { EASE_OUT } from "@/lib/motion";
 import { useMode } from "@/components/mode-provider";
 
-const EYEBROW = "UTKARSH SONAWANE";
+const NAME = contact.name || "Utkarsh Sonawane";
 const HEADLINE = "Software engineer. In progress, on purpose.";
 
 const featured = projects.find((p) => p.featured) ?? projects[0];
@@ -50,7 +51,7 @@ function RecruiterHero({ initial }: { initial: boolean | { opacity: number; y: n
       transition={{ duration: 0.35, ease: EASE_OUT }}
       className="mx-auto max-w-2xl text-center"
     >
-      <p className="eyebrow">{EYEBROW}</p>
+      <p className="eyebrow">{NAME}</p>
       <h1 className="mt-6 text-3xl font-medium leading-tight tracking-tight sm:text-[38px]">
         {HEADLINE}
       </h1>
@@ -73,7 +74,7 @@ function ExperienceHero({ initial }: { initial: boolean | { opacity: number; y: 
         transition={{ duration: 0.35, ease: EASE_OUT }}
         className="eyebrow"
       >
-        {EYEBROW}
+        {NAME}
       </motion.p>
       <motion.h1
         initial={initial}
@@ -83,18 +84,12 @@ function ExperienceHero({ initial }: { initial: boolean | { opacity: number; y: 
       >
         {HEADLINE}
       </motion.h1>
-      <motion.p
-        initial={initial}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, ease: EASE_OUT, delay: 0.16 }}
-        className="mt-4 text-graphite"
-      >
-        {credentialsLine}
-      </motion.p>
+      {/* TODO: one-line pitch goes here (user to write — not the credentials line,
+          which is duplicated by the pills below). */}
       <motion.div
         initial={initial}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, ease: EASE_OUT, delay: 0.24 }}
+        transition={{ duration: 0.35, ease: EASE_OUT, delay: 0.16 }}
         className="mt-6 flex flex-wrap gap-2"
       >
         {pills.map((pill) => (
@@ -106,7 +101,7 @@ function ExperienceHero({ initial }: { initial: boolean | { opacity: number; y: 
       <motion.article
         initial={initial}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, ease: EASE_OUT, delay: 0.32 }}
+        transition={{ duration: 0.35, ease: EASE_OUT, delay: 0.24 }}
         className="mt-10 rounded-lg border border-line bg-mist p-6 sm:p-8"
       >
         <p className="eyebrow">Featured work</p>
@@ -123,8 +118,7 @@ function ExperienceHero({ initial }: { initial: boolean | { opacity: number; y: 
           ))}
         </div>
         <a
-          href="#"
-          // TODO: wire to the project detail route once it exists
+          href="#projects"
           className="mt-6 inline-block text-sm font-medium text-signal transition-colors hover:text-signal-700"
         >
           View →

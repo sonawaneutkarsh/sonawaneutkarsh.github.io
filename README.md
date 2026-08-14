@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). `npm run build` produces a static export in `/out`.
+Open [http://localhost:3000](http://localhost:3000). `npm run build` produces a static export in `/out`; `npm start` previews that export locally (via `npx serve out`).
 
 ## How deployment works
 

@@ -15,7 +15,7 @@ export function Projects() {
   const { mode } = useMode();
 
   return (
-    <section className="border-t border-line">
+    <section id="projects" className="scroll-mt-14 border-t border-line">
       <Container className="py-20 sm:py-24">
         <h2 className="eyebrow">Projects</h2>
         {mode === "recruiter" ? (
@@ -241,7 +241,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
           <X className="h-5 w-5" />
         </button>
         <div className="aspect-video w-full rounded-lg bg-mist" />
-        <h2 id={`project-${project.slug}-title`} className="mt-5 text-2xl font-medium tracking-tight">
+        <h2 id={`project-${project.slug}-title`} className="mt-5 text-xl font-medium tracking-tight">
           {project.title}
         </h2>
         <p className="mt-1 text-graphite">{project.oneLiner}</p>
