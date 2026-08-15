@@ -1,41 +1,80 @@
-import { Briefcase, FileText, GitBranch, Mail, Phone } from "lucide-react";
+import { Briefcase, GitBranch, Mail, Phone } from "lucide-react";
 import { contact } from "@/data/contact";
 import { Container } from "@/components/container";
 
-const fields = [
-  { key: "email", icon: Mail, label: "Email", href: contact.email ? `mailto:${contact.email}` : "" },
-  { key: "phone", icon: Phone, label: "Phone", href: contact.phone ? `tel:${contact.phone}` : "" },
-  { key: "linkedin", icon: Briefcase, label: "LinkedIn", href: contact.linkedin },
-  { key: "github", icon: GitBranch, label: "GitHub", href: `https://github.com/${contact.github}` },
-  { key: "resume", icon: FileText, label: "Resume", href: contact.resumeUrl },
-];
-
 export function Contact() {
-  const links = fields.filter((field) => field.href);
+  const phones = (contact.phone ?? "").split(",").map((s) => s.trim()).filter(Boolean);
 
   return (
-    <section className="border-t border-line">
+    <section id="contact" className="scroll-mt-14 border-t border-line">
       <Container className="py-20 sm:py-24">
         <h2 className="eyebrow">Contact</h2>
-        {/* TODO: email, phone, LinkedIn, and resume in data/contact.ts are still empty —
-            only GitHub renders until they are filled in. */}
-        <div className="mt-6 flex flex-wrap gap-x-8 gap-y-4">
-          {links.map(({ key, icon: Icon, label, href }) => {
-            const isExternal = href.startsWith("http");
-            return (
+        <ul className="mt-6 flex flex-wrap gap-x-8 gap-y-4">
+          {contact.email ? (
+            <li>
               <a
-                key={key}
-                href={href}
-                target={isExternal ? "_blank" : undefined}
-                rel={isExternal ? "noopener noreferrer" : undefined}
+                href={`mailto:${contact.email}`}
                 className="flex items-center gap-2 text-signal transition-colors hover:text-signal-700"
               >
-                <Icon className="h-4 w-4" aria-hidden="true" />
-                {label}
+                <Mail className="h-4 w-4" aria-hidden="true" />
+                {contact.email}
               </a>
-            );
-          })}
-        </div>
+            </li>
+          ) : null}
+          {phones.map((p) => (
+            <li key={`phone-${p}`}>
+              <a
+                href={`tel:${p.replace(/[^\d+]/g, "")}`}
+                className="flex items-center gap-2 text-signal transition-colors hover:text-signal-700"
+              >
+                <Phone className="h-4 w-4" aria-hidden="true" />
+                {p}
+              </a>
+            </li>
+          ))}
+          {contact.linkedin ? (
+            <li>
+              <a
+                href={contact.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-signal transition-colors hover:text-signal-700"
+              >
+                <Briefcase className="h-4 w-4" aria-hidden="true" />
+                LinkedIn
+              </a>
+            </li>
+          ) : null}
+          {contact.github ? (
+            <li>
+              <a
+                href={`https://github.com/${contact.github}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-signal transition-colors hover:text-signal-700"
+              >
+                <GitBranch className="h-4 w-4" aria-hidden="true" />
+                GitHub
+              </a>
+            </li>
+          ) : null}
+          {contact.discord ? (
+            <li>
+              <span className="flex items-center gap-2 text-signal">
+                <svg
+                  role="img"
+                  aria-label="Discord"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="h-4 w-4 shrink-0"
+                >
+                  <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z" />
+                </svg>
+                {contact.discord}
+              </span>
+            </li>
+          ) : null}
+        </ul>
       </Container>
     </section>
   );

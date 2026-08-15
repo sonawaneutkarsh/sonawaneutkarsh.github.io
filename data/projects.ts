@@ -16,6 +16,7 @@ export const projects: Project[] = [
       { label: "Seeds", value: "Multi-seed validated" },
     ],
     status: "in-progress",
+    links: [{ label: "Repository", url: "https://github.com/sonawaneutkarsh/Clage" }],
   },
   {
     slug: "scholarai",
@@ -39,14 +40,10 @@ export const projects: Project[] = [
       "Processes multiple medical documents, compares them, identifies discrepancies, answers questions, and provides page-level citations. Features reading-level toggles, source coverage badges, persistent chat history, voice input, and PDF export.",
     tech: ["React", "Express", "Gemini API"],
     status: "shipped",
-  },
-  {
-    slug: "zorabihealth",
-    title: "ZorabiHealth",
-    oneLiner: "Full-stack healthcare platform with offline-first sync",
-    description: "Real-time synchronization, offline-first architecture, notifications, and AI voice workflows.",
-    tech: ["Next.js", "TypeScript", "React Native", "Expo", "Supabase", "PostgreSQL"],
-    status: "shipped",
+    links: [
+      { label: "Repository", url: "https://github.com/sonawaneutkarsh/MedClarity" },
+      { label: "Live Demo", url: "https://medclarity-one.vercel.app" },
+    ],
   },
   {
     slug: "esp32-plant-monitor",
@@ -55,45 +52,18 @@ export const projects: Project[] = [
     description: "Capacitive soil sensor with calibrated ADC readings and averaging, connected over Wi-Fi with SMTP/Gmail notifications.",
     tech: ["ESP32-C3", "C++", "Arduino"],
     status: "shipped",
+    links: [
+      { label: "Repository", url: "https://github.com/sonawaneutkarsh/esp32-soil-moisture-monitor" },
+    ],
   },
   {
-    slug: "twenty-questions",
-    title: "20 Questions",
-    oneLiner: "Real-time multiplayer 20 Questions game",
-    tech: ["Flask", "Python", "JavaScript", "Firebase"],
+    slug: "devvy",
+    title: "Devvy",
+    oneLiner: "A local Discord Rich Presence bridge for OpenCode, Command Code, and VS Code",
+    description:
+      "Devvy publishes local coding activity from OpenCode, Command Code, and VS Code to Discord Rich Presence through a single local daemon.\n\nOpenCode ──────┐\nVS Code ───────┤ → local HTTP daemon → Discord IPC → Discord\nCommand Code ──┘\n\nThe daemon is the only Discord IPC/RPC owner. Publishers communicate only with the local daemon over HTTP. No cloud service is required.\n\nThe system publishes safe activity metadata such as: project basename, file basename, language, git branch, model identifier, and activity label.\n\nIt does NOT send: source code, prompts, credentials, API keys, file contents, or absolute paths.\n\nComponents: Node daemon with HTTP API and Discord IPC client, VS Code extension, OpenCode integration, Command Code integration, and LaunchAgent integration for macOS.\n\nPriority system: OpenCode actively working → Command Code actively working → VS Code available → idle / clear. Each source uses heartbeats with expiration/TTL handling, and the daemon clears Discord presence when all sources disappear.\n\nTesting includes: daemon end-to-end tests, fallback tests, reconnect tests, VS Code behavior tests, Command Code integration tests, OpenCode plugin tests, multi-session tests, race-condition tests, privacy/leak tests, and asset tests.\n\nRequirements: macOS, Node.js, Discord desktop app, Discord Developer Portal application.",
+    tech: ["Node.js", "JavaScript", "TypeScript", "Shell", "Discord IPC"],
     status: "shipped",
-  },
-  {
-    slug: "hatchling",
-    title: "Hatchling",
-    oneLiner: "Competition submission — details available on request",
-    status: "competition-private",
-  },
-  {
-    slug: "voyager-9",
-    title: "VOYAGER-9",
-    oneLiner: "Competition submission — details available on request",
-    status: "competition-private",
-  },
-  {
-    // TODO: fill in when the user provides details
-    slug: "roomatino",
-    title: "Roomatino",
-    oneLiner: "",
-    tech: [],
-  },
-  {
-    // TODO: fill in when the user provides details
-    slug: "glimpse-newsletter",
-    title: "Glimpse Newsletter",
-    oneLiner: "",
-    tech: [],
-  },
-  {
-    // TODO: fill in when the user provides details
-    slug: "stick-films-animation",
-    title: "Stick Films Animation",
-    oneLiner: "",
-    tech: [],
+    links: [{ label: "Repository", url: "https://github.com/sonawaneutkarsh/devvy" }],
   },
 ];

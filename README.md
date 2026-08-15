@@ -27,18 +27,17 @@ All site content lives in `/data` — the UI reads these files directly. Edit a 
 
 | File | What it controls |
 |---|---|
-| `data/projects.ts` | Projects (title, one-liner, description, role, tech, metrics, status). Order in the array = display order. `featured: true` marks Clage for the hero proof card. |
-| `data/education.ts` | School, degree, honors college, CGPA, graduation, extracurriculars. |
-| `data/experience.ts` | Work experience entries (currently empty — add the DataPhi internship here once confirmed). |
+| `data/projects.ts` | Projects (title, one-liner, description, role, tech, metrics, links, status). Order in the array = display order. `featured: true` marks Clage for the hero featured card. |
+| `data/education.ts` | School, degree, GPA, and expected graduation (surfaced in the hero credential line). |
 | `data/skills.ts` | Skill groups and their tag lists. |
 | `data/achievements.ts` | Achievements with optional detail. |
-| `data/books.ts` | Books grouped by status (`reading` / `read` / `owned`). |
-| `data/certifications.ts` | Certifications (renders nothing while empty). |
-| `data/contact.ts` | Name, email, phone, LinkedIn, GitHub, resume URL, location. Only non-empty fields render. |
+| `data/certifications.ts` | Certifications (one entry: Ethics of AI). |
+| `data/contact.ts` | Name, email, phone, LinkedIn, GitHub, Discord, resume URL, location. Only non-empty fields render. |
 | `data/types.ts` | TypeScript types for all of the above. |
+| `app/layout.tsx` | Page metadata (title, description, OG, theme color, no-Flash theme script). |
 
 ### Still TODO
-- About-section bio copy (marked with a TODO in `components/about.tsx`)
-- `data/contact.ts` values beyond GitHub
-- Project screenshot slots (marked with TODOs in `components/projects.tsx` / `components/hero.tsx`)
+- `data/contact.ts` resume URL (intentionally left empty — no resume to link)
 - A real favicon and `og:image` social card
+
+`/.commandcode/` (Command Code agent state) is git-ignored and never committed.

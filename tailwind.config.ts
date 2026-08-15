@@ -9,17 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#0B0B0C",
-        paper: "#FFFFFF",
-        mist: "#F5F5F7",
-        line: "#E4E4E7",
-        graphite: "#6E6E76",
+        ink: "rgb(var(--ink) / <alpha-value>)",
+        paper: "rgb(var(--paper) / <alpha-value>)",
+        mist: "rgb(var(--mist) / <alpha-value>)",
+        line: "rgb(var(--line) / <alpha-value>)",
+        graphite: "rgb(var(--graphite) / <alpha-value>)",
         signal: {
-          DEFAULT: "#5B4FE8",
-          50: "#EEECFC",
-          100: "#DAD6F8",
-          600: "#5B4FE8",
-          700: "#463AC2",
+          DEFAULT: "rgb(var(--signal) / <alpha-value>)",
+          700: "rgb(var(--signal-hover) / <alpha-value>)",
         },
       },
       maxWidth: {

@@ -14,20 +14,8 @@ export interface Project {
 export interface EducationEntry {
   school: string;
   degree: string;
-  honorsCollege?: string;
-  cgpa?: string;
+  gpa?: string;
   graduation?: string;
-  notes?: string;
-  extracurriculars?: string[];
-}
-
-export interface ExperienceEntry {
-  role: string;
-  company: string;
-  location?: string;
-  start?: string;
-  end?: string;
-  points?: string[];
 }
 
 export interface Achievement {
@@ -38,11 +26,6 @@ export interface Achievement {
 export interface SkillGroup {
   category: string;
   items: string[];
-}
-
-export interface Book {
-  title: string;
-  status: "reading" | "read" | "owned";
 }
 
 export interface Certification {
@@ -58,5 +41,6 @@ export interface Contact {
   linkedin: string;
   github: string;
   resumeUrl: string;
+  discord?: string;
   location: string;
 }

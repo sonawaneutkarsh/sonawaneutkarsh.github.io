@@ -28,42 +28,93 @@ export function Projects() {
   );
 }
 
+function MetricChips({ project }: { project: Project }) {
+  if (!project.metrics || project.metrics.length === 0) return null;
+  return (
+    <div className="flex flex-wrap gap-2">
+      {project.metrics.map((m) => (
+        <span
+          key={m.label}
+          className="rounded-md border border-line bg-paper px-2 py-1 font-mono text-[11px] text-graphite"
+        >
+          {m.label}: {m.value}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function TechList({ project }: { project: Project }) {
+  if (!project.tech || project.tech.length === 0) return null;
+  return (
+    <div className="flex flex-wrap gap-2">
+      {project.tech.map((tech) => (
+        <span
+          key={tech}
+          className="rounded-md border border-line bg-mist px-2 py-0.5 font-mono text-[11px] text-graphite"
+        >
+          {tech}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function ProjectLinks({ project }: { project: Project }) {
+  if (!project.links || project.links.length === 0) return null;
+  return (
+    <div className="flex flex-wrap gap-4">
+      {project.links.map((link) => (
+        <a
+          key={link.label}
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-signal transition-colors hover:text-signal-700"
+        >
+          {link.label} →
+        </a>
+      ))}
+    </div>
+  );
+}
+
 function RecruiterList({ projects }: { projects: Project[] }) {
   return (
     <ul className="mt-6">
-      {projects.map((project) => (
-        <li key={project.slug} className="border-t border-line py-6 first:border-t-0">
-          <h3 className="text-xl font-medium tracking-tight">{project.title}</h3>
-          <p className="mt-1 text-graphite">{project.oneLiner}</p>
-          {project.tech && project.tech.length > 0 ? (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {project.tech.map((tech) => (
-                <span
-                  key={tech}
-                  className="rounded-md border border-line bg-mist px-2 py-0.5 font-mono text-[11px] text-graphite"
-                >
-                  {tech}
-                </span>
-              ))}
+      {projects.map((project) => {
+        const emphasized = Boolean(project.featured || project.metrics?.length);
+        return (
+          <li
+            key={project.slug}
+            className="border-t border-line py-6 first:border-t-0 first:pt-0"
+          >
+            {project.featured ? <p className="eyebrow">Featured</p> : null}
+            <h3
+              className={
+                project.featured
+                  ? "mt-2 text-2xl font-medium tracking-tight"
+                  : "text-xl font-medium tracking-tight"
+              }
+            >
+              {project.title}
+            </h3>
+            <p className="mt-1 text-graphite">{project.oneLiner}</p>
+            {project.role ? <p className="mt-2 text-sm text-ink">{project.role}</p> : null}
+            {emphasized ? (
+              <div className="mt-3">
+                <MetricChips project={project} />
+              </div>
+            ) : null}
+            <div className="mt-3">
+              <TechList project={project} />
             </div>
-          ) : null}
-          {project.links && project.links.length > 0 ? (
-            <div className="mt-3 flex flex-wrap gap-4">
-              {project.links.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-signal transition-colors hover:text-signal-700"
-                >
-                  {link.label} →
-                </a>
-              ))}
+            <div className="mt-3">
+              <ProjectLinks project={project} />
             </div>
-          ) : null}
-        </li>
-      ))}
+          </li>
+        );
+      })}
     </ul>
   );
 }
@@ -100,7 +151,7 @@ function ExperienceRail({ projects }: { projects: Project[] }) {
                 type="button"
                 data-card
                 onClick={() => setOpenSlug(project.slug)}
-                className="block w-80 overflow-hidden rounded-lg border border-line bg-paper text-left transition-colors hover:border-graphite sm:w-96"
+                className="block h-full w-80 rounded-lg border border-line bg-paper p-5 text-left transition-colors hover:border-graphite sm:w-96"
               >
                 <CardContent project={project} />
               </button>
@@ -118,35 +169,25 @@ function ExperienceRail({ projects }: { projects: Project[] }) {
 function CardContent({ project }: { project: Project }) {
   return (
     <>
-      {/* TODO: replace this placeholder image slot with a real screenshot */}
-      <div className="aspect-video w-full bg-mist" />
-      <div className="p-5">
-        <h3 className="text-lg font-medium tracking-tight">{project.title}</h3>
-        <p className="mt-1 text-sm text-graphite">{project.oneLiner}</p>
-        {project.metrics && project.metrics.length > 0 ? (
-          <dl className="mt-4 space-y-1.5">
-            {project.metrics.map((metric) => (
-              <div key={metric.label} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-graphite">
-                  {metric.label}
-                </dt>
-                <dd className="font-mono text-[11px] text-ink">{metric.value}</dd>
-              </div>
-            ))}
-          </dl>
-        ) : null}
-        {project.tech && project.tech.length > 0 ? (
-          <div className="mt-4 flex flex-wrap gap-2">
-            {project.tech.map((tech) => (
-              <span
-                key={tech}
-                className="rounded-md border border-line bg-mist px-2 py-0.5 font-mono text-[11px] text-graphite"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-        ) : null}
+      {project.featured ? <p className="eyebrow">Featured</p> : null}
+      <h3 className="text-lg font-medium tracking-tight">
+        {project.title}
+      </h3>
+      <p className="mt-1 text-sm text-graphite">{project.oneLiner}</p>
+      {project.metrics && project.metrics.length > 0 ? (
+        <dl className="mt-4 space-y-1.5 border-t border-line pt-4">
+          {project.metrics.map((metric) => (
+            <div key={metric.label} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-graphite">
+                {metric.label}
+              </dt>
+              <dd className="font-mono text-[11px] text-ink">{metric.value}</dd>
+            </div>
+          ))}
+        </dl>
+      ) : null}
+      <div className="mt-4">
+        <TechList project={project} />
       </div>
     </>
   );
@@ -154,14 +195,13 @@ function CardContent({ project }: { project: Project }) {
 
 function PrivateCard({ project }: { project: Project }) {
   return (
-    <div className="w-80 overflow-hidden rounded-lg border border-line bg-paper sm:w-96">
-      <div className="flex aspect-video w-full items-center justify-center bg-mist">
-        <Lock className="h-6 w-6 text-graphite" aria-hidden="true" />
+    <div className="flex h-full w-80 flex-col rounded-lg border border-dashed border-line bg-mist/50 p-5 sm:w-96">
+      <div className="flex items-center gap-2">
+        <Lock className="h-4 w-4 text-graphite" aria-hidden="true" />
+        <p className="eyebrow">Competition project</p>
       </div>
-      <div className="p-5">
-        <h3 className="text-lg font-medium tracking-tight">{project.title}</h3>
-        <p className="mt-1 text-sm text-graphite">{project.oneLiner}</p>
-      </div>
+      <h3 className="mt-3 text-lg font-medium tracking-tight">{project.title}</h3>
+      <p className="mt-1 text-sm text-graphite">{project.oneLiner}</p>
     </div>
   );
 }
@@ -212,7 +252,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
       <motion.div
-        className="absolute inset-0 bg-ink/40"
+        className="absolute inset-0 bg-black/40"
         aria-hidden="true"
         onClick={onClose}
         initial={reduceMotion ? false : { opacity: 0 }}
@@ -236,19 +276,24 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
           type="button"
           aria-label="Close"
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-full p-1 text-graphite hover:text-ink"
+          className="absolute right-4 top-4 rounded-full p-1 text-graphite transition-colors hover:text-ink"
         >
           <X className="h-5 w-5" />
         </button>
-        <div className="aspect-video w-full rounded-lg bg-mist" />
-        <h2 id={`project-${project.slug}-title`} className="mt-5 text-xl font-medium tracking-tight">
+        {project.featured ? <p className="eyebrow">Featured</p> : null}
+        <h2
+          id={`project-${project.slug}-title`}
+          className="mt-2 text-xl font-medium tracking-tight"
+        >
           {project.title}
         </h2>
         <p className="mt-1 text-graphite">{project.oneLiner}</p>
+        {project.role ? (
+          <p className="mt-4 border-l-2 border-signal pl-3 text-sm text-ink">{project.role}</p>
+        ) : null}
         {project.description ? <p className="mt-4 leading-relaxed">{project.description}</p> : null}
-        {project.role ? <p className="mt-4 text-graphite">{project.role}</p> : null}
         {project.metrics && project.metrics.length > 0 ? (
-          <dl className="mt-5 space-y-1.5">
+          <dl className="mt-5 space-y-1.5 border-t border-line pt-5">
             {project.metrics.map((metric) => (
               <div key={metric.label} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                 <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-graphite">
@@ -259,33 +304,12 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             ))}
           </dl>
         ) : null}
-        {project.tech && project.tech.length > 0 ? (
-          <div className="mt-5 flex flex-wrap gap-2">
-            {project.tech.map((tech) => (
-              <span
-                key={tech}
-                className="rounded-md border border-line bg-mist px-2 py-0.5 font-mono text-[11px] text-graphite"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-        ) : null}
-        {project.links && project.links.length > 0 ? (
-          <div className="mt-6 flex flex-wrap gap-4">
-            {project.links.map((link) => (
-              <a
-                key={link.label}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-medium text-signal transition-colors hover:text-signal-700"
-              >
-                {link.label} →
-              </a>
-            ))}
-          </div>
-        ) : null}
+        <div className="mt-5">
+          <TechList project={project} />
+        </div>
+        <div className="mt-6">
+          <ProjectLinks project={project} />
+        </div>
         <p className="mt-6 text-xs text-graphite">Press Esc to close</p>
       </motion.div>
     </div>

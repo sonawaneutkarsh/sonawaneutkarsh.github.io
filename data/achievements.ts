@@ -2,12 +2,8 @@ import type { Achievement } from "./types";
 
 export const achievements: Achievement[] = [
   {
-    label: "Accepted into BU1LD",
-    detail: "Microsoft-affiliated ML research and startup hub",
-  },
-  {
-    label: "USAII Global AI Hackathon — finalist",
-    detail: "6,081 participants",
+    label: "USAII Global AI Hackathon 2026 — Finalist",
+    detail: "6,081 participants worldwide",
   },
   {
     label: "Dean's List",

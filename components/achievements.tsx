@@ -1,11 +1,10 @@
-import { Trophy, Rocket, Award } from "lucide-react";
+import { Trophy, Award } from "lucide-react";
 import { achievements } from "@/data/achievements";
 import type { Achievement } from "@/data/types";
 import { Container } from "@/components/container";
 
 function iconFor(achievement: Achievement) {
   if (achievement.label.includes("Hackathon")) return Trophy;
-  if (achievement.label.includes("BU1LD")) return Rocket;
   return Award;
 }
 

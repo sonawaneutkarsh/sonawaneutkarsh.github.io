@@ -34,6 +34,9 @@ yarn-error.log*
 # local build progress notes
 /progress
 
+# command-code / agent state (never commit)
+/.commandcode/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
