@@ -81,6 +81,7 @@ export function Nav() {
                   role="tab"
                   data-value={value}
                   aria-selected={mode === value}
+                  tabIndex={mode === value ? 0 : -1}
                   onClick={() => setMode(value)}
                   className={cn(
                     "rounded-full px-3 py-1 text-sm transition-colors",

@@ -15,7 +15,10 @@ function ScrollTrack() {
   const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll();
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 120, damping: 24 });
-  const dotY = useTransform(smoothProgress, [0, 1], ["0vh", "calc(100vh - 8px)"]);
+  // Function transform: interpolating between "0vh" and "calc(100vh - 8px)" as
+  // two static strings is not something framer-motion can mix (different numeric
+  // structures), so compute the offset numerically per frame instead.
+  const dotY = useTransform(smoothProgress, (v) => `calc(${v * 100}vh - ${v * 8}px)`);
 
   return (
     <div

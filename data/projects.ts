@@ -21,16 +21,19 @@ export const projects: Project[] = [
   {
     slug: "scholarai",
     title: "ScholarAI",
-    oneLiner: "AI platform for discovering eligible Indian government schemes across 4,700+ programs",
+    oneLiner: "AI platform for discovering eligible Indian government schemes across 1,000+ programs",
     description:
       "Built for the USAII Global AI Hackathon (6,081 participants worldwide, 5-person team) — finalist. Covers data scraping/normalization, weighted eligibility logic, RAG over embeddings in pgvector, AI-generated reports, and what-if simulations.",
     role: "Data engineer — owned the data pipeline and vector database/retrieval layer",
     metrics: [
       { label: "Result", value: "Hackathon finalist" },
-      { label: "Schemes covered", value: "4,700+" },
+      { label: "Schemes covered", value: "1,000+" },
     ],
     tech: ["RAG", "pgvector", "PostgreSQL", "Supabase", "FastAPI", "SQLAlchemy", "Selenium"],
     status: "shipped",
+    links: [
+      { label: "Repository", url: "https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI" },
+    ],
   },
   {
     slug: "medclarity",
