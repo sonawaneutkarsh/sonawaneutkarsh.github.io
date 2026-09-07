@@ -1,11 +1,13 @@
 import { Award, Trophy, BookOpen } from "lucide-react";
 import { Container } from "@/components/container";
+import { Reveal } from "@/components/reveal";
 
 export function Experience() {
   return (
     <section id="experience" className="scroll-mt-14 border-b border-line">
       <Container className="py-20 sm:py-24">
-        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2">
+        <Reveal>
+          <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2">
           <div>
             <h2 className="eyebrow">Recognition & Leadership</h2>
             <p className="mt-1 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
@@ -88,6 +90,7 @@ export function Experience() {
             </div>
           </div>
         </div>
+        </Reveal>
       </Container>
     </section>
   );

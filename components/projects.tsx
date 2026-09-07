@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight, ArrowRight, Award } from "lucide-react";
 import { projects } from "@/data/projects";
 import { Container } from "@/components/container";
+import { Reveal } from "@/components/reveal";
 
 export function Projects() {
   const primaryProjects = projects.slice(0, 4);
@@ -10,21 +11,22 @@ export function Projects() {
   return (
     <section id="projects" className="scroll-mt-14 border-b border-line">
       <Container className="py-20 sm:py-24">
-        {/* Section Header */}
-        <div>
-          <h2 className="eyebrow">Projects</h2>
-          <p className="mt-1 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-            Selected Work
-          </p>
-        </div>
+        <Reveal>
+          {/* Section Header */}
+          <div>
+            <h2 className="eyebrow">Projects</h2>
+            <p className="mt-1 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+              Selected Work
+            </p>
+          </div>
 
-        {/* Primary Project Cards (Nytr, Clage, Devvy, ScholarAI) */}
-        <div className="mt-10 space-y-8">
-          {primaryProjects.map((project, index) => (
-            <article
-              key={project.slug}
-              className="rounded-xl border border-line bg-paper p-6 sm:p-8 transition-all hover:border-graphite/40"
-            >
+          {/* Primary Project Cards (Nytr, Clage, Devvy, ScholarAI) */}
+          <div className="mt-10 space-y-8">
+            {primaryProjects.map((project, index) => (
+              <article
+                key={project.slug}
+                className="rounded-xl border border-line bg-paper p-6 sm:p-8 transition-all duration-200 hover:border-graphite/40 hover:-translate-y-0.5"
+              >
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
@@ -155,7 +157,7 @@ export function Projects() {
               {secondaryProjects.map((project) => (
                 <div
                   key={project.slug}
-                  className="flex h-full flex-col rounded-lg border border-line bg-paper p-6 transition-colors hover:border-graphite/40"
+                  className="flex h-full flex-col rounded-lg border border-line bg-paper p-6 transition-all duration-200 hover:border-graphite/40 hover:-translate-y-0.5"
                 >
                   <h4 className="text-lg font-semibold tracking-tight text-ink">
                     {project.title}
@@ -179,7 +181,7 @@ export function Projects() {
                   </div>
 
                   {project.links && project.links.length > 0 ? (
-                    <div className="mt-5 flex flex-wrap gap-3 border-t border-line/60 pt-3 mt-auto">
+                    <div className="flex flex-wrap gap-3 border-t border-line/60 pt-3 mt-auto">
                       {project.links.map((link) => (
                         <a
                           key={link.label}
@@ -199,6 +201,7 @@ export function Projects() {
             </div>
           </div>
         ) : null}
+        </Reveal>
       </Container>
     </section>
   );

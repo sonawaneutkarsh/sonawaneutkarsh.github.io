@@ -1,12 +1,14 @@
 import { Mail, MapPin, FileText, ArrowUpRight } from "lucide-react";
 import { contact } from "@/data/contact";
 import { Container } from "@/components/container";
+import { Reveal } from "@/components/reveal";
 
 export function Contact() {
   return (
     <section id="contact" className="scroll-mt-14">
       <Container className="py-20 sm:py-24">
-        <div className="mx-auto max-w-2xl text-center">
+        <Reveal>
+          <div className="mx-auto max-w-2xl text-center">
           <h2 className="eyebrow">Contact</h2>
           <p className="mt-2 text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
             Get in touch.
@@ -70,6 +72,7 @@ export function Contact() {
             </span>
           </div>
         </div>
+        </Reveal>
       </Container>
     </section>
   );

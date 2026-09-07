@@ -1,10 +1,12 @@
 import { Container } from "@/components/container";
+import { Reveal } from "@/components/reveal";
 
 export function About() {
   return (
     <section id="about" className="scroll-mt-14 border-b border-line">
       <Container className="py-20 sm:py-24">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
+        <Reveal>
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
           <div>
             <h2 className="eyebrow">About</h2>
             <p className="mt-1 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
@@ -35,6 +37,7 @@ export function About() {
             </p>
           </div>
         </div>
+        </Reveal>
       </Container>
     </section>
   );

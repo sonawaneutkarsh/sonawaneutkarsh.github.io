@@ -59,6 +59,9 @@ export default function RootLayout({
     >
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <noscript>
+          <style>{`[style*="opacity:0"],[style*="opacity: 0"]{opacity:1 !important;transform:none !important;}`}</style>
+        </noscript>
         <ThemeProvider>
           <Nav />
           <main>{children}</main>
