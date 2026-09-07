@@ -169,7 +169,7 @@ export default function ClageCaseStudy() {
             <ul className="list-disc space-y-2.5 pl-5 text-sm text-graphite">
               <li>
                 <strong className="text-ink">9-Number Observation Vector:</strong> At every tick, an organism observes its surroundings via a normalized 9-element array:
-                <code className="mt-1 block rounded bg-mist p-2 font-mono text-xs text-ink">
+                <code className="mt-1 block overflow-x-auto rounded bg-mist p-2 font-mono text-xs text-ink">
                   [food_dx, food_dy, food_density, organism_density, normalized_energy, boundary_x, boundary_y, prev_move, prev_eat]
                 </code>
                 where <code className="font-mono text-xs">food_dx</code> and <code className="font-mono text-xs">food_dy</code> are normalized offsets to the nearest food item in [-1.0, 1.0],

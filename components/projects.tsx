@@ -13,9 +13,9 @@ export function Projects() {
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2">
           <div>
-            <h2 className="eyebrow">Selected Work</h2>
+            <h2 className="eyebrow">Projects</h2>
             <p className="mt-1 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-              Systems, Core Algorithms & Data Infrastructure
+              Selected Work
             </p>
           </div>
           <p className="font-mono text-xs text-graphite">

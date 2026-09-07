@@ -24,12 +24,11 @@ export function Hero() {
 
           {/* Main Statement */}
           <h1 className="mt-6 text-3xl font-semibold tracking-tight text-ink sm:text-5xl lg:text-5xl lg:leading-[1.15]">
-            I build systems from first principles — backend infrastructure, algorithms, and grounded AI where decisions can be traced back to evidence.
+            I build software I actually want to use every day.
           </h1>
 
           <p className="mt-6 text-base leading-relaxed text-graphite sm:text-lg">
-            Undergraduate Computer Science student at Penn State (GPA 3.53/4.0, Dean&rsquo;s List, Capital Honors Program).
-            Focused on systems programming, deterministic data pipelines, neuroevolution from scratch, and zero-dependency local daemons.
+            I&rsquo;m an honors Computer Science student at Penn State. Most of my projects start with something I want to improve in my own life &mdash; my nutrition and training, my setup, or something repetitive I wish worked better. Right now I&rsquo;m especially interested in LLMs, agentic systems, and backend infrastructure.
           </p>
 
           {/* Action CTAs */}

@@ -9,7 +9,7 @@ export function Skills() {
           <div>
             <h2 className="eyebrow">Technical Skills</h2>
             <p className="mt-1 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-              Grounded Tooling & Systems
+              Tools I use
             </p>
           </div>
           <p className="font-mono text-xs text-graphite">

@@ -149,7 +149,7 @@ export default function NytrCaseStudy() {
 
             {/* Architecture Visual Diagram */}
             <div className="rounded-lg border border-line bg-paper p-6 font-mono text-xs leading-relaxed overflow-x-auto">
-              <pre className="text-ink">
+              <pre className="text-ink overflow-x-auto">
 {`┌────────────────────────┐      ┌─────────────────────────┐      ┌─────────────────────────┐
 │   Penn State Stacks    │      │    Apple HealthKit      │      │     Hevy Cloud API      │
 │  Daily Menu Scraper    │      │   (Native iOS Client)   │      │ (Official Developer API)│
