@@ -9,9 +9,9 @@ import { Container } from "@/components/container";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Utkarsh Sonawane — Systems, Algorithms & Infrastructure",
+  title: "Utkarsh Sonawane — Honors Computer Science at Penn State",
   description:
-    "Undergraduate Computer Science honors student at Penn State. Building systems from first principles — backend infrastructure, algorithms, and grounded AI where decisions can be traced back to evidence.",
+    "Honors Computer Science student at Penn State building software I actually use every day. Interested in LLMs, agentic systems, and backend infrastructure.",
   metadataBase: new URL("https://sonawaneutkarsh.github.io"),
   icons: {
     icon: [
@@ -22,18 +22,18 @@ export const metadata: Metadata = {
     apple: { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
   },
   openGraph: {
-    title: "Utkarsh Sonawane — Systems, Algorithms & Infrastructure",
+    title: "Utkarsh Sonawane — Honors Computer Science at Penn State",
     description:
-      "Undergraduate Computer Science honors student at Penn State. Building systems from first principles — backend infrastructure, algorithms, and grounded AI.",
+      "Honors Computer Science student at Penn State building software I actually use every day. Interested in LLMs, agentic systems, and backend infrastructure.",
     url: "https://sonawaneutkarsh.github.io",
     type: "website",
     siteName: "Utkarsh Sonawane",
   },
   twitter: {
     card: "summary",
-    title: "Utkarsh Sonawane — Systems, Algorithms & Infrastructure",
+    title: "Utkarsh Sonawane — Honors Computer Science at Penn State",
     description:
-      "Undergraduate Computer Science honors student at Penn State. Building systems from first principles — backend infrastructure, algorithms, and grounded AI.",
+      "Honors Computer Science student at Penn State building software I actually use every day. Interested in LLMs, agentic systems, and backend infrastructure.",
   },
 };
 

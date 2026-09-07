@@ -25,7 +25,7 @@ export function Projects() {
             {primaryProjects.map((project, index) => (
               <article
                 key={project.slug}
-                className="rounded-xl border border-line bg-paper p-6 sm:p-8 transition-all duration-200 hover:border-graphite/40 hover:-translate-y-0.5"
+                className="rounded-xl border border-line bg-paper p-6 sm:p-8 transition-all duration-200 hover:border-graphite/40 motion-safe:hover:-translate-y-0.5"
               >
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
@@ -157,7 +157,7 @@ export function Projects() {
               {secondaryProjects.map((project) => (
                 <div
                   key={project.slug}
-                  className="flex h-full flex-col rounded-lg border border-line bg-paper p-6 transition-all duration-200 hover:border-graphite/40 hover:-translate-y-0.5"
+                  className="flex h-full flex-col rounded-lg border border-line bg-paper p-6 transition-all duration-200 hover:border-graphite/40 motion-safe:hover:-translate-y-0.5"
                 >
                   <h4 className="text-lg font-semibold tracking-tight text-ink">
                     {project.title}
