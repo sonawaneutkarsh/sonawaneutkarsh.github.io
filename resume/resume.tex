@@ -1,0 +1,193 @@
+%-------------------------
+% Resume in Latex
+% Author : Utkarsh Sonawane
+% License : MIT
+%------------------------
+\documentclass[letterpaper,10pt]{article}
+
+\usepackage[normalem]{ulem}
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{iftex}
+
+\ifpdftex
+  \input{glyphtounicode}
+  \pdfgentounicode=1
+\fi
+
+% ---------- Page Style ----------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% ---------- Margins ----------
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1.0in}
+\addtolength{\topmargin}{-0.75in}
+\addtolength{\textheight}{1.55in}
+
+\urlstyle{same}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% ---------- Section Formatting ----------
+\titleformat{\section}{
+  \vspace{-7pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-6pt}]
+
+% ---------- Custom Commands ----------
+\newcommand{\resumeItem}[1]{
+  \item\small{#1 \vspace{-2pt}}
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+  \begin{tabular*}{0.98\textwidth}[t]{l@{\extracolsep{\fill}}r}
+    \textbf{#1} & #2 \\
+    \textit{\small #3} & \textit{\small #4} \\
+  \end{tabular*}\vspace{-6pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+  \vspace{-2pt}\item
+  \begin{tabular*}{0.98\textwidth}{l@{\extracolsep{\fill}}r}
+    \textbf{#1} & \small #2 \\
+  \end{tabular*}\vspace{-6pt}
+}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.10in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}[leftmargin=0.15in]}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-6pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%
+\begin{document}
+
+% ---------- HEADING ----------
+\begin{center}
+  \textbf{\Huge \scshape Utkarsh Sonawane} \\ \vspace{3pt}
+  \small
+  223-283-7125 $|$
+  \href{mailto:utkarshsonawane@psu.edu}{\uline{utkarshsonawane@psu.edu}} $|$
+  \href{https://sonawaneutkarsh.github.io}{\uline{sonawaneutkarsh.github.io}} \\ \vspace{2pt}
+  \href{https://github.com/sonawaneutkarsh}{\uline{github.com/sonawaneutkarsh}} $|$
+  \href{https://linkedin.com/in/sonawaneutkarsh}{\uline{linkedin.com/in/sonawaneutkarsh}}
+\end{center}
+
+% ---------- EDUCATION ----------
+\section{Education}
+\resumeSubHeadingListStart
+
+\resumeSubheading
+  {The Pennsylvania State University}
+  {Harrisburg, PA}
+  {Bachelor of Science in Computer Science (Honors)}
+  {Expected December 2028}
+
+\resumeItemListStart
+  \resumeItem{\textbf{GPA:} 3.53/4.0 \;$|$\; \textbf{Honors:} Dean's List, Capital Honors Program}
+  \resumeItem{\textbf{Relevant Coursework:} Data Structures \& Algorithms, Object-Oriented Programming, Calculus III, Linear Algebra}
+\resumeItemListEnd
+
+\resumeSubHeadingListEnd
+
+% ---------- TECHNICAL SKILLS ----------
+\section{Technical Skills}
+\begin{itemize}[leftmargin=0.10in, label={}]
+  \small{
+    \item{
+      \textbf{Languages:} Python, TypeScript, JavaScript, C++, Swift, SQL \\
+      \textbf{Backend \& Systems:} FastAPI, Node.js, Express, Flask, REST APIs, Docker, Linux, Git \\
+      \textbf{Data \& Databases:} PostgreSQL, Supabase, pgvector, Vector Embeddings, RAG, NumPy, Pandas \\
+      \textbf{Mobile \& Client:} SwiftUI, HealthKit, React, Next.js, Tailwind CSS
+    }
+  }
+\end{itemize}
+\vspace{-8pt}
+
+% ---------- PROJECTS ----------
+\section{Projects}
+\resumeSubHeadingListStart
+
+\resumeProjectHeading
+  {Nytr --- Evidence-Driven Decision System $|$ \emph{Python, FastAPI, PostgreSQL, SwiftUI, HealthKit}}{2026}
+\resumeItemListStart
+  \resumeItem{Engineered an evidence-driven decision system integrating Penn State dining menus, Apple HealthKit, and Hevy through a FastAPI modular backend and native SwiftUI companion client.}
+  \resumeItem{Designed immutable/versioned pipelines for nutrition history, body-mass trends, target policies, and workout revisions with PostgreSQL RLS, idempotent sync via durable anchors, and deterministic Decimal analytics.}
+  \resumeItem{Enforced strict dietary gates, 0-drift Decimal nutrition calculations, and tombstone deletion semantics; validated production correctness with 1,000+ automated tests and physical iPhone verification.}
+\resumeItemListEnd
+
+\resumeProjectHeading
+  {Clage --- From-Scratch NEAT Engine \& Artificial Life $|$ \emph{Python, Algorithms from Scratch}}{2025 -- 2026}
+\resumeItemListStart
+  \resumeItem{Implemented complete NeuroEvolution of Augmenting Topologies from first principles in pure Python (genome encoding, global innovation ledger, topological crossover, mutation, and speciation) with zero external ML libraries.}
+  \resumeItem{Validated the evolutionary engine on OR, AND, XOR, and sine benchmarks across fixed seeds before deploying in a 2D artificial-life simulation with dynamic energy budgets and reproduction, backed by 188 passing tests.}
+  \resumeItem{Investigated behavioral diversity metrics across populations; identified and eliminated a local food density confound from cross-condition comparative analysis.}
+\resumeItemListEnd
+
+\resumeProjectHeading
+  {Devvy --- Developer Infrastructure for Discord IPC $|$ \emph{TypeScript, Node.js, macOS launchd}}{2026}
+\resumeItemListStart
+  \resumeItem{Built a zero-dependency background daemon speaking Discord's local IPC protocol directly (Unix socket discovery, binary opcode framing, backoff reconnect) to coordinate Rich Presence across 3 developer environments.}
+  \resumeItem{Designed priority arbitration (OpenCode $\to$ Command Code $\to$ VS Code) with TTL-based heartbeat expiry; validated with a 22-script test suite covering race conditions, reconnect resilience, and memory leaks.}
+\resumeItemListEnd
+
+\resumeProjectHeading
+  {ScholarAI --- Government Scheme Discovery Platform $|$ \emph{Python, PostgreSQL, pgvector, FastAPI}}{2026}
+\resumeItemListStart
+  \resumeItem{Data engineer on a 5-person team; finalist among 6,081+ global participants in the USAII Global AI Hackathon 2026.}
+  \resumeItem{Built data pipeline parsing 1,000+ scraped schemes into structured relational models; generated high-dimensional semantic embeddings and loaded them via fault-tolerant batched inserts into PostgreSQL with pgvector for hybrid retrieval.}
+\resumeItemListEnd
+
+\resumeSubHeadingListEnd
+
+% ---------- LEADERSHIP & ACTIVITIES ----------
+\section{Leadership \& Activities}
+\resumeSubHeadingListStart
+
+\resumeSubheading
+  {CS Team Lead \& Technical Team Member, IEEE}
+  {Harrisburg, PA}
+  {IEEE Student Branch, Penn State Harrisburg}
+  {Sept 2025 -- Present}
+\resumeItemListStart
+  \resumeItem{Conducted hands-on technical workshop for 20+ students on documentation, Markdown, and developer toolchains.}
+  \resumeItem{Lead technical initiatives and collaborative coding sessions across Computer Science and AI student branches.}
+\resumeItemListEnd
+
+\resumeSubheading
+  {Founder \& Editor-in-Chief}
+  {Dubai, UAE}
+  {Glimpse --- Student Publication}
+  {Jun 2024 -- Feb 2025}
+\resumeItemListStart
+  \resumeItem{Scaled subscriber readership from 0 to 250+ readers; authored and edited 30+ long-form articles on technology and science.}
+\resumeItemListEnd
+
+\resumeSubHeadingListEnd
+
+% ---------- CERTIFICATIONS & HONORS ----------
+\section{Certifications \& Honors}
+\begin{itemize}[leftmargin=0.10in, label={}]
+  \small{
+    \item{
+      \textbf{Honors:} Finalist, USAII Global AI Hackathon (Top teams among 6,081+ participants) \;$|$\; Dean's List, Penn State \\
+      \textbf{Certifications:} Practical Deep Learning for Coders (\emph{fast.ai}) \;$|$\; Machine Learning Specialization (\emph{DeepLearning.ai}) \;$|$\; Ethics of AI (\emph{University of Helsinki})
+    }
+  }
+\end{itemize}
+
+\end{document}

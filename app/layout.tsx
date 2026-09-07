@@ -1,27 +1,18 @@
 import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
-import { GitBranch } from "lucide-react";
+import { GitBranch, FileText } from "lucide-react";
 import { contact } from "@/data/contact";
-import { education } from "@/data/education";
-import { ModeProvider } from "@/components/mode-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Nav } from "@/components/nav";
-import { ScrollThread } from "@/components/scroll-thread";
 import { Container } from "@/components/container";
 import "./globals.css";
 
-const credentialParts = [
-  education[0].degree ? `${education[0].degree} — ${education[0].school}` : education[0].school,
-  education[0].gpa ? `GPA: ${education[0].gpa}` : null,
-  education[0].graduation ? `Expected graduation: ${education[0].graduation}` : null,
-].filter(Boolean);
-
-const credentialsLine = credentialParts.join(" · ");
-
 export const metadata: Metadata = {
-  title: contact.name || "Software Engineer",
-  description: contact.name ? `${contact.name} — ${credentialsLine}` : "Software engineer portfolio.",
+  title: "Utkarsh Sonawane — Systems, Algorithms & Infrastructure",
+  description:
+    "Undergraduate Computer Science honors student at Penn State. Building systems from first principles — backend infrastructure, algorithms, and grounded AI where decisions can be traced back to evidence.",
+  metadataBase: new URL("https://sonawaneutkarsh.github.io"),
   icons: {
     icon: [
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
@@ -31,14 +22,21 @@ export const metadata: Metadata = {
     apple: { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
   },
   openGraph: {
-    title: contact.name || "Software Engineer",
-    description: contact.name ? `${contact.name} — ${credentialsLine}` : "Software engineer portfolio.",
+    title: "Utkarsh Sonawane — Systems, Algorithms & Infrastructure",
+    description:
+      "Undergraduate Computer Science honors student at Penn State. Building systems from first principles — backend infrastructure, algorithms, and grounded AI.",
+    url: "https://sonawaneutkarsh.github.io",
     type: "website",
-    siteName: contact.name || "Software Engineer",
+    siteName: "Utkarsh Sonawane",
+  },
+  twitter: {
+    card: "summary",
+    title: "Utkarsh Sonawane — Systems, Algorithms & Infrastructure",
+    description:
+      "Undergraduate Computer Science honors student at Penn State. Building systems from first principles — backend infrastructure, algorithms, and grounded AI.",
   },
 };
 
-// Runs before first paint so the correct theme is applied with no flash.
 const themeInitScript = `(function(){try{var t=localStorage.getItem("portfolio-theme");var d=t?t==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;var c=d?"dark":"light";document.documentElement.classList.toggle("dark",d);document.documentElement.style.colorScheme=c;}catch(e){}})();`;
 
 export const viewport: Viewport = {
@@ -62,27 +60,43 @@ export default function RootLayout({
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <ThemeProvider>
-          <ModeProvider>
-            <ScrollThread />
-            <Nav />
-            <main>{children}</main>
-            <footer className="border-t border-line">
-              <Container className="flex h-16 items-center justify-between">
-                <p className="text-sm text-graphite">
-                  © {new Date().getFullYear()} {contact.name || "Portfolio"}
-                </p>
+          <Nav />
+          <main>{children}</main>
+          <footer className="border-t border-line mt-16">
+            <Container className="flex flex-col sm:flex-row h-auto sm:h-16 py-6 sm:py-0 items-center justify-between gap-4">
+              <p className="text-sm text-graphite">
+                © {new Date().getFullYear()} {contact.name}. Grounded in first principles.
+              </p>
+              <div className="flex items-center gap-6 text-sm text-graphite">
+                <a
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 transition-colors hover:text-ink"
+                >
+                  <FileText className="h-3.5 w-3.5" aria-hidden="true" />
+                  Résumé
+                </a>
                 <a
                   href={`https://github.com/${contact.github}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-signal transition-colors hover:text-signal-700"
+                  className="flex items-center gap-1.5 transition-colors hover:text-ink"
                 >
-                  <GitBranch className="h-4 w-4" aria-hidden="true" />
+                  <GitBranch className="h-3.5 w-3.5" aria-hidden="true" />
                   GitHub
                 </a>
-              </Container>
-            </footer>
-          </ModeProvider>
+                <a
+                  href={contact.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-ink"
+                >
+                  LinkedIn
+                </a>
+              </div>
+            </Container>
+          </footer>
         </ThemeProvider>
       </body>
     </html>

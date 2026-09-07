@@ -3,18 +3,34 @@ import { Container } from "@/components/container";
 
 export function Skills() {
   return (
-    <section className="border-t border-line">
+    <section id="skills" className="scroll-mt-14 border-b border-line">
       <Container className="py-20 sm:py-24">
-        <h2 className="eyebrow">Skills</h2>
-        <div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2">
+        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2">
+          <div>
+            <h2 className="eyebrow">Technical Skills</h2>
+            <p className="mt-1 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+              Grounded Tooling & Systems
+            </p>
+          </div>
+          <p className="font-mono text-xs text-graphite">
+            Curated by daily engineering use
+          </p>
+        </div>
+
+        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {skillGroups.map((group) => (
-            <div key={group.category}>
-              <h3 className="text-sm font-medium">{group.category}</h3>
-              <div className="mt-3 flex flex-wrap gap-2">
+            <div
+              key={group.category}
+              className="rounded-lg border border-line bg-paper p-6 transition-colors hover:border-graphite/40"
+            >
+              <h3 className="font-mono text-xs font-semibold uppercase tracking-wider text-graphite">
+                {group.category}
+              </h3>
+              <div className="mt-4 flex flex-wrap gap-2">
                 {group.items.map((item) => (
                   <span
                     key={item}
-                    className="rounded-full border border-line bg-mist px-3 py-1 text-sm text-graphite"
+                    className="rounded-md border border-line bg-mist px-2.5 py-1 font-mono text-xs text-ink"
                   >
                     {item}
                   </span>

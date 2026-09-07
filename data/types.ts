@@ -5,10 +5,11 @@ export interface Project {
   description?: string;
   role?: string;
   tech?: string[];
-  links?: { label: string; url: string }[];
+  links?: { label: string; url: string; isCaseStudy?: boolean }[];
   featured?: boolean;
   metrics?: { label: string; value: string }[];
   status?: "shipped" | "in-progress" | "competition-private";
+  hasCaseStudy?: boolean;
 }
 
 export interface EducationEntry {
@@ -16,6 +17,8 @@ export interface EducationEntry {
   degree: string;
   gpa?: string;
   graduation?: string;
+  honors?: string[];
+  relevantCourses?: string[];
 }
 
 export interface Achievement {
@@ -36,6 +39,7 @@ export interface Certification {
 
 export interface Contact {
   name: string;
+  title: string;
   email: string;
   phone: string;
   linkedin: string;

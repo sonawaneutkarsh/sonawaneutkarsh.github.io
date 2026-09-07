@@ -3,35 +3,22 @@ import type { SkillGroup } from "./types";
 export const skillGroups: SkillGroup[] = [
   {
     category: "Languages",
-    items: ["Python", "JavaScript", "SQL", "C++"],
+    items: ["Python", "TypeScript", "JavaScript", "C++", "Swift", "SQL"],
   },
   {
-    category: "AI / ML",
-    items: [
-      "RAG",
-      "Embeddings",
-      "pgvector",
-      "Sentence Transformers",
-      "AI agents",
-      "Semantic retrieval",
-      "NEAT",
-      "Evolutionary algorithms",
-    ],
+    category: "Backend & Systems",
+    items: ["FastAPI", "Node.js", "Express", "Flask", "REST APIs", "Docker", "Linux", "Git"],
   },
   {
-    category: "Backend / Infrastructure",
-    items: ["FastAPI", "PostgreSQL", "Supabase", "SQLAlchemy", "Selenium", "Gemini API", "Data pipelines"],
+    category: "Data & Databases",
+    items: ["PostgreSQL", "Supabase", "pgvector", "Vector Embeddings", "RAG", "NumPy", "Pandas"],
   },
   {
-    category: "Frontend & Mobile",
-    items: ["TypeScript", "React", "Next.js", "React Native", "Expo", "Express", "Flask", "Firebase"],
+    category: "Mobile & Frontend",
+    items: ["SwiftUI", "HealthKit", "React", "Next.js", "Tailwind CSS"],
   },
   {
-    category: "Embedded",
-    items: ["ESP32", "Arduino"],
-  },
-  {
-    category: "Tools",
-    items: ["Git / GitHub", "Linux / Terminal"],
+    category: "Embedded & Hardware",
+    items: ["ESP32-C3", "Arduino", "Sensor Telemetry"],
   },
 ];

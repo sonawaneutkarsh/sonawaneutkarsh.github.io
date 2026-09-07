@@ -2,34 +2,78 @@ import type { Project } from "./types";
 
 export const projects: Project[] = [
   {
+    slug: "nytr",
+    title: "Nytr",
+    oneLiner: "An evidence-driven personal nutrition and training decision platform integrating campus dining, HealthKit, and Hevy",
+    description:
+      "A production-tested personal decision system built on a FastAPI modular monolith, PostgreSQL/Supabase, and a native SwiftUI/HealthKit iOS companion. Eliminates fitness app hallucinations through strict source authority, immutable versioned evidence, idempotent dual-anchor sync, PostgreSQL RLS, and deterministic Decimal calculations.",
+    role: "Solo Creator · Systems Architecture, Backend, Database & Native iOS",
+    tech: ["Python", "FastAPI", "PostgreSQL", "Supabase", "SwiftUI", "HealthKit", "Hevy API", "Docker", "Pytest"],
+    featured: true,
+    hasCaseStudy: true,
+    metrics: [
+      { label: "Core Philosophy", value: "DATA → CALCULATION → DECISION" },
+      { label: "Backend Tests", value: "1,041 automated tests" },
+      { label: "Sync Engine", value: "Dual-anchor idempotent sync" },
+      { label: "Precision", value: "0-drift Decimal arithmetic" },
+    ],
+    status: "shipped",
+    links: [
+      { label: "Technical Case Study", url: "/projects/nytr", isCaseStudy: true },
+    ],
+  },
+  {
     slug: "clage",
     title: "Clage",
-    oneLiner: "A from-scratch NEAT implementation and 2D artificial-life simulation",
+    oneLiner: "From-scratch NEAT neuroevolution implementation and 2D artificial-life simulation",
     description:
-      "Custom NEAT (NeuroEvolution of Augmenting Topologies) implementation built without neat-python — genome representation, phenotype/network construction, an innovation ledger, mutation, crossover, speciation, and full population lifecycle. Runs inside a 2D artificial-life environment with organisms, food, energy, and reproduction, plus controlled experiments and behavioral diversity metrics.",
-    role: "Solo, built from scratch",
-    tech: ["Python", "NEAT", "Evolutionary algorithms"],
+      "Complete NeuroEvolution of Augmenting Topologies (NEAT) implemented from first principles in pure Python without neat-python or external ML libraries. Features a global innovation ledger, topological crossover, structural mutation, speciation, and directed graph feed-forward network execution. Evaluated on classic benchmarks (OR, AND, XOR, sine) across fixed seeds and deployed in an energy-constrained 2D artificial life world.",
+    role: "Solo Creator · Evolutionary Algorithms, Simulation & Analytics",
+    tech: ["Python", "Algorithms from Scratch", "Complex Systems", "Simulation", "Pytest"],
     featured: true,
+    hasCaseStudy: true,
     metrics: [
-      { label: "Tests", value: "184" },
-      { label: "Benchmarks", value: "OR / AND / XOR / sin" },
-      { label: "Seeds", value: "Multi-seed validated" },
+      { label: "Passing Tests", value: "188 passing tests" },
+      { label: "Dependencies", value: "Zero ML packages (pure Python)" },
+      { label: "Validation", value: "Multi-seed on OR / AND / XOR / Sin" },
     ],
-    status: "in-progress",
-    links: [{ label: "Repository", url: "https://github.com/sonawaneutkarsh/Clage" }],
+    status: "shipped",
+    links: [
+      { label: "Technical Case Study", url: "/projects/clage", isCaseStudy: true },
+      { label: "Repository", url: "https://github.com/sonawaneutkarsh/Clage" },
+    ],
+  },
+  {
+    slug: "devvy",
+    title: "Devvy",
+    oneLiner: "Zero-dependency local daemon coordinating Discord Rich Presence across developer environments",
+    description:
+      "Local background infrastructure that speaks Discord's local IPC protocol directly over Unix domain sockets with custom binary opcode framing, handshake negotiation, and backoff reconnects. Unifies activity status across OpenCode, Command Code, and VS Code with priority arbitration, heartbeats, and TTL-based source expiry.",
+    role: "Solo Creator · Systems Programming, IPC & Devtools",
+    tech: ["TypeScript", "Node.js", "Discord IPC", "macOS launchd", "Unix Sockets"],
+    featured: false,
+    metrics: [
+      { label: "Runtime Deps", value: "Zero external dependencies" },
+      { label: "Protocol", value: "Direct IPC binary opcode framing" },
+      { label: "Validation", value: "22-scenario automated suite" },
+    ],
+    status: "shipped",
+    links: [{ label: "Repository", url: "https://github.com/sonawaneutkarsh/devvy" }],
   },
   {
     slug: "scholarai",
     title: "ScholarAI",
-    oneLiner: "AI platform for discovering eligible Indian government schemes across 1,000+ programs",
+    oneLiner: "AI platform for discovering and verifying Indian government schemes across 1,000+ programs",
     description:
-      "Built for the USAII Global AI Hackathon (6,081 participants worldwide, 5-person team) — finalist. Covers data scraping/normalization, weighted eligibility logic, RAG over embeddings in pgvector, AI-generated reports, and what-if simulations.",
-    role: "Data engineer — owned the data pipeline and vector database/retrieval layer",
+      "Built for the USAII Global AI Hackathon 2026 (6,081+ participants worldwide, 5-person team) — Finalist. Built the complete data engineering pipeline: scraped and normalized 1,000+ complex schemes via regex-based extraction into structured relational models, generated high-dimensional semantic embeddings, and built batched loaders into PostgreSQL with pgvector for hybrid retrieval.",
+    role: "Data Engineer · Data Pipeline, Relational Schema & Vector Database",
+    tech: ["Python", "PostgreSQL", "pgvector", "FastAPI", "Selenium", "RAG"],
+    featured: false,
     metrics: [
-      { label: "Result", value: "Hackathon finalist" },
-      { label: "Schemes covered", value: "1,000+" },
+      { label: "Hackathon Result", value: "Finalist (6,081+ participants)" },
+      { label: "Data Volume", value: "1,000+ schemes indexed" },
+      { label: "Engineering Team", value: "5-person team" },
     ],
-    tech: ["RAG", "pgvector", "PostgreSQL", "Supabase", "FastAPI", "SQLAlchemy", "Selenium"],
     status: "shipped",
     links: [
       { label: "Repository", url: "https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI" },
@@ -38,10 +82,10 @@ export const projects: Project[] = [
   {
     slug: "medclarity",
     title: "MedClarity",
-    oneLiner: "AI assistant that analyzes and cross-references medical documents",
+    oneLiner: "Client-side audited medical document intelligence with page-level ground truth",
     description:
-      "Processes multiple medical documents, compares them, identifies discrepancies, answers questions, and provides page-level citations. Features reading-level toggles, source coverage badges, persistent chat history, voice input, and PDF export.",
-    tech: ["React", "Express", "Gemini API"],
+      "Schema-enforced Gemini pipeline comparing cross-document medical reports, identifying contradictions, unit mismatches, and temporal trends. Client-side PDF extraction guarantees that only relevant clinical text reaches the model, paired with page-level clickable citations.",
+    tech: ["React", "TypeScript", "Express", "Gemini API"],
     status: "shipped",
     links: [
       { label: "Repository", url: "https://github.com/sonawaneutkarsh/MedClarity" },
@@ -50,23 +94,14 @@ export const projects: Project[] = [
   },
   {
     slug: "esp32-plant-monitor",
-    title: "ESP32 Plant Monitor",
-    oneLiner: "Embedded soil-moisture monitor with email alerts",
-    description: "Capacitive soil sensor with calibrated ADC readings and averaging, connected over Wi-Fi with SMTP/Gmail notifications.",
-    tech: ["ESP32-C3", "C++", "Arduino"],
+    title: "ESP32 Soil Moisture Monitor",
+    oneLiner: "Embedded capacitive soil-moisture sensor with Wi-Fi alert daemon",
+    description:
+      "Low-power embedded telemetry system using an ESP32-C3 microcontroller, calibrated capacitive soil sensing, running window ADC noise filtering, and automated SMTP/Gmail alert dispatching.",
+    tech: ["ESP32-C3", "C++", "Arduino", "Embedded Systems"],
     status: "shipped",
     links: [
       { label: "Repository", url: "https://github.com/sonawaneutkarsh/esp32-soil-moisture-monitor" },
     ],
-  },
-  {
-    slug: "devvy",
-    title: "Devvy",
-    oneLiner: "A local Discord Rich Presence bridge for OpenCode, Command Code, and VS Code",
-    description:
-      "Devvy publishes local coding activity from OpenCode, Command Code, and VS Code to Discord Rich Presence through a single local daemon.\n\nOpenCode ──────┐\nVS Code ───────┤ → local HTTP daemon → Discord IPC → Discord\nCommand Code ──┘\n\nThe daemon is the only Discord IPC/RPC owner. Publishers communicate only with the local daemon over HTTP. No cloud service is required.\n\nThe system publishes safe activity metadata such as: project basename, file basename, language, git branch, model identifier, and activity label.\n\nIt does NOT send: source code, prompts, credentials, API keys, file contents, or absolute paths.\n\nComponents: Node daemon with HTTP API and Discord IPC client, VS Code extension, OpenCode integration, Command Code integration, and LaunchAgent integration for macOS.\n\nPriority system: OpenCode actively working → Command Code actively working → VS Code available → idle / clear. Each source uses heartbeats with expiration/TTL handling, and the daemon clears Discord presence when all sources disappear.\n\nTesting includes: daemon end-to-end tests, fallback tests, reconnect tests, VS Code behavior tests, Command Code integration tests, OpenCode plugin tests, multi-session tests, race-condition tests, privacy/leak tests, and asset tests.\n\nRequirements: macOS, Node.js, Discord desktop app, Discord Developer Portal application.",
-    tech: ["Node.js", "JavaScript", "TypeScript", "Shell", "Discord IPC"],
-    status: "shipped",
-    links: [{ label: "Repository", url: "https://github.com/sonawaneutkarsh/devvy" }],
   },
 ];

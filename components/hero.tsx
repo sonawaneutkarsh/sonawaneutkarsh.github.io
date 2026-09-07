@@ -1,130 +1,110 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+import { ArrowDown, ArrowUpRight, FileText, ArrowRight } from "lucide-react";
 import { education } from "@/data/education";
-import { projects } from "@/data/projects";
 import { contact } from "@/data/contact";
-import { EASE_OUT } from "@/lib/motion";
-import { useMode } from "@/components/mode-provider";
-
-const NAME = contact.name || "Utkarsh Sonawane";
-const featured = projects.find((p) => p.featured) ?? projects[0];
-
-const credentialParts = [
-  education[0].degree ? `${education[0].degree} — ${education[0].school}` : education[0].school,
-  education[0].gpa ? `GPA: ${education[0].gpa}` : null,
-  education[0].graduation ? `Expected graduation: ${education[0].graduation}` : null,
-].filter(Boolean) as string[];
-
-const credentialsLine = credentialParts.join(" · ");
-
-type Initial = boolean | { opacity: number; y: number };
+import { Container } from "@/components/container";
 
 export function Hero() {
-  const { mode } = useMode();
-  const reduceMotion = useReducedMotion();
-  const initial: Initial = reduceMotion ? false : { opacity: 0, y: 12 };
+  const edu = education[0];
 
   return (
-    <div id="top" className="flex min-h-[calc(100vh-3.5rem)] flex-col">
-      <div className="flex flex-1 items-center">
-        <div className="w-full">
-          {mode === "recruiter" ? (
-            <RecruiterHero initial={initial} />
-          ) : (
-            <ExperienceHero initial={initial} />
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
+    <div id="top" className="border-b border-line">
+      <Container className="py-20 sm:py-28 lg:py-32">
+        <div className="mx-auto max-w-3xl">
+          {/* Eyebrow & Status */}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="eyebrow">{contact.name}</span>
+            <span className="text-graphite font-mono text-xs">·</span>
+            <span className="font-mono text-xs text-graphite">
+              {edu.degree} · {edu.school}
+            </span>
+          </div>
 
-function RecruiterHero({ initial }: { initial: Initial }) {
-  return (
-    <motion.section
-      initial={initial}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, ease: EASE_OUT }}
-      className="mx-auto max-w-2xl text-center"
-    >
-      <h1 className="eyebrow">{NAME}</h1>
-      <p className="mt-6 text-graphite">{credentialsLine}</p>
-      <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-        <a
-          href="#projects"
-          className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm font-medium transition-colors hover:border-graphite"
-        >
-          View work
-          <ArrowDown className="h-4 w-4" aria-hidden="true" />
-        </a>
-        <a
-          href={`https://github.com/${contact.github}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-signal transition-colors hover:text-signal-700"
-        >
-          GitHub
-          <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-        </a>
-      </div>
-    </motion.section>
-  );
-}
+          {/* Main Statement */}
+          <h1 className="mt-6 text-3xl font-semibold tracking-tight text-ink sm:text-5xl lg:text-5xl lg:leading-[1.15]">
+            I build systems from first principles — backend infrastructure, algorithms, and grounded AI where decisions can be traced back to evidence.
+          </h1>
 
-function ExperienceHero({ initial }: { initial: Initial }) {
-  const metrics = featured.metrics?.slice(0, 3) ?? [];
+          <p className="mt-6 text-base leading-relaxed text-graphite sm:text-lg">
+            Undergraduate Computer Science honors student at Penn State (GPA 3.53/4.0, Dean&rsquo;s List, Capital Honors Program).
+            Focused on systems programming, deterministic data pipelines, neuroevolution from scratch, and zero-dependency local daemons.
+          </p>
 
-  return (
-    <section>
-      <div className="mx-auto max-w-2xl">
-        <motion.h1
-          initial={initial}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: EASE_OUT }}
-          className="eyebrow"
-        >
-          {NAME}
-        </motion.h1>
-        <motion.p
-          initial={initial}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: EASE_OUT, delay: 0.08 }}
-          className="mt-4 text-graphite"
-        >
-          {credentialsLine}
-        </motion.p>
-        <motion.article
-          initial={initial}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: EASE_OUT, delay: 0.16 }}
-          className="mt-8 rounded-lg border border-line bg-mist p-6 sm:p-8"
-        >
-          <p className="eyebrow">Featured work</p>
-          <h2 className="mt-3 text-xl font-medium tracking-tight">{featured.title}</h2>
-          <p className="mt-2 text-graphite">{featured.oneLiner}</p>
-          {metrics.length > 0 ? (
-            <div className="mt-5 flex flex-wrap gap-2">
-              {metrics.map((m) => (
-                <span
-                  key={m.label}
-                  className="rounded-md border border-line bg-paper px-2 py-1 font-mono text-[11px] text-graphite"
-                >
-                  {m.label}: {m.value}
-                </span>
-              ))}
+          {/* Action CTAs */}
+          <div className="mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
+            <a
+              href="#projects"
+              className="inline-flex items-center gap-2 rounded-full border border-line bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-all hover:opacity-90"
+            >
+              Selected Work
+              <ArrowDown className="h-4 w-4" aria-hidden="true" />
+            </a>
+
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-line bg-paper px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-mist"
+            >
+              <FileText className="h-4 w-4 text-signal" aria-hidden="true" />
+              View Résumé (PDF)
+            </a>
+
+            <a
+              href={`https://github.com/${contact.github}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-graphite transition-colors hover:text-ink"
+            >
+              GitHub
+              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+          </div>
+
+          {/* Flagship Highlight Banner */}
+          <div className="mt-12 rounded-xl border border-line bg-mist/60 p-5 sm:p-6 transition-colors hover:border-graphite/40">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <span className="inline-block h-2 w-2 rounded-full bg-signal" />
+                <span className="eyebrow text-ink">Flagship System</span>
+              </div>
+              <span className="font-mono text-xs text-graphite">1,041 Automated Tests · 0-Drift Math</span>
             </div>
-          ) : null}
-          <a
-            href="#projects"
-            className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-signal transition-colors hover:text-signal-700"
-          >
-            View project
-            <ArrowDown className="h-4 w-4" aria-hidden="true" />
-          </a>
-        </motion.article>
-      </div>
-    </section>
+
+            <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink sm:text-2xl">
+              Nytr: Evidence-Driven Nutrition & Training Decision Platform
+            </h2>
+
+            <p className="mt-2 text-sm text-graphite leading-relaxed">
+              Eliminating digital health hallucinations. Integrates Penn State dining menus, Apple HealthKit telemetry,
+              and Hevy workout revisions via a FastAPI modular monolith, Supabase PostgreSQL, and a native SwiftUI companion client.
+            </p>
+
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t border-line/60 pt-4">
+              <div className="flex flex-wrap gap-2">
+                {["Python", "FastAPI", "PostgreSQL", "SwiftUI", "HealthKit", "Docker"].map((tech) => (
+                  <span
+                    key={tech}
+                    className="rounded-md border border-line bg-paper px-2 py-0.5 font-mono text-[11px] text-graphite"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+
+              <Link
+                href="/projects/nytr"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-signal transition-colors hover:text-signal-700"
+              >
+                Read Technical Case Study
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </Container>
+    </div>
   );
 }
