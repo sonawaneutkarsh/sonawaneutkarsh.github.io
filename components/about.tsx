@@ -14,21 +14,24 @@ export function About() {
 
           <div className="md:col-span-2 space-y-5 text-base text-graphite leading-relaxed">
             <p>
-              Most of my projects start with a problem I keep running into. I like building things that
-              become part of my routine instead of one-off demos. Nytr is the clearest example &mdash; I
-              genuinely use it every day to guide my nutrition and training. Devvy came from wanting my
-              development setup to work the way I wanted without manually managing everything around it.
+              I started building things because I wanted to improve parts of my own day-to-day life.
+              I like making software that becomes part of my routine instead of something I build once
+              and never use again. Nytr is a good example. I train regularly, and I wanted something
+              that could scan the dining options at Penn State each day and recommend meals that fit
+              my nutrition goals. So I built it. I genuinely use Nytr every day to help make decisions
+              about my nutrition and training.
             </p>
             <p>
-              Not everything I build starts as a practical tool. Sometimes I build something because I
-              want to understand it properly. Clage came from wanting to understand neuroevolution deeply
-              enough to implement NEAT myself instead of treating it as a library call. That&rsquo;s usually
-              how I learn: build the thing, use it, and then keep digging into the layers underneath.
+              Not everything I build starts with a practical problem, though. Sometimes I build something
+              simply because I want to understand how it works. When I started tinkering with autonomous
+              systems, I became interested in how behavior could emerge from the algorithms underneath
+              them. That led me to neuroevolution and eventually to Clage, where I implemented NEAT myself
+              instead of treating it as a library call. That&rsquo;s usually how I learn: build something,
+              understand it from the inside, and keep improving it as I learn more.
             </p>
             <p>
-              Right now I&rsquo;m spending most of my time around LLMs, agentic systems, and backend
-              infrastructure &mdash; especially the problem of turning powerful AI systems into tools
-              reliable enough to actually use every day.
+              Right now, I&rsquo;m spending most of my time exploring LLMs, agentic systems, and backend
+              infrastructure.
             </p>
           </div>
         </div>

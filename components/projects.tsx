@@ -11,15 +11,10 @@ export function Projects() {
     <section id="projects" className="scroll-mt-14 border-b border-line">
       <Container className="py-20 sm:py-24">
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2">
-          <div>
-            <h2 className="eyebrow">Projects</h2>
-            <p className="mt-1 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-              Selected Work
-            </p>
-          </div>
-          <p className="font-mono text-xs text-graphite">
-            Sorted by engineering depth
+        <div>
+          <h2 className="eyebrow">Projects</h2>
+          <p className="mt-1 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+            Selected Work
           </p>
         </div>
 
@@ -160,7 +155,7 @@ export function Projects() {
               {secondaryProjects.map((project) => (
                 <div
                   key={project.slug}
-                  className="rounded-lg border border-line bg-paper p-6 transition-colors hover:border-graphite/40"
+                  className="flex h-full flex-col rounded-lg border border-line bg-paper p-6 transition-colors hover:border-graphite/40"
                 >
                   <h4 className="text-lg font-semibold tracking-tight text-ink">
                     {project.title}
@@ -184,7 +179,7 @@ export function Projects() {
                   </div>
 
                   {project.links && project.links.length > 0 ? (
-                    <div className="mt-5 flex flex-wrap gap-3 border-t border-line/60 pt-3">
+                    <div className="mt-5 flex flex-wrap gap-3 border-t border-line/60 pt-3 mt-auto">
                       {project.links.map((link) => (
                         <a
                           key={link.label}

@@ -12,8 +12,7 @@ export function Contact() {
             Get in touch.
           </p>
           <p className="mt-4 text-base text-graphite leading-relaxed">
-            Interested in backend infrastructure, systems programming, or undergraduate research collaboration.
-            Always open to discussing engineering problems.
+            I&rsquo;m always open to discussing LLMs, agentic systems, backend infrastructure, or undergraduate research. Feel free to reach out.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
@@ -35,6 +34,16 @@ export function Contact() {
               Download Résumé (PDF)
             </a>
           </div>
+
+          <p className="mt-4 text-sm text-graphite">
+            You can also reach me directly at{" "}
+            <a
+              href={`mailto:${contact.personalEmail || "utkarshsonawane67@gmail.com"}`}
+              className="text-ink underline underline-offset-4 transition-colors hover:text-signal"
+            >
+              {contact.personalEmail || "utkarshsonawane67@gmail.com"}
+            </a>
+          </p>
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-sm text-graphite">
             <a

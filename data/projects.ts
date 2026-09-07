@@ -65,7 +65,7 @@ export const projects: Project[] = [
     title: "ScholarAI",
     oneLiner: "AI platform for discovering and verifying Indian government schemes across 1,000+ programs",
     description:
-      "Built for the USAII Global AI Hackathon 2026 (6,081+ participants worldwide, 5-person team) — Finalist. Built the complete data engineering pipeline: scraped and normalized 1,000+ complex schemes via regex-based extraction into structured relational models, generated high-dimensional semantic embeddings, and built batched loaders into PostgreSQL with pgvector for hybrid retrieval.",
+      "Built for the USAII Global AI Hackathon 2026 (6,081+ participants worldwide, 5-person team) — Finalist. As the Data Engineer, I built the complete data engineering pipeline: scraped and normalized 1,000+ complex schemes via regex-based extraction into structured relational models, generated high-dimensional semantic embeddings, and built batched loaders into PostgreSQL with pgvector for hybrid retrieval.",
     role: "Data Engineer · Data Pipeline, Relational Schema & Vector Database",
     tech: ["Python", "PostgreSQL", "pgvector", "FastAPI", "Selenium", "RAG"],
     featured: false,

@@ -46,10 +46,10 @@ export function Experience() {
             </div>
           </div>
 
-          {/* Column 2: Honors & Certifications */}
+          {/* Column 2: Honors & Additional Learning */}
           <div className="space-y-6">
             <h3 className="font-mono text-xs font-semibold uppercase tracking-wider text-graphite">
-              Honors & Certifications
+              Honors & Additional Learning
             </h3>
 
             <div className="rounded-lg border border-line bg-paper p-6 space-y-3">
@@ -75,10 +75,13 @@ export function Experience() {
 
               <div className="flex items-start gap-3 border-t border-line/60 pt-3">
                 <BookOpen className="h-5 w-5 text-graphite shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-semibold text-ink text-sm">Continuous Learning</p>
-                  <p className="text-xs text-graphite mt-0.5">
-                    Practical Deep Learning for Coders (fast.ai) · Machine Learning Specialization (DeepLearning.ai) · Ethics of AI (University of Helsinki).
+                <div className="space-y-1">
+                  <p className="font-semibold text-ink text-sm">Additional Learning</p>
+                  <p className="text-xs text-graphite">
+                    <span className="font-medium text-ink">Completed:</span> Ethics of AI (University of Helsinki) · AI Essentials (Penn State)
+                  </p>
+                  <p className="text-xs text-graphite">
+                    <span className="font-medium text-ink">In Progress:</span> Machine Learning Specialization (DeepLearning.AI) · Practical Deep Learning for Coders (fast.ai)
                   </p>
                 </div>
               </div>

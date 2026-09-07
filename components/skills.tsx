@@ -5,15 +5,10 @@ export function Skills() {
   return (
     <section id="skills" className="scroll-mt-14 border-b border-line">
       <Container className="py-20 sm:py-24">
-        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2">
-          <div>
-            <h2 className="eyebrow">Technical Skills</h2>
-            <p className="mt-1 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-              Tools I use
-            </p>
-          </div>
-          <p className="font-mono text-xs text-graphite">
-            Curated by daily engineering use
+        <div>
+          <h2 className="eyebrow">Technical Skills</h2>
+          <p className="mt-1 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+            Tools I use
           </p>
         </div>
 

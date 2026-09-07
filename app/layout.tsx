@@ -65,7 +65,7 @@ export default function RootLayout({
           <footer className="border-t border-line mt-16">
             <Container className="flex flex-col sm:flex-row h-auto sm:h-16 py-6 sm:py-0 items-center justify-between gap-4">
               <p className="text-sm text-graphite">
-                © {new Date().getFullYear()} {contact.name}. Grounded in first principles.
+                © {new Date().getFullYear()} {contact.name}.
               </p>
               <div className="flex items-center gap-6 text-sm text-graphite">
                 <a
