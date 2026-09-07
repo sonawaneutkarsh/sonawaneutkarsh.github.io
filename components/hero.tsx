@@ -78,7 +78,7 @@ export function Hero() {
             </h2>
 
             <p className="mt-2 text-sm text-graphite leading-relaxed">
-              Eliminating digital health hallucinations. Integrates Penn State dining menus, Apple HealthKit telemetry,
+              Separating authoritative source data, deterministic computation, and user-approved policy changes. Integrates Penn State dining menus, Apple HealthKit telemetry,
               and Hevy workout revisions via a FastAPI modular monolith, Supabase PostgreSQL, and a native SwiftUI companion client.
             </p>
 

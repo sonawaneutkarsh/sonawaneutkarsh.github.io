@@ -40,7 +40,8 @@ export default function NytrCaseStudy() {
           </h1>
 
           <p className="mt-4 text-lg leading-relaxed text-graphite sm:text-xl">
-            A personal decision system built from first principles to eliminate digital health hallucinations.
+            A personal decision system separating authoritative source data, deterministic computation,
+            and user-approved policy changes so constrained decisions do not depend on non-authoritative estimates.
             Combines Penn State dining menus, Apple HealthKit telemetry, and Hevy workout data via a FastAPI
             modular monolith, Supabase PostgreSQL, and a native SwiftUI iOS client.
           </p>
@@ -72,13 +73,11 @@ export default function NytrCaseStudy() {
           <section className="space-y-4">
             <h2 className="text-2xl font-semibold tracking-tight text-ink">1. Overview & System Philosophy</h2>
             <p>
-              Most fitness and diet applications operate on fragile assumptions: they trust uncalibrated user inputs,
-              rely on probabilistic AI chatbots to guess portion weights, and silently mutate historical records.
-              When apps auto-adjust daily calorie allowances based on questionable Apple Watch burn estimates (&ldquo;exercise-calorie eat-back&rdquo;),
-              users routinely blow their real dietary budgets.
+              Many consumer nutrition tools couple unverified inputs with heuristic auto-adjustments, silently mutating historical records or altering daily calorie targets based on noisy wearable burn estimates (&ldquo;exercise-calorie eat-back&rdquo;).
+              When decision logic relies on non-authoritative estimates, recommendations quickly diverge from measurable progress.
             </p>
             <p>
-              <strong>Nytr</strong> was conceived from an uncompromising engineering premise:
+              Nytr separates authoritative source data, deterministic computation, and user-approved policy changes so constrained decisions do not depend on non-authoritative estimates:
             </p>
             <div className="my-6 rounded-lg border border-line bg-mist p-6 text-center">
               <span className="font-mono text-sm tracking-widest text-graphite uppercase">Core Principle</span>
@@ -203,7 +202,7 @@ export default function NytrCaseStudy() {
                   </h3>
                 </div>
                 <p className="mt-3 text-sm text-graphite">
-                  Syncing mobile health telemetry over cellular networks without state corruption requires
+                  Syncing mobile health telemetry over cellular networks requires
                   distinguishing between transient query state and durable storage:
                 </p>
                 <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-graphite">
@@ -259,13 +258,13 @@ export default function NytrCaseStudy() {
                   </h3>
                 </div>
                 <p className="mt-3 text-sm text-graphite">
-                  Standard IEEE-754 floating-point numbers accumulate rounding artifacts that corrupt calorie and macronutrient sums over time:
+                  Using Decimal/numeric arithmetic avoids binary floating-point rounding error in persisted nutrition and body-mass calculations:
                 </p>
                 <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-graphite">
                   <li>
                     <strong className="text-ink">End-to-End Decimal Types:</strong> All continuous quantities (calories, protein, carbs, fats, body mass)
                     parse through Python&rsquo;s <code className="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">Decimal</code> module and persist into
-                    PostgreSQL <code className="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">numeric(6,3)</code> columns. Deterministic Decimal arithmetic eliminates floating-point rounding drift.
+                    PostgreSQL <code className="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">numeric(6,3)</code> columns, maintaining exact precision across domain calculations and database storage.
                   </li>
                   <li>
                     <strong className="text-ink">Strict Anti-Eat-Back Doctrine:</strong> Workouts observed via HealthKit or Hevy provide timing context
@@ -321,7 +320,7 @@ export default function NytrCaseStudy() {
                 <p className="font-mono text-2xl font-bold text-ink">Dual Anchors</p>
                 <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-graphite">Sync Engine</p>
                 <p className="mt-2 text-xs text-graphite">
-                  Durable keychain anchors and tombstone semantics guaranteeing idempotent mobile telemetry synchronization.
+                  Durable anchors and idempotent writes support replay-safe mobile synchronization.
                 </p>
               </div>
               <div className="rounded-lg border border-line bg-paper p-5">
@@ -339,10 +338,8 @@ export default function NytrCaseStudy() {
             <h2 className="text-2xl font-semibold tracking-tight text-ink">6. Engineering Lessons</h2>
             <div className="space-y-3 text-sm text-graphite">
               <p>
-                <strong className="text-ink">1. First-principles modeling beats LLM wrappers:</strong> Generating meal plans with
-                generative AI sounds modern, but large language models struggle with integer programming, fail exact dietary exclusions,
-                and hallucinate nutritional facts. A deterministic scoring engine running over verified, versioned database rows is fast,
-                explainable, and eliminates entire classes of LLM hallucination and constraint violation.
+                <strong className="text-ink">1. Use deterministic computation where constraints must be exact:</strong> Meal
+                scoring, dietary exclusions, target math, and historical reconstruction operate over verified, versioned data rather than probabilistic model output.
               </p>
               <p>
                 <strong className="text-ink">2. Treat data provenance as a tier-1 property:</strong> In production systems, knowing
@@ -350,8 +347,8 @@ export default function NytrCaseStudy() {
                 as the value itself.
               </p>
               <p>
-                <strong className="text-ink">3. Immutability creates tranquility:</strong> By enforcing immutable insert-only records
-                and explicit tombstone transitions at the database level, race conditions, mutation bugs, and accidental historical overwrites are systematically prevented.
+                <strong className="text-ink">3. Contained failure modes:</strong> Append-only
+                history, controlled tombstones, and idempotent writes prevent specific mutation, replay, and accidental-overwrite failure modes.
               </p>
             </div>
           </section>

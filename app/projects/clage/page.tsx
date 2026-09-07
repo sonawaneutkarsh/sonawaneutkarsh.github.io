@@ -203,7 +203,7 @@ export default function ClageCaseStudy() {
             <h2 className="text-2xl font-semibold tracking-tight text-ink">4. Behavioral Diversity & Empirical Rigor</h2>
             <p>
               In evolutionary simulations, it is easy to mistake accidental spatial clustering for genuine behavioral intelligence.
-              To measure whether populations actually developed diverse survival strategies, I designed 5 quantitative behavioral metrics computed from per-tick traces:
+              To measure whether populations actually developed diverse survival strategies, I designed a set of quantitative behavioral metrics computed from per-tick traces, including:
             </p>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

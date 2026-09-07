@@ -6,7 +6,7 @@ export const projects: Project[] = [
     title: "Nytr",
     oneLiner: "An evidence-driven personal nutrition and training decision platform integrating campus dining, HealthKit, and Hevy",
     description:
-      "A production-tested personal decision system built on a FastAPI modular monolith, PostgreSQL/Supabase, and a native SwiftUI/HealthKit iOS companion. Eliminates fitness app hallucinations through strict source authority, immutable versioned evidence, idempotent dual-anchor sync, PostgreSQL RLS, and deterministic Decimal calculations.",
+      "A production-tested personal decision system built on a FastAPI modular monolith, PostgreSQL/Supabase, and a native SwiftUI/HealthKit iOS companion. Separates authoritative source data, deterministic computation, and user-approved policy changes through strict source authority, immutable versioned evidence, replay-safe mobile sync, PostgreSQL RLS, and deterministic Decimal calculations.",
     role: "Solo Creator · Systems Architecture, Backend, Database & Native iOS",
     tech: ["Python", "FastAPI", "PostgreSQL", "Supabase", "SwiftUI", "HealthKit", "Hevy API", "Docker", "Pytest"],
     featured: true,
