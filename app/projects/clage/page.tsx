@@ -121,14 +121,15 @@ export default function ClageCaseStudy() {
                 </div>
                 <p className="mt-3 text-sm text-graphite">
                   Structural additions initially decrease fitness because new connections have unoptimized weights.
-                  Clage partitions the population into evolutionary niches (species) using a genetic compatibility distance metric:
+                  Clage partitions the population into evolutionary niches (species) using Kenneth Stanley&rsquo;s compatibility distance:
                 </p>
                 <div className="mt-2 rounded bg-mist p-2 font-mono text-xs text-ink">
                   &delta; = (c1 &middot; E / N) + (c2 &middot; D / N) + c3 &middot; &Delta;W
                 </div>
                 <p className="mt-2 text-xs text-graphite">
-                  where E is excess genes, D is disjoint genes, and &Delta;W is average weight difference. Species compete internally through shared fitness,
-                  protecting structural innovations until they have time to optimize.
+                  where E is excess genes, D is disjoint genes, and &Delta;W is average weight difference across matching genes.
+                  The normalizer N is set to 1 for small genomes (&lt; 20 connections) to prevent distance collapse. Species maintain
+                  persistent representative champions, age counters, and stagnation tracking with explicit shared fitness.
                 </p>
               </div>
 
@@ -138,9 +139,10 @@ export default function ClageCaseStudy() {
                   <h3 className="text-lg font-semibold text-ink">Phenotype Network Construction</h3>
                 </div>
                 <p className="mt-3 text-sm text-graphite">
-                  Clage decodes arbitrary genome connection lists into feed-forward neural networks.
-                  The builder handles cycle detection, recurrent connection isolation, and arbitrary hidden-layer topologies,
-                  executing node activations sequentially with configurable activation functions (sigmoid, tanh, ReLU).
+                  Clage decodes genome connection lists into executable feed-forward neural networks in pure Python.
+                  A deterministic evaluation order is established using Kahn&rsquo;s topological sort with min-heap tie-breaking on node IDs.
+                  Active graph cycles raise a <code className="rounded bg-mist px-1 py-0.5 font-mono text-xs">ValueError</code> at decode time
+                  (strictly feed-forward, cyclic graphs rejected at decode time), and node activations compute <code className="rounded bg-mist px-1 py-0.5 font-mono text-xs">math.tanh</code> over incoming weighted sums plus bias.
                 </p>
               </div>
 
@@ -150,7 +152,7 @@ export default function ClageCaseStudy() {
                   <h3 className="text-lg font-semibold text-ink">Benchmark Validation</h3>
                 </div>
                 <p className="mt-3 text-sm text-graphite">
-                  Before deploying the engine in an open-ended world, the evolutionary implementation was validated across fixed random seeds against:
+                  Before deploying the engine in an open-ended simulation, the evolutionary implementation was validated across fixed random seeds against:
                   <strong>OR</strong>, <strong>AND</strong>, non-linearly separable <strong>XOR</strong> (requiring evolved hidden nodes),
                   and continuous <strong>sine wave regression</strong>.
                 </p>
@@ -162,20 +164,36 @@ export default function ClageCaseStudy() {
           <section className="space-y-4">
             <h2 className="text-2xl font-semibold tracking-tight text-ink">3. 2D Artificial-Life Environment</h2>
             <p>
-              Once benchmarked, the NEAT engine was connected to an embodied 2D grid world:
+              Once benchmarked, the NEAT engine was connected to an embodied 2D walled grid world with energy dynamics:
             </p>
-            <ul className="list-disc space-y-2 pl-5 text-sm text-graphite">
+            <ul className="list-disc space-y-2.5 pl-5 text-sm text-graphite">
               <li>
-                <strong className="text-ink">Sensory Inputs:</strong> Organisms receive egocentric sensory rays: distance to walls,
-                proximity to food items, current internal energy level, and velocity.
+                <strong className="text-ink">9-Number Observation Vector:</strong> At every tick, an organism observes its surroundings via a normalized 9-element array:
+                <code className="mt-1 block rounded bg-mist p-2 font-mono text-xs text-ink">
+                  [food_dx, food_dy, food_density, organism_density, normalized_energy, boundary_x, boundary_y, prev_move, prev_eat]
+                </code>
+                where <code className="font-mono text-xs">food_dx</code> and <code className="font-mono text-xs">food_dy</code> are normalized offsets to the nearest food item in [-1.0, 1.0],
+                <code className="font-mono text-xs">food_density</code> and <code className="font-mono text-xs">organism_density</code> count entities within a radial window,
+                <code className="font-mono text-xs">normalized_energy</code> represents remaining energy fraction,
+                <code className="font-mono text-xs">boundary_x</code> / <code className="font-mono text-xs">boundary_y</code> measure wall proximity (1.0 at walls, 0.0 at center),
+                and <code className="font-mono text-xs">prev_move</code> / <code className="font-mono text-xs">prev_eat</code> are binary indicators of the organism&rsquo;s previous action.
               </li>
               <li>
-                <strong className="text-ink">Action Outputs:</strong> Motor outputs govern locomotion (forward/backward thrust, turning angle)
-                and metabolic reproduction triggers.
+                <strong className="text-ink">4 Discrete Network Actions:</strong> The neural network outputs 4 values; the organism executes the action corresponding to <code className="font-mono text-xs">argmax(outputs)</code>:
+                <div className="mt-1 grid grid-cols-2 gap-2 font-mono text-xs text-ink sm:grid-cols-4">
+                  <span className="rounded bg-mist p-1.5 text-center">0: MOVE (Forward)</span>
+                  <span className="rounded bg-mist p-1.5 text-center">1: TURN_LEFT (90°)</span>
+                  <span className="rounded bg-mist p-1.5 text-center">2: TURN_RIGHT (90°)</span>
+                  <span className="rounded bg-mist p-1.5 text-center">3: EAT (Facing Cell)</span>
+                </div>
               </li>
               <li>
-                <strong className="text-ink">Thermodynamic Constraints:</strong> Every action burns energy. Survival requires locating
-                food patches that regenerate according to configurable spatial distributions.
+                <strong className="text-ink">Lifecycle Reproduction (Not a Neural Trigger):</strong> Reproduction is not an action emitted by the network.
+                Instead, it is a separate lifecycle event evaluated after action execution and metabolic deduction: if an organism&rsquo;s energy meets or exceeds the reproduction threshold and an adjacent grid cell is vacant, the organism reproduces asexually, transferring a configured energy fraction to an offspring placed in the adjacent cell.
+              </li>
+              <li>
+                <strong className="text-ink">Metabolic & World Dynamics:</strong> Each tick incurs an unavoidable baseline metabolic cost.
+                Food regenerates dynamically across configurable spatial distributions to prevent trivial static feeding.
               </li>
             </ul>
           </section>
@@ -185,31 +203,42 @@ export default function ClageCaseStudy() {
             <h2 className="text-2xl font-semibold tracking-tight text-ink">4. Behavioral Diversity & Empirical Rigor</h2>
             <p>
               In evolutionary simulations, it is easy to mistake accidental spatial clustering for genuine behavioral intelligence.
-              To measure whether populations actually developed diverse survival strategies, I designed quantitative behavioral metrics:
+              To measure whether populations actually developed diverse survival strategies, I designed 5 quantitative behavioral metrics computed from per-tick traces:
             </p>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="rounded-lg border border-line bg-mist/30 p-4">
                 <p className="font-mono text-xs font-semibold text-ink uppercase">Action Entropy</p>
                 <p className="mt-1 text-xs text-graphite">
-                  Shannon entropy across motor output distributions, distinguishing active navigators from degenerate static agents.
+                  Shannon entropy across the 4-action distribution, distinguishing active multi-action policies from degenerate fixed agents.
+                </p>
+              </div>
+              <div className="rounded-lg border border-line bg-mist/30 p-4">
+                <p className="font-mono text-xs font-semibold text-ink uppercase">Transition Entropy Rate</p>
+                <p className="mt-1 text-xs text-graphite">
+                  Conditional entropy H(a<sub>t</sub> | a<sub>t-1</sub>) measuring sequential action structure and temporal predictability beyond raw marginal frequencies.
                 </p>
               </div>
               <div className="rounded-lg border border-line bg-mist/30 p-4">
                 <p className="font-mono text-xs font-semibold text-ink uppercase">Spatial Grid Coverage</p>
                 <p className="mt-1 text-xs text-graphite">
-                  Occupancy ratio across discrete spatial bins to quantify exploratory behavior versus localized trapping.
+                  Fraction of distinct grid cells visited over the total world area, quantifying dispersion without assuming navigation intent.
+                </p>
+              </div>
+              <div className="rounded-lg border border-line bg-mist/30 p-4">
+                <p className="font-mono text-xs font-semibold text-ink uppercase">Food Alignment Cosine</p>
+                <p className="mt-1 text-xs text-graphite">
+                  Mean cosine between effective movement vectors and nearest-food direction vectors, tracking statistical directional coupling.
                 </p>
               </div>
             </div>
 
             <div className="mt-4 rounded-lg border border-line bg-paper p-5">
-              <h3 className="text-sm font-semibold text-ink">Empirical Finding: Confound Identification</h3>
+              <h3 className="text-sm font-semibold text-ink">Empirical Finding: Food Density Confound</h3>
               <p className="mt-2 text-sm text-graphite">
-                During multi-condition experiments, initial data suggested that one mutation rate produced significantly higher &ldquo;behavioral diversity.&rdquo;
-                However, deeper investigation revealed that the metric was confounded by local food replenishment density:
-                organisms in dense food zones moved less, skewing the naive metric.
-                Once isolated, the metric was corrected and validated across multi-seed ablation runs.
+                During experimental sweeps across food abundance conditions, initial analytics appeared to show that certain conditions yielded significantly higher &ldquo;food navigation intelligence.&rdquo;
+                However, rigorous ablation revealed that <code className="rounded bg-mist px-1 py-0.5 font-mono text-xs">food_alignment_cosine</code> was base-rate confounded by local food replenishment density: in dense food environments, random walks naturally align with food items purely due to geometric proximity.
+                Once diagnosed, food alignment was excluded from cross-condition comparisons and restricted strictly to within-condition baselines with equalized resource distributions.
               </p>
             </div>
           </section>

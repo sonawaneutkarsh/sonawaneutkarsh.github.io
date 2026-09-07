@@ -15,7 +15,7 @@ export const projects: Project[] = [
       { label: "Core Philosophy", value: "DATA → CALCULATION → DECISION" },
       { label: "Backend Tests", value: "1,041 automated tests" },
       { label: "Sync Engine", value: "Dual-anchor idempotent sync" },
-      { label: "Precision", value: "0-drift Decimal arithmetic" },
+      { label: "Precision", value: "Deterministic Decimal arithmetic" },
     ],
     status: "shipped",
     links: [

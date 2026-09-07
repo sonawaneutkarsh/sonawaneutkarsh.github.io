@@ -28,7 +28,7 @@ export function Hero() {
           </h1>
 
           <p className="mt-6 text-base leading-relaxed text-graphite sm:text-lg">
-            Undergraduate Computer Science honors student at Penn State (GPA 3.53/4.0, Dean&rsquo;s List, Capital Honors Program).
+            Undergraduate Computer Science student at Penn State (GPA 3.53/4.0, Dean&rsquo;s List, Capital Honors Program).
             Focused on systems programming, deterministic data pipelines, neuroevolution from scratch, and zero-dependency local daemons.
           </p>
 
@@ -70,7 +70,7 @@ export function Hero() {
                 <span className="inline-block h-2 w-2 rounded-full bg-signal" />
                 <span className="eyebrow text-ink">Flagship System</span>
               </div>
-              <span className="font-mono text-xs text-graphite">1,041 Automated Tests · 0-Drift Math</span>
+              <span className="font-mono text-xs text-graphite">1,041 Automated Tests · Deterministic Decimal Math</span>
             </div>
 
             <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink sm:text-2xl">

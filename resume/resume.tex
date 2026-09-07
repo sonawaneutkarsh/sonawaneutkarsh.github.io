@@ -94,7 +94,7 @@
 \resumeSubheading
   {The Pennsylvania State University}
   {Harrisburg, PA}
-  {Bachelor of Science in Computer Science (Honors)}
+  {Bachelor of Science in Computer Science}
   {Expected December 2028}
 
 \resumeItemListStart
@@ -126,8 +126,8 @@
   {Nytr --- Evidence-Driven Decision System $|$ \emph{Python, FastAPI, PostgreSQL, SwiftUI, HealthKit}}{2026}
 \resumeItemListStart
   \resumeItem{Engineered an evidence-driven decision system integrating Penn State dining menus, Apple HealthKit, and Hevy through a FastAPI modular backend and native SwiftUI companion client.}
-  \resumeItem{Designed immutable/versioned pipelines for nutrition history, body-mass trends, target policies, and workout revisions with PostgreSQL RLS, idempotent sync via durable anchors, and deterministic Decimal analytics.}
-  \resumeItem{Enforced strict dietary gates, 0-drift Decimal nutrition calculations, and tombstone deletion semantics; validated production correctness with 1,000+ automated tests and physical iPhone verification.}
+  \resumeItem{Designed immutable/versioned pipelines for nutrition history, 28-day Theil--Sen body-mass trends, target policies, and workout revisions with PostgreSQL RLS, idempotent sync via durable anchors, and deterministic Decimal analytics.}
+  \resumeItem{Enforced strict dietary eligibility gates, deterministic Decimal nutrition calculations, and tombstone deletion semantics; validated production correctness with 1,000+ automated tests and physical-device verification.}
 \resumeItemListEnd
 
 \resumeProjectHeading
@@ -142,7 +142,7 @@
   {Devvy --- Developer Infrastructure for Discord IPC $|$ \emph{TypeScript, Node.js, macOS launchd}}{2026}
 \resumeItemListStart
   \resumeItem{Built a zero-dependency background daemon speaking Discord's local IPC protocol directly (Unix socket discovery, binary opcode framing, backoff reconnect) to coordinate Rich Presence across 3 developer environments.}
-  \resumeItem{Designed priority arbitration (OpenCode $\to$ Command Code $\to$ VS Code) with TTL-based heartbeat expiry; validated with a 22-script test suite covering race conditions, reconnect resilience, and memory leaks.}
+  \resumeItem{Designed priority arbitration (OpenCode $\to$ Command Code $\to$ VS Code) with TTL-based heartbeat expiry; validated with a 22-script test suite covering race conditions, reconnect resilience, and IPC socket lifecycle.}
 \resumeItemListEnd
 
 \resumeProjectHeading

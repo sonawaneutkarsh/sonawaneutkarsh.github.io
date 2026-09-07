@@ -40,3 +40,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local review artifacts and temporary files
+/screenshots/
+/resume/*.png
+/resume/resume.pdf
+/resume/resume_original.tex
+*.aux
+*.log
+*.out
+

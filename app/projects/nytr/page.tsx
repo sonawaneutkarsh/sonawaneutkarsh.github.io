@@ -53,15 +53,15 @@ export default function NytrCaseStudy() {
             </div>
             <div>
               <p className="eyebrow">Math Precision</p>
-              <p className="mt-1 font-mono text-lg font-semibold text-ink">0-Drift Decimal</p>
+              <p className="mt-1 font-mono text-lg font-semibold text-ink">Deterministic Decimal</p>
             </div>
             <div>
               <p className="eyebrow">Sync Engine</p>
               <p className="mt-1 font-mono text-lg font-semibold text-ink">Dual Anchors</p>
             </div>
             <div>
-              <p className="eyebrow">Database RLS</p>
-              <p className="mt-1 font-mono text-lg font-semibold text-ink">Strict Immutable</p>
+              <p className="eyebrow">Database Security</p>
+              <p className="mt-1 font-mono text-lg font-semibold text-ink">RLS & Tombstones</p>
             </div>
           </div>
         </header>
@@ -169,21 +169,21 @@ export default function NytrCaseStudy() {
 │             ▼                          ▼                              ▼                  │
 │  ┌────────────────────────────────────────────────────────────────────────────────────┐  │
 │  │                               Pure Domain Engine                                   │  │
-│  │  • Deterministic Decimal Arithmetic (0 float drift)                                │  │
+│  │  • Deterministic Decimal Arithmetic (exact numeric precision)                      │  │
 │  │  • Schedule Resolution (Class schedule + workout timing context)                   │  │
-│  │  • Strict Dietary Gate (owner-chicken-seafood-veg.v1)                              │  │
+│  │  • Strict Dietary Eligibility Gates (Diet-Specific Filtering)                     │  │
 │  │  • Bounded Candidate Scoring & Frozen Plan Generation (SHA-256 Fingerprint)        │  │
-│  │  • 28-Day Exponential Weight Trend & Explicit Target Review Policy                 │  │
+│  │  • 28-Day Theil-Sen Body-Mass Trend & Explicit Target Review Policy                │  │
 │  └─────────────────────────────────────┬──────────────────────────────────────────────┘  │
 └────────────────────────────────────────┼─────────────────────────────────────────────────┘
-                                         │ Trusted Service Role / Authenticated RLS
+                                         │ Authenticated RLS / Backend Service Connection
                                          ▼
 ┌──────────────────────────────────────────────────────────────────────────────────────────┐
 │                                 Supabase PostgreSQL                                      │
-│  • Immutable Plan Run & Items (SELECT/INSERT only, no UPDATE/DELETE)                     │
-│  • Versioned Target Policies with Mandatory Audit Decision Log                           │
-│  • Immutable Menu Label Observations & Accepted Page Membership                          │
-│  • Row-Level Security (RLS) bound to authenticated JWT identity                          │
+│  • Immutable Plan Runs, Items & Target Policy Versions (Append-Only)                     │
+│  • Controlled Tombstone Updates (tombstoned_at) on HealthKit Sync Records                │
+│  • Shared Dining Menus & Station Cache (Read via Backend Service Connection)             │
+│  • User-Owned Tables Protected by Row-Level Security (RLS) Bound to Auth Identity        │
 └──────────────────────────────────────────────────────────────────────────────────────────┘`}
               </pre>
             </div>
@@ -236,12 +236,10 @@ export default function NytrCaseStudy() {
                 </p>
                 <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-graphite">
                   <li>
-                    <strong className="text-ink">Hard Database Privileges:</strong> In PostgreSQL, the{" "}
-                    <code className="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">authenticated</code> role is granted only{" "}
-                    <code className="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">SELECT</code> and{" "}
-                    <code className="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">INSERT</code> permissions on core plan tables.
-                    There is zero <code className="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">UPDATE</code> or{" "}
-                    <code className="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">DELETE</code> capability granted to the client.
+                    <strong className="text-ink">PostgreSQL Row-Level Security:</strong> User-owned tables enforce RLS policies bound directly to the authenticated user ID. Plan runs, daily items, and target policy versions are strictly immutable insert-only records.
+                  </li>
+                  <li>
+                    <strong className="text-ink">Controlled Tombstone Semantics:</strong> Health telemetry synchronizations avoid physical row deletion in favor of explicit <code className="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">tombstoned_at</code> timestamps, maintaining historical auditability. Shared global dining menus and station caches are accessed via a dedicated backend service connection without per-user RLS.
                   </li>
                   <li>
                     <strong className="text-ink">Versioned Pinning:</strong> When a daily plan is generated, it pins the exact{" "}
@@ -257,17 +255,17 @@ export default function NytrCaseStudy() {
                 <div className="flex items-center gap-3">
                   <Cpu className="h-5 w-5 text-signal" aria-hidden="true" />
                   <h3 className="text-lg font-semibold text-ink">
-                    Zero-Drift Decimal Math & No Exercise Eat-Back
+                    Deterministic Decimal Arithmetic & No Exercise Eat-Back
                   </h3>
                 </div>
                 <p className="mt-3 text-sm text-graphite">
-                  IEEE-754 floating-point numbers accumulate rounding artifacts that corrupt calorie and macronutrient sums over weeks:
+                  Standard IEEE-754 floating-point numbers accumulate rounding artifacts that corrupt calorie and macronutrient sums over time:
                 </p>
                 <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-graphite">
                   <li>
                     <strong className="text-ink">End-to-End Decimal Types:</strong> All continuous quantities (calories, protein, carbs, fats, body mass)
                     parse through Python&rsquo;s <code className="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">Decimal</code> module and persist into
-                    PostgreSQL <code className="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">numeric(6,3)</code> columns. Floating drift is literally 0.00.
+                    PostgreSQL <code className="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">numeric(6,3)</code> columns. Deterministic Decimal arithmetic eliminates floating-point rounding drift.
                   </li>
                   <li>
                     <strong className="text-ink">Strict Anti-Eat-Back Doctrine:</strong> Workouts observed via HealthKit or Hevy provide timing context
@@ -282,15 +280,18 @@ export default function NytrCaseStudy() {
                 <div className="flex items-center gap-3">
                   <ShieldAlert className="h-5 w-5 text-signal" aria-hidden="true" />
                   <h3 className="text-lg font-semibold text-ink">
-                    Bounded Adaptive Target Reviews with Mandatory Audit Logging
+                    28-Day Theil–Sen Body-Mass Evidence Window & Target Reviews
                   </h3>
                 </div>
                 <p className="mt-3 text-sm text-graphite">
-                  Instead of automatic recalibration that alters meal sizes without warning, Nytr runs an on-demand 28-day body-mass trend analysis:
+                  Instead of automatic recalibration that alters meal sizes without warning, Nytr runs an on-demand 28-day body-mass evidence window using robust Theil–Sen slope estimation:
                 </p>
                 <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-graphite">
                   <li>
-                    If the 28-day trend signals an off-target rate of gain or loss, the backend formulates a bounded review proposal (strictly limited to &plusmn;100 kcal).
+                    The median-of-slopes Theil–Sen estimator calculates an outlier-resistant rate of change (kg/week) over a 28-day rolling window, remaining resilient against single-day hydration fluctuations.
+                  </li>
+                  <li>
+                    If the trend indicates a persistent rate outside target boundaries, the backend formulates a bounded review proposal (strictly limited to &plusmn;100 kcal).
                   </li>
                   <li>
                     The review is purely advisory. The proposal can only become active policy when the authenticated user explicitly approves it on iOS,
@@ -305,8 +306,7 @@ export default function NytrCaseStudy() {
           <section className="space-y-4">
             <h2 className="text-2xl font-semibold tracking-tight text-ink">5. Verification & Production Discipline</h2>
             <p>
-              Because Nytr is trusted with personal health and nutrition in production, it is backed by the most rigorous test suite
-              in the portfolio:
+              Because Nytr is trusted with personal health and nutrition in production, it is backed by a rigorous test and verification suite:
             </p>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -318,17 +318,17 @@ export default function NytrCaseStudy() {
                 </p>
               </div>
               <div className="rounded-lg border border-line bg-paper p-5">
-                <p className="font-mono text-2xl font-bold text-ink">12</p>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-graphite">SQL Migrations</p>
+                <p className="font-mono text-2xl font-bold text-ink">Dual Anchors</p>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-graphite">Sync Engine</p>
                 <p className="mt-2 text-xs text-graphite">
-                  Linear, zero-downtime schema evolution managing RLS security policies, snapshot deduplication, and immutable foreign keys.
+                  Durable keychain anchors and tombstone semantics guaranteeing idempotent mobile telemetry synchronization.
                 </p>
               </div>
               <div className="rounded-lg border border-line bg-paper p-5">
-                <p className="font-mono text-2xl font-bold text-ink">100%</p>
+                <p className="font-mono text-2xl font-bold text-ink">Hardware</p>
                 <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-graphite">Physical Validation</p>
                 <p className="mt-2 text-xs text-graphite">
-                  Verified with real physical iPhone devices, authentic Apple HealthKit permissions, and Stacks Market food offerings.
+                  Physical-device validated with real iPhone hardware, authentic Apple HealthKit permissions, and Stacks Market food offerings.
                 </p>
               </div>
             </div>
@@ -341,8 +341,8 @@ export default function NytrCaseStudy() {
               <p>
                 <strong className="text-ink">1. First-principles modeling beats LLM wrappers:</strong> Generating meal plans with
                 generative AI sounds modern, but large language models struggle with integer programming, fail exact dietary exclusions,
-                and hallucinate nutritional facts. A deterministic scoring engine running over verified, versioned database rows is faster,
-                cheaper, 100% explainable, and provably bug-free.
+                and hallucinate nutritional facts. A deterministic scoring engine running over verified, versioned database rows is fast,
+                explainable, and eliminates entire classes of LLM hallucination and constraint violation.
               </p>
               <p>
                 <strong className="text-ink">2. Treat data provenance as a tier-1 property:</strong> In production systems, knowing
@@ -350,8 +350,8 @@ export default function NytrCaseStudy() {
                 as the value itself.
               </p>
               <p>
-                <strong className="text-ink">3. Immutability creates tranquility:</strong> By denying client update/delete privileges
-                at the database engine level, race conditions and accidental overwrites become mathematically impossible.
+                <strong className="text-ink">3. Immutability creates tranquility:</strong> By enforcing immutable insert-only records
+                and explicit tombstone transitions at the database level, race conditions, mutation bugs, and accidental historical overwrites are systematically prevented.
               </p>
             </div>
           </section>

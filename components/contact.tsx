@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, FileText, ArrowUpRight } from "lucide-react";
+import { Mail, MapPin, FileText, ArrowUpRight } from "lucide-react";
 import { contact } from "@/data/contact";
 import { Container } from "@/components/container";
 
@@ -54,11 +54,6 @@ export function Contact() {
             >
               GitHub <ArrowUpRight className="h-3.5 w-3.5" />
             </a>
-
-            <span className="inline-flex items-center gap-1 text-graphite">
-              <Phone className="h-3.5 w-3.5" />
-              {contact.phone}
-            </span>
 
             <span className="inline-flex items-center gap-1 text-graphite">
               <MapPin className="h-3.5 w-3.5" />

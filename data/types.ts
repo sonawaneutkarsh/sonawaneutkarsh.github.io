@@ -41,7 +41,7 @@ export interface Contact {
   name: string;
   title: string;
   email: string;
-  phone: string;
+  phone?: string;
   linkedin: string;
   github: string;
   resumeUrl: string;
