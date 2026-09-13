@@ -164,29 +164,30 @@
 
 % ----- NYTR -----
 \resumeProjectHeading
-  {Nytr --- Evidence-Driven Decision System
+  {Nytr --- Penn State Dining \& Training System
   $|$ \emph{Python, FastAPI, PostgreSQL, SwiftUI, HealthKit}}
   {2026}
 
 \resumeItemListStart
 
   \resumeItem{
-    Engineered an evidence-driven nutrition and training system
-    integrating Penn State dining menus, Apple HealthKit, and Hevy
-    through a FastAPI modular backend and native SwiftUI companion client.
+    Built and deployed a native iOS decision system around Penn State
+    Harrisburg's Stacks Market, integrating daily dining availability,
+    HealthKit, Hevy training history, barcode/manual foods, and a
+    FastAPI/PostgreSQL backend.
   }
 
   \resumeItem{
-    Designed immutable and versioned pipelines for nutrition history,
-    28-day Theil--Sen body-mass trends, target policies, and workout
-    revisions with PostgreSQL RLS, replay-safe synchronization via
-    durable anchors, and deterministic Decimal analytics.
+    Designed deterministic, provenance-aware planning with immutable
+    and versioned evidence, append-only corrections, PostgreSQL RLS,
+    exact Decimal arithmetic, and fail-closed handling of incomplete
+    or conflicting data.
   }
 
   \resumeItem{
-    Enforced strict dietary eligibility gates, deterministic nutrition
-    calculations, and tombstone deletion semantics; validated with
-    1,000+ automated tests and physical-device verification.
+    Shipped meal recommendations, body-goal tracking, progressive-overload
+    coaching, and optional on-device Apple Foundation Models explanations;
+    validated with 1,000+ backend and 250+ iOS tests plus physical-device testing.
   }
 
 \resumeItemListEnd
