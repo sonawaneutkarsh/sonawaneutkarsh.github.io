@@ -102,7 +102,7 @@ export function Hero() {
                 <span className="inline-block h-2 w-2 rounded-full bg-signal" />
                 <span className="eyebrow text-ink">Flagship System</span>
               </div>
-              <span className="font-mono text-xs text-graphite">1,041 Automated Tests · Deterministic Decimal Math</span>
+              <span className="font-mono text-xs text-graphite">940+ Backend · 250+ iOS Tests · Deterministic Decimal Math</span>
             </div>
 
             <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink sm:text-2xl">

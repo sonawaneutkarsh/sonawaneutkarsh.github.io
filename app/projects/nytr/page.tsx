@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, ShieldAlert, Database, Cpu, Activity } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, ShieldAlert, Database, Cpu, Activity } from "lucide-react";
 import { Container } from "@/components/container";
 
 export const metadata: Metadata = {
@@ -40,21 +40,34 @@ export default function NytrCaseStudy() {
           </h1>
 
           <p className="mt-4 text-lg leading-relaxed text-graphite sm:text-xl">
-            A personal decision system separating authoritative source data, deterministic computation,
-            and user-approved policy changes so constrained decisions do not depend on non-authoritative estimates.
-            Combines Penn State dining menus, Apple HealthKit telemetry, and Hevy workout data via a FastAPI
-            modular monolith, Supabase PostgreSQL, and a native SwiftUI iOS client.
+            Penn State dining changes every day, while nutrition and training targets don&rsquo;t.
+            I built Nytr around Penn State Harrisburg&rsquo;s Stacks Market to combine daily dining availability
+            with verified food logs, Apple HealthKit telemetry, and Hevy strength history into deterministic
+            meal recommendations and progressive-overload guidance.
           </p>
+
+          {/* Action Links */}
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <a
+              href="https://github.com/sonawaneutkarsh/Nytr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full border border-line bg-mist px-4 py-2 text-xs font-semibold text-ink transition-colors hover:bg-ink hover:text-paper"
+            >
+              View Repository on GitHub
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </a>
+          </div>
 
           {/* Quick Metrics Bar */}
           <div className="mt-8 grid grid-cols-2 gap-4 rounded-lg border border-line bg-mist/50 p-4 sm:grid-cols-4">
             <div>
               <p className="eyebrow">Backend Suite</p>
-              <p className="mt-1 font-mono text-lg font-semibold text-ink">1,041 Tests</p>
+              <p className="mt-1 font-mono text-lg font-semibold text-ink">940+ Tests</p>
             </div>
             <div>
-              <p className="eyebrow">Math Precision</p>
-              <p className="mt-1 font-mono text-lg font-semibold text-ink">Deterministic Decimal</p>
+              <p className="eyebrow">iOS Test Suite</p>
+              <p className="mt-1 font-mono text-lg font-semibold text-ink">250+ Tests</p>
             </div>
             <div>
               <p className="eyebrow">Sync Engine</p>
@@ -66,6 +79,34 @@ export default function NytrCaseStudy() {
             </div>
           </div>
         </header>
+
+        {/* Product Demo Video */}
+        <section className="mt-10 border-b border-line pb-12" aria-labelledby="product-demo-heading">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 id="product-demo-heading" className="eyebrow">
+              Product Demo
+            </h2>
+            <span className="font-mono text-xs text-graphite">1:08 · 1080p · Stereo Audio</span>
+          </div>
+
+          <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-line bg-black shadow-sm">
+            <video
+              className="h-full w-full object-contain"
+              controls
+              playsInline
+              preload="metadata"
+              poster="/images/projects/nytr/nytr-demo-poster.png"
+              aria-label="Nytr product demo showing Penn State dining recommendations, food logging, deterministic training coaching, progress tracking, and on-device AI explanation"
+            >
+              <source src="/videos/nytr-demo.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+
+          <p className="mt-3 text-xs text-graphite sm:text-sm">
+            Dining availability, deterministic meal guidance, training coaching, progress tracking, and optional on-device explanation.
+          </p>
+        </section>
 
         {/* Main Content */}
         <article className="mt-12 space-y-16 text-base leading-relaxed">
@@ -93,6 +134,9 @@ export default function NytrCaseStudy() {
               Nytr is <strong>not</strong> a generic calorie tracker, an LLM chatbot wrapper, or an automated health dashboard.
               It is an operational decision platform deployed for daily life at Penn State Harrisburg, specifically bounded
               to campus dining (Stacks Market), Apple HealthKit weight observations, and Hevy strength logs.
+              Authoritative meal scoring and progressive-overload decisions are computed deterministically.
+              An optional Apple Foundation Models integration operates downstream purely to provide private, on-device explanations
+              and second opinions without affecting authoritative calculations.
             </p>
           </section>
 
@@ -308,12 +352,19 @@ export default function NytrCaseStudy() {
               Because Nytr is trusted with personal health and nutrition in production, it is backed by a rigorous test and verification suite:
             </p>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <div className="rounded-lg border border-line bg-paper p-5">
-                <p className="font-mono text-2xl font-bold text-ink">1,041</p>
+                <p className="font-mono text-2xl font-bold text-ink">940+</p>
                 <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-graphite">Backend Tests</p>
                 <p className="mt-2 text-xs text-graphite">
                   Pytest suite covering domain algorithms, candidate scoring, date windows, idempotency, and PostgreSQL RLS integration.
+                </p>
+              </div>
+              <div className="rounded-lg border border-line bg-paper p-5">
+                <p className="font-mono text-2xl font-bold text-ink">250+</p>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-graphite">iOS Tests</p>
+                <p className="mt-2 text-xs text-graphite">
+                  XCTest suite covering HealthKit sync state machines, offline persistence, and view-model transitions.
                 </p>
               </div>
               <div className="rounded-lg border border-line bg-paper p-5">
@@ -352,6 +403,13 @@ export default function NytrCaseStudy() {
               </p>
             </div>
           </section>
+
+          {/* Penn State Disclaimer */}
+          <footer className="border-t border-line pt-8 text-xs text-graphite">
+            <p>
+              Nytr is an independent student project and is not affiliated with or endorsed by The Pennsylvania State University.
+            </p>
+          </footer>
         </article>
       </Container>
     </div>

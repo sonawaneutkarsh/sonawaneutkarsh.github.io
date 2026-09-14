@@ -13,13 +13,14 @@ export const projects: Project[] = [
     hasCaseStudy: true,
     metrics: [
       { label: "Core Philosophy", value: "DATA → CALCULATION → DECISION" },
-      { label: "Backend Tests", value: "1,041 automated tests" },
+      { label: "Automated Tests", value: "940+ backend, 250+ iOS" },
       { label: "Sync Engine", value: "Dual-anchor idempotent sync" },
       { label: "Precision", value: "Deterministic Decimal arithmetic" },
     ],
     status: "shipped",
     links: [
       { label: "Technical Case Study", url: "/projects/nytr", isCaseStudy: true },
+      { label: "Repository", url: "https://github.com/sonawaneutkarsh/Nytr" },
     ],
   },
   {
