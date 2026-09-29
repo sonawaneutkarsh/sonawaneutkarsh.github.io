@@ -11,8 +11,7 @@ export function Contact() {
           <div className="mx-auto max-w-2xl text-center">
           <h2 className="eyebrow">Contact</h2>
           <p className="mt-2 text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-            Get in touch.
-          </p>
+            Get in touch.</p><p className="mt-4 text-sm font-semibold uppercase tracking-widest text-signal">Currently seeking Summer 2027 SWE/AI internships.</p>
           <p className="mt-4 text-base text-graphite leading-relaxed">
             I&rsquo;m always open to discussing LLMs, agentic systems, backend infrastructure, or undergraduate research. Feel free to reach out.
           </p>
