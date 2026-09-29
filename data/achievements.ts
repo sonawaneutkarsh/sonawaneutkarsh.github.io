@@ -10,7 +10,7 @@ export const achievements: Achievement[] = [
     detail: "Penn State University (GPA: 3.53/4.0)",
   },
   {
-    label: "CS Team Lead & Technical Team Member, IEEE",
-    detail: "Delivered hands-on developer documentation workshops for 20+ engineering students",
+    label: "Technical Chair, IEEE",
+    detail: "Elected to coordinate software, AI, and robotics workshops and projects for the IEEE student branch",
   },
 ];

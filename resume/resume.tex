@@ -113,20 +113,18 @@
 \resumeSubheading
   {The Pennsylvania State University}
   {Harrisburg, PA}
-  {Bachelor of Science in Computer Science $|$ Capital Honors Program}
-  {Expected December 2028}
+  {B.S. Computer Science $|$ Capital Honors Program}
+  {Expected Dec 2028}
 
 \resumeItemListStart
   \resumeItem{
-    \textbf{GPA:} 3.53/4.0
+    \textbf{GPA:} 3.53/4.00
     \;$|$\;
     Dean's List
   }
   \resumeItem{
-    \textbf{Relevant Coursework:}
-    Data Structures \& Algorithms,
-    Object-Oriented Programming,
-    Calculus III
+    \textbf{Coursework:}
+    Data Structures \& Algorithms; Object-Oriented Programming and Calculus III (in progress)
   }
 \resumeItemListEnd
 
@@ -139,18 +137,13 @@
   \small{
     \item{
       \textbf{Languages:}
-      Python, TypeScript, JavaScript, C++, Swift, SQL \\
+      Python, TypeScript, JavaScript, Java, Swift, SQL \\
 
-      \textbf{Backend \& Systems:}
-      FastAPI, Node.js, Express, Flask, REST APIs, Docker, Linux, Git \\
+      \textbf{Backend \& Data:}
+      FastAPI, Node.js, Express, PostgreSQL, Supabase, REST APIs, pgvector \\
 
-      \textbf{Data \& AI:}
-      PostgreSQL, Supabase, pgvector, Vector Embeddings, RAG,
-      NumPy, Pandas, PyTorch \\
-
-      \textbf{Client \& Hardware:}
-      SwiftUI, HealthKit, React, Next.js, Tailwind CSS,
-      Arduino, ESP32
+      \textbf{Tools \& Clients:}
+      Git, Linux, React, Next.js, SwiftUI, HealthKit, ESP32 (Arduino/C++)
     }
   }
 \end{itemize}
@@ -164,104 +157,76 @@
 
 % ----- NYTR -----
 \resumeProjectHeading
-  {Nytr --- Penn State Dining \& Training System
-  $|$ \emph{Python, FastAPI, PostgreSQL, SwiftUI, HealthKit}}
+  {Nytr --- iOS Nutrition \& Training System
+  $|$ \emph{Python, FastAPI, PostgreSQL, SwiftUI}}
   {2026}
 
 \resumeItemListStart
 
   \resumeItem{
-    Built and deployed a native iOS decision system around Penn State
-    Harrisburg's Stacks Market, integrating daily dining availability,
-    HealthKit, Hevy training history, barcode/manual foods, and a
-    FastAPI/PostgreSQL backend.
+    Built a production-validated iOS and FastAPI/PostgreSQL system integrating Stacks Market dining data, HealthKit, Hevy, and barcode food records into daily nutrition and training guidance.
   }
 
   \resumeItem{
-    Designed deterministic, provenance-aware planning with immutable
-    and versioned evidence, append-only corrections, PostgreSQL RLS,
-    exact Decimal arithmetic, and fail-closed handling of incomplete
-    or conflicting data.
+    Engineered an auditable planning backend with PostgreSQL row-level security, immutable versioned evidence, append-only corrections, and exact Decimal arithmetic to prevent incomplete data from becoming unsupported recommendations.
   }
 
   \resumeItem{
-    Shipped meal recommendations, body-goal tracking, progressive-overload
-    coaching, and optional on-device Apple Foundation Models explanations;
-    validated with 1,000+ backend and 250+ iOS tests plus physical-device testing.
-  }
-
-\resumeItemListEnd
-
-% ----- CLAGE -----
-\resumeProjectHeading
-  {Clage --- From-Scratch NEAT Engine \& Artificial Life
-  $|$ \emph{Python, Algorithms from Scratch}}
-  {2025 -- 2026}
-
-\resumeItemListStart
-
-  \resumeItem{
-    Implemented NeuroEvolution of Augmenting Topologies (NEAT) from
-    first principles in pure Python, including genome encoding,
-    global innovation tracking, structural mutation, topological
-    crossover, and speciation with zero external ML libraries.
-  }
-
-  \resumeItem{
-    Validated the evolutionary engine on OR, AND, XOR, and sine
-    benchmarks across fixed seeds before deploying it in a 2D
-    artificial-life simulation, backed by 188 passing tests.
-  }
-
-  \resumeItem{
-    Investigated behavioral diversity across evolved populations;
-    identified a food-density confound in a behavioral metric and
-    excluded it from cross-condition analysis.
+    Validated meal planning, goal tracking, and training-coaching workflows with 1,000+ backend tests, 250+ iOS tests, and physical-device testing.
   }
 
 \resumeItemListEnd
 
 % ----- DEVVY -----
 \resumeProjectHeading
-  {Devvy --- Developer Infrastructure for Discord IPC
-  $|$ \emph{TypeScript, Node.js, macOS launchd}}
+  {Devvy --- Local Developer IPC Service
+  $|$ \emph{TypeScript, Node.js, Unix Sockets}}
   {2026}
 
 \resumeItemListStart
 
   \resumeItem{
-    Built a zero-dependency background daemon speaking Discord's local
-    IPC protocol directly through Unix socket discovery, binary opcode
-    framing, handshake negotiation, and backoff reconnect logic.
+    Built a local Discord presence daemon supporting VS Code, OpenCode, and Command Code on macOS and Windows through structured localhost events and direct Discord IPC.
   }
 
   \resumeItem{
-    Designed priority arbitration across OpenCode, Command Code, and
-    VS Code with TTL-based heartbeat expiry; validated with a 22-script
-    test suite covering race conditions, reconnect resilience, and IPC
-    socket lifecycle.
+    Unified 3 competing editor/agent integrations into a single privacy-conscious activity feed using priority arbitration, heartbeat expiration, binary IPC framing, and reconnect handling.
   }
 
 \resumeItemListEnd
 
 % ----- SCHOLARAI -----
 \resumeProjectHeading
-  {ScholarAI --- Government Scheme Discovery Platform
-  $|$ \emph{Python, PostgreSQL, pgvector, FastAPI}}
+  {ScholarAI --- Government Scheme Discovery
+  $|$ \emph{Python, PostgreSQL, pgvector}}
   {2026}
 
 \resumeItemListStart
 
   \resumeItem{
-    Data Engineer on a 5-person team; finalist among 6,081+ participants
-    in the USAII Global AI Hackathon 2026.
+    Built the data ingestion pipeline for a 5-person hackathon team, normalizing 1,000+ scraped government schemes into PostgreSQL through batched inserts.
   }
 
   \resumeItem{
-    Built a data pipeline parsing 1,000+ scraped government schemes into
-    structured relational models; generated semantic embeddings and
-    loaded them through fault-tolerant batched inserts into PostgreSQL
-    with pgvector.
+    Generated embeddings and loaded scheme records into pgvector for semantic retrieval; the team advanced to the final round of the USAII Global AI Hackathon (6,000+ registrants).
+  }
+
+\resumeItemListEnd
+
+% ----- CLAGE -----
+\resumeProjectHeading
+  {Clage --- NEAT Engine \& Artificial Life
+  $|$ \emph{Python, Algorithms}}
+  {2025 -- 2026}
+
+\resumeItemListStart
+
+  \resumeItem{
+    Implemented NEAT from scratch in Python, including mutation, innovation tracking, crossover, and speciation; evaluated the engine on 4 benchmark tasks (OR, AND, XOR, sine).
+  }
+
+  \resumeItem{
+    Built a 2D artificial-life simulation and reproducible experiment harness with fixed-seed benchmark runs and one-factor-at-a-time environmental sweeps.
   }
 
 \resumeItemListEnd
@@ -274,21 +239,19 @@
 \resumeSubHeadingListStart
 
 \resumeSubheading
-  {CS Team Lead \& Technical Team Member, IEEE}
+  {Technical Chair, IEEE}
   {Harrisburg, PA}
   {IEEE Student Branch, Penn State Harrisburg}
-  {Sept 2025 -- Present}
+  {Sep 2025 -- Present}
 
 \resumeItemListStart
 
   \resumeItem{
-    Organize and lead technical workshops for students on topics including
-    Markdown, Google Gemini, developer tooling, and applied AI workflows.
+    Hosted 2 technical workshops on Markdown and building with Google Gemini, translating developer tools and applied AI workflows into hands-on student sessions.
   }
 
   \resumeItem{
-    Coordinate technical initiatives and collaborative coding sessions
-    across Computer Science and AI student groups.
+    Elected Technical Chair in Sep 2026 to coordinate software, AI, and robotics workshops and projects for the IEEE student branch.
   }
 
 \resumeItemListEnd
@@ -302,8 +265,7 @@
 \resumeItemListStart
 
   \resumeItem{
-    Scaled readership from 0 to 250+ subscribers and authored or edited
-    30+ long-form articles on technology, science, and student life.
+    Grew a student publication from launch to 250+ subscribers by authoring and editing 30+ articles on technology, science, and student life.
   }
 
 \resumeItemListEnd
@@ -317,17 +279,13 @@
   \small{
     \item{
       \textbf{Honors:}
-      Finalist, USAII Global AI Hackathon
-      (6,081+ participants)
+      USAII Global AI Hackathon finalist
       \;$|$\;
       Capital Honors Program
       \;$|$\;
-      Dean's List, Penn State
+      Dean's List
       \\
       \textbf{Certifications:}
-      Machine Learning Specialization (\emph{DeepLearning.AI})
-      \\
-      \phantom{\textbf{Certifications:}}
       Ethics of AI (\emph{University of Helsinki})
       \;$|$\;
       AI Essentials (\emph{Penn State})
