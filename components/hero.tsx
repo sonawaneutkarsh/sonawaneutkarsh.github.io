@@ -35,7 +35,7 @@ export function Hero() {
             <span className="eyebrow">{contact.name}</span>
             <span className="text-graphite font-mono text-xs">·</span>
             <span className="font-mono text-xs text-graphite">
-              {edu.degree} · {edu.school}
+              {edu.degree} · {edu.school} · {edu.graduation}
             </span>
           </motion.div>
 
@@ -56,7 +56,7 @@ export function Hero() {
             transition={getTransition(0.16)}
           >
             <p className="mt-6 text-base leading-relaxed text-graphite sm:text-lg">
-              I&rsquo;m an honors Computer Science student at Penn State. Most of my projects start with something I want to improve in my own life &mdash; my nutrition and training, my setup, or something repetitive I wish worked better. Right now I&rsquo;m especially interested in LLMs, agentic systems, and backend infrastructure.
+              I&rsquo;m an honors Computer Science student at Penn State. Most of my projects start with something I want to improve in my own life &mdash; my nutrition and training, my setup, or something repetitive I wish worked better. Right now I&rsquo;m especially interested in LLMs, agentic systems, and backend infrastructure. Currently seeking Summer 2027 SWE/AI internships.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
