@@ -56,7 +56,7 @@ export const projects: Project[] = [
     featured: true,
     hasCaseStudy: true,
     metrics: [
-      { label: "Passing Tests", value: "188 passing tests" },
+      { label: "Passing Tests", value: "300 passing tests" },
       { label: "Dependencies", value: "Zero ML packages (pure Python)" },
       { label: "Validation", value: "Multi-seed on OR / AND / XOR / Sin" },
     ],
