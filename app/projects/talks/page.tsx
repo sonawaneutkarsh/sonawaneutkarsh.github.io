@@ -230,7 +230,7 @@ export default function TalksCaseStudy() {
 │  │                     On-Device Speech Pipeline                    │  │
 │  │  • Primary: SpeechAnalyzer + SpeechTranscriber (#available iOS 26)│  │
 │  │  • Fallback: SFSpeechRecognizer (strict on-device, zero cloud)    │  │
-│  │  • TaskTimeoutWatchdog isolates speech finalization hangs         │  │
+│  │  • withTimeout watchdog isolates speech finalization hangs        │  │
 │  │  • Session circuit breaker triggers immediate fallback           │  │
 │  │  • Invariant: Immutable raw transcript preserved verbatim         │  │
 │  └────────────────────────────────┬─────────────────────────────────┘  │
@@ -238,7 +238,7 @@ export default function TalksCaseStudy() {
 │  ┌────────────────────────────────▼─────────────────────────────────┐  │
 │  │                  Apple Intelligence Structuring                  │  │
 │  │  • Foundation Models SystemLanguageModel schema generation       │  │
-│  │  • Hierarchical semantic chunking for 30m, 60m, 90m, 120m talks   │  │
+│  │  • Context-aware chunking for long transcripts                    │  │
 │  │  • Structured extraction: Title, Summary, Key Points, Decisions, │  │
 │  │    Action Items, and Follow-Ups                                  │  │
 │  └────────────────────────────────┬─────────────────────────────────┘  │
@@ -320,7 +320,7 @@ export default function TalksCaseStudy() {
             <h2 className="text-2xl font-semibold tracking-tight text-ink">4. iPhone Durable Queue & State Recovery</h2>
             <p>
               Mobile apps are frequently killed by the operating system due to memory pressure or background execution limits.
-              Talks guarantees that in-flight jobs are never lost by grounding all state transitions in an atomic, disk-backed queue:
+              Talks is designed to recover in-flight jobs across app restarts by persisting state transitions atomically to disk:
             </p>
             <ul className="list-disc space-y-2.5 pl-5 text-sm text-graphite">
               <li>
@@ -376,9 +376,9 @@ export default function TalksCaseStudy() {
                     <td className="p-3.5 text-graphite">Strict on-device mode (requiresOnDeviceRecognition = true). Zero cloud fallback.</td>
                   </tr>
                   <tr>
-                    <td className="p-3.5 font-semibold text-ink">TaskTimeoutWatchdog</td>
-                    <td className="p-3.5 text-graphite">All Transcriptions</td>
-                    <td className="p-3.5 text-graphite">Isolates operations in child tasks; catches speech finalization hangs.</td>
+                    <td className="p-3.5 font-semibold text-ink">Timeout Watchdog (withTimeout)</td>
+                    <td className="p-3.5 text-graphite">TranscriptionService with AtomicCompletionState</td>
+                    <td className="p-3.5 text-graphite">Enforces duration-scaled deadlines and isolates speech finalization hangs.</td>
                   </tr>
                   <tr>
                     <td className="p-3.5 font-semibold text-ink">Session Circuit Breaker</td>
@@ -394,7 +394,8 @@ export default function TalksCaseStudy() {
               <p className="mt-2 text-sm text-graphite">
                 A subtle failure mode discovered during iOS speech testing was finalization hangs: occasionally, the primary speech analyzer would transcribe
                 audio successfully but hang indefinitely while attempting to close its audio input stream or yield final recognition tokens.
-                If an analyzer task exceeds its calculated timeout window (proportional to audio length: <code className="font-mono text-xs">max(30s, duration * 2)</code>),
+                To guard against this, <code className="font-mono text-xs">TranscriptionService</code> implements watchdog behavior using an asynchronous <code className="font-mono text-xs">withTimeout(...)</code> mechanism
+                paired with an <code className="font-mono text-xs">AtomicCompletionState</code> flag. If an analyzer task exceeds its calculated timeout window (proportional to audio length: <code className="font-mono text-xs">max(30s, duration * 2)</code>),
                 the watchdog fires, trips the session circuit breaker, and abandons the primary task.
               </p>
               <p className="mt-2 text-sm text-graphite">
@@ -442,8 +443,8 @@ export default function TalksCaseStudy() {
             </div>
 
             <p className="text-sm text-graphite">
-              For long meetings that exceed the on-device model&rsquo;s token window, <code className="font-mono text-xs">MeetingAIService.splitIntoChunks</code> performs
-              hierarchical semantic chunking: it divides text along natural paragraph and turn boundaries into bounded chunks (target size ~3,500 characters),
+              For long transcripts that exceed the on-device model&rsquo;s token window, <code className="font-mono text-xs">MeetingAIService.splitIntoChunks</code> performs
+              context-aware chunking: it divides text along natural paragraph and turn boundaries into bounded chunks (target size ~3,500 characters),
               generates structured summaries per section, and synthesizes a consolidated executive summary (<code className="font-mono text-xs">ConsolidatedSummaryOutput</code>)
               without dropping a single character from the source transcript.
             </p>
@@ -469,7 +470,7 @@ export default function TalksCaseStudy() {
               </li>
               <li>
                 <strong className="text-ink">2,000-Character Notion Block Boundary Splitting:</strong> The Notion API rejects any block whose rich text content exceeds
-                2,000 characters. Talks automatically splits long transcript paragraphs across safe sentence boundaries to guarantee zero API payload rejections.
+                2,000 characters. Talks automatically splits long transcript paragraphs across safe sentence boundaries to prevent API payload rejections.
               </li>
               <li>
                 <strong className="text-ink">Zero Duplicate Page Invariant:</strong> If an upload fails midway through block insertion,
@@ -507,8 +508,8 @@ export default function TalksCaseStudy() {
                   Early iterations attempted to acknowledge file receipt from iPhone to Apple Watch using <code className="font-mono text-xs">WCSession.sendMessage</code>.
                   However, <code className="font-mono text-xs">sendMessage</code> requires both apps to be active and reachable simultaneously.
                   If the watch went to sleep immediately after finishing capture, the ACK would fail with an error, leaving the watch uncertain whether the file had arrived.
-                  Replacing live messages with <code className="font-mono text-xs">WCSession.transferUserInfo</code> resolved the problem completely:
-                  the system queues the acknowledgement dictionary out-of-process and guarantees delivery the instant watchOS wakes.
+                  Replacing live messages with <code className="font-mono text-xs">WCSession.transferUserInfo</code> resolved the problem:
+                  the system queues the acknowledgement dictionary out-of-process, delivering it reliably when watchOS wakes.
                 </p>
               </div>
             </div>

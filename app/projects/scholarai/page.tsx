@@ -398,7 +398,8 @@ export default function ScholarAICaseStudy() {
                   This was rejected due to latency, token costs, and hallucination risks.
                   Instead, the architecture enforces a strict two-stage gate: the relational database first filters out impossible candidates
                   using deterministic numerical constraints (<code className="font-mono text-xs">income_max</code>, category, state domicile).
-                  The LLM is invoked only on the top candidate pool to evaluate nuanced qualitative criteria, reducing inference volume by over 95%.
+                  Filtering deterministic eligibility constraints before LLM reasoning substantially reduces the candidate set passed to the model,
+                  invoking LLM inference only on top candidates for nuanced qualitative evaluation.
                 </p>
               </div>
 
