@@ -59,9 +59,7 @@ export function Nav() {
 
             {/* Mobile Navigation */}
             <div className="flex sm:hidden items-center gap-3 text-xs font-medium text-graphite">
-              <a href="/#projects" className="hover:text-ink transition-colors">
-                Work
-              </a>
+              <a href="/#projects" className="hover:text-ink transition-colors">Work</a> <a href="/#about" className="hover:text-ink transition-colors">About</a> <a href="/#skills" className="hover:text-ink transition-colors">Skills</a>
               <a
                 href="/resume.pdf"
                 target="_blank"
@@ -69,15 +67,14 @@ export function Nav() {
                 className="flex items-center gap-1 text-signal hover:underline"
               >
                 <FileText className="h-3 w-3" />
-                Résumé
-              </a>
+                Résumé</a> <a href="/#contact" className="hover:text-ink transition-colors">Contact</a>
             </div>
 
             <a
               href={`https://github.com/${contact.github}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full p-1.5 text-graphite transition-colors hover:bg-mist hover:text-ink hidden sm:inline-flex"
+              className="rounded-full p-1.5 text-graphite transition-colors hover:bg-mist hover:text-ink inline-flex"
               aria-label="GitHub Profile"
             >
               <svg
