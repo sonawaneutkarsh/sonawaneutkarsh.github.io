@@ -49,7 +49,7 @@ export default function ClageCaseStudy() {
           <div className="mt-8 grid grid-cols-2 gap-4 rounded-lg border border-line bg-mist/50 p-4 sm:grid-cols-4">
             <div>
               <p className="eyebrow">Automated Tests</p>
-              <p className="mt-1 font-mono text-lg font-semibold text-ink">188 Tests</p>
+              <p className="mt-1 font-mono text-lg font-semibold text-ink">300 Tests</p>
             </div>
             <div>
               <p className="eyebrow">External ML Deps</p>
@@ -92,7 +92,7 @@ export default function ClageCaseStudy() {
             </p>
             <p>
               I built Clage from first principles to understand exactly what happens underneath evolutionary graph abstractions.
-              Every line of code—from gene encoding to speciation distance equations—is implemented in pure Python, backed by a rigorous 188-test suite.
+              Every line of code—from gene encoding to speciation distance equations—is implemented in pure Python, backed by a rigorous 300-test suite.
             </p>
           </section>
 
@@ -247,7 +247,7 @@ export default function ClageCaseStudy() {
           <section className="space-y-4 border-t border-line pt-10">
             <h2 className="text-2xl font-semibold tracking-tight text-ink">5. Verification & Test Suite</h2>
             <p className="text-sm text-graphite">
-              The entire engine is validated by <strong>188 unit and integration tests</strong> covering:
+              The entire engine is validated by <strong>300 unit and integration tests</strong> covering:
             </p>
             <div className="grid grid-cols-2 gap-2 font-mono text-xs text-graphite sm:grid-cols-3">
               <span className="rounded border border-line bg-mist p-2">test_genome.py</span>
