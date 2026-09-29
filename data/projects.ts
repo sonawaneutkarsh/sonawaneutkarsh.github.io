@@ -24,6 +24,28 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "talks",
+    title: "Talks",
+    oneLiner: "Apple Watch meeting capture with durable background transfer, on-device speech/AI processing, and automatic Notion notes",
+    description:
+      "A privacy-first meeting capture and intelligence system across watchOS and iOS. Apple Watch recordings are transferred out-of-process via WCSession with durable ACK handshakes. The iPhone companion coordinates an atomic, crash-recoverable job queue, transcribing audio locally via SpeechAnalyzer (with strict SFSpeechRecognizer on-device fallback) and extracting structured summaries, decisions, and action items via Apple Foundation Models before direct Notion API upload.",
+    role: "Solo Creator · iOS/watchOS, Systems Architecture & On-Device AI",
+    tech: ["Swift 6", "SwiftUI", "watchOS", "iOS", "WatchConnectivity", "Speech", "Foundation Models", "Notion API"],
+    featured: false,
+    hasCaseStudy: true,
+    metrics: [
+      { label: "Automated Tests", value: "54 passing tests" },
+      { label: "Speech Engine", value: "SpeechAnalyzer + watchdog fallback" },
+      { label: "On-Device AI", value: "Apple Foundation Models" },
+      { label: "Transfer & Queue", value: "WCSession file transfer + atomic ACK" },
+    ],
+    status: "shipped",
+    links: [
+      { label: "Technical Case Study", url: "/projects/talks", isCaseStudy: true },
+      { label: "Repository", url: "https://github.com/sonawaneutkarsh/Talks" },
+    ],
+  },
+  {
     slug: "clage",
     title: "Clage",
     oneLiner: "From-scratch NEAT neuroevolution implementation and 2D artificial-life simulation",
@@ -53,13 +75,17 @@ export const projects: Project[] = [
     role: "Solo Creator · Systems Programming, IPC & Devtools",
     tech: ["TypeScript", "Node.js", "Discord IPC", "macOS launchd", "Unix Sockets"],
     featured: false,
+    hasCaseStudy: true,
     metrics: [
       { label: "Runtime Deps", value: "Zero external dependencies" },
       { label: "Protocol", value: "Direct IPC binary opcode framing" },
       { label: "Validation", value: "22-scenario automated suite" },
     ],
     status: "shipped",
-    links: [{ label: "Repository", url: "https://github.com/sonawaneutkarsh/devvy" }],
+    links: [
+      { label: "Technical Case Study", url: "/projects/devvy", isCaseStudy: true },
+      { label: "Repository", url: "https://github.com/sonawaneutkarsh/devvy" },
+    ],
   },
   {
     slug: "scholarai",
@@ -70,6 +96,7 @@ export const projects: Project[] = [
     role: "Data Engineer · Data Pipeline, Relational Schema & Vector Database",
     tech: ["Python", "PostgreSQL", "pgvector", "FastAPI", "Selenium", "RAG"],
     featured: false,
+    hasCaseStudy: true,
     metrics: [
       { label: "Hackathon Result", value: "Finalist (6,081+ participants)" },
       { label: "Data Volume", value: "1,000+ schemes indexed" },
@@ -77,6 +104,7 @@ export const projects: Project[] = [
     ],
     status: "shipped",
     links: [
+      { label: "Technical Case Study", url: "/projects/scholarai", isCaseStudy: true },
       { label: "Repository", url: "https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI" },
     ],
   },

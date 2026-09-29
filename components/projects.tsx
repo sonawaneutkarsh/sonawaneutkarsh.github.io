@@ -5,8 +5,8 @@ import { Container } from "@/components/container";
 import { Reveal } from "@/components/reveal";
 
 export function Projects() {
-  const primaryProjects = projects.slice(0, 4);
-  const secondaryProjects = projects.slice(4);
+  const primaryProjects = projects.slice(0, 5);
+  const secondaryProjects = projects.slice(5);
 
   return (
     <section id="projects" className="scroll-mt-14 border-b border-line">
@@ -20,7 +20,7 @@ export function Projects() {
             </p>
           </div>
 
-          {/* Primary Project Cards (Nytr, Clage, Devvy, ScholarAI) */}
+          {/* Primary Project Cards (Nytr, Talks, Clage, Devvy, ScholarAI) */}
           <div className="mt-10 space-y-8">
             {primaryProjects.map((project, index) => (
               <article
@@ -32,7 +32,7 @@ export function Projects() {
                   <div className="flex flex-wrap items-center gap-2">
                     {project.featured ? (
                       <span className="rounded-md border border-line bg-mist px-2 py-0.5 font-mono text-[11px] font-medium text-graphite uppercase tracking-wider">
-                        {index === 0 ? "Flagship System" : "Core Algorithm"}
+                        {project.slug === "nytr" ? "Flagship System" : "Core Algorithm"}
                       </span>
                     ) : null}
                     {project.slug === "scholarai" ? (
