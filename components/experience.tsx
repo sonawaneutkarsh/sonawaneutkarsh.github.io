@@ -70,7 +70,7 @@ export function Experience() {
                 <div>
                   <p className="font-semibold text-ink text-sm">Dean&rsquo;s List & Capital Honors Program</p>
                   <p className="text-xs text-graphite mt-0.5">
-                    The Pennsylvania State University · B.S. in Computer Science (GPA: 3.53 / 4.0).
+                    The Pennsylvania State University · B.S. in Computer Science (GPA: 3.53 / 4.0 · Expected December 2028).
                   </p>
                 </div>
               </div>
