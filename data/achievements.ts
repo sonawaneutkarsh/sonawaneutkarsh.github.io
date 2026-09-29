@@ -7,7 +7,7 @@ export const achievements: Achievement[] = [
   },
   {
     label: "Capital Honors Program & Dean's List",
-    detail: "Penn State University (GPA: 3.53/4.0)",
+    detail: "Penn State University (GPA: 3.53/4.0 · Expected December 2028)",
   },
   {
     label: "Technical Chair, IEEE",
