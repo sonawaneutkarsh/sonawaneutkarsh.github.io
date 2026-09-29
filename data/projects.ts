@@ -71,7 +71,7 @@ export const projects: Project[] = [
     title: "Devvy",
     oneLiner: "Zero-dependency local daemon coordinating Discord Rich Presence across developer environments",
     description:
-      "Local background infrastructure that speaks Discord's local IPC protocol directly over Unix domain sockets with custom binary opcode framing, handshake negotiation, and backoff reconnects. Unifies activity status across OpenCode, Command Code, and VS Code with priority arbitration, heartbeats, and TTL-based source expiry.",
+      "Local background infrastructure that speaks Discord's local IPC protocol directly over Unix domain sockets with custom binary opcode framing, handshake negotiation, and backoff reconnects. Unifies activity status across OpenCode, Command Code (a terminal-based AI coding agent), and VS Code with priority arbitration, heartbeats, and TTL-based source expiry.",
     role: "Solo Creator · Systems Programming, IPC & Devtools",
     tech: ["TypeScript", "Node.js", "Discord IPC", "macOS launchd", "Unix Sockets"],
     featured: false,
