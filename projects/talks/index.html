@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Talks: On-Device Meeting Intelligence Across Apple Watch & iPhone — Utkarsh Sonawane</title>
+  <meta name="description" content="Recording lectures, advising sessions, and research office hours should not require pulling out a phone, tolerating wireless audio dropouts, or transmitting sensitive conversations to third-party AI clouds. I engineered Talks as a reliable, distributed iOS and watchOS system: one-tap distraction-free recording from Apple Watch, durable background file transfer, on-device speech transcription, and local structuring via Apple Foundation Models before synchronizing structured notes directly to a private Notion workspace.">
+  <meta name="author" content="Utkarsh Sonawane">
+  
+  <link rel="icon" href="../../favicon.ico" sizes="any">
+  <link rel="icon" href="../../favicon-32x32.png" type="image/png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="blog-post-page">
+
+  <!-- Sticky Left CONTENTS Sidebar (Desktop) -->
+  <nav class="toc-sidebar" aria-label="Contents">
+    <p class="toc-title">Contents</p>
+    <ol class="toc-list">
+      <li><a href="#interface-system-in-action">Interface & System In Action</a></li>
+      <li><a href="#1-the-problem-physical-constraints-in-distributed-wearable-capture">1. The Problem: Physical Constraints in Distributed Wearable Capture</a></li>
+      <li><a href="#2-end-to-end-architecture">2. End-to-End Architecture</a></li>
+      <li><a href="#3-watch-side-reliability-deletion-invariants">3. Watch-Side Reliability & Deletion Invariants</a></li>
+      <li><a href="#4-iphone-durable-queue-state-recovery">4. iPhone Durable Queue & State Recovery</a></li>
+      <li><a href="#5-on-device-speech-pipeline-speechanalyzer-watchdog-fallback">5. On-Device Speech Pipeline: SpeechAnalyzer & Watchdog Fallback</a></li>
+      <li><a href="#6-on-device-foundation-models-apple-intelligence">6. On-Device Foundation Models & Apple Intelligence</a></li>
+      <li><a href="#7-direct-notion-api-sync-idempotency">7. Direct Notion API Sync & Idempotency</a></li>
+      <li><a href="#8-real-failure-modes-engineering-lessons">8. Real Failure Modes & Engineering Lessons</a></li>
+      <li><a href="#9-verification-test-suite">9. Verification & Test Suite</a></li>
+      <li><a href="#10-source-code-open-source">10. Source Code & Open Source</a></li>
+    </ol>
+  </nav>
+
+  <main class="container">
+    <article class="blog-post-article">
+      <a href="../../#projects" class="back-link">← Projects</a>
+
+      <header class="post-header">
+        <h1>Talks: On-Device Meeting Intelligence Across Apple Watch & iPhone</h1>
+        <p class="post-subtitle">Recording lectures, advising sessions, and research office hours should not require pulling out a phone, tolerating wireless audio dropouts, or transmitting sensitive conversations to third-party AI clouds. I engineered Talks as a reliable, distributed iOS and watchOS system: one-tap distraction-free recording from Apple Watch, durable background file transfer, on-device speech transcription, and local structuring via Apple Foundation Models before synchronizing structured notes directly to a private Notion workspace.</p>
+        
+        <div class="case-study-meta">
+          <div class="meta-links">
+            <a href="https://github.com/sonawaneutkarsh/Talks" target="_blank" rel="noopener" class="pill-btn">Code Repository</a>
+          </div>
+        </div>
+      </header>
+
+      <div class="prose">
+        <section aria-labelledby="talks-visuals-heading" class="mt-10 border-b border-line pb-12"><div><h2 id="interface-system-in-action">Interface &amp; System In Action</h2><span>Native watchOS &amp; iOS Clients</span></div><div><div><div><div><img alt="Apple Watch Talks application in idle state showing high-contrast Record button" data-nimg="1" decoding="async" height="496" loading="lazy" src="../../images/projects/talks/watch-record-idle.png" style="max-width:100%; height:auto; border-radius:8px; border:1px solid var(--border); margin:1.5rem 0;" width="416"/></div><div><img alt="Apple Watch Talks active recording state showing live timer, stop action, and screen-off trigger" data-nimg="1" decoding="async" height="496" loading="lazy" src="../../images/projects/talks/watch-recording-active.png" style="max-width:100%; height:auto; border-radius:8px; border:1px solid var(--border); margin:1.5rem 0;" width="416"/></div></div><h3>watchOS Capture &amp; Screen-Off Controls</h3><p>One-tap start with haptic feedback, live duration timer, and non-intrusive Screen Off blackout for academic meetings.</p></div><div><div><div><img alt="iPhone Talks Talk Detail screen showing AI-formatted transcript, executive summary, and key points" data-nimg="1" decoding="async" height="1630" loading="lazy" src="../../images/projects/talks/iphone-talk-detail.png" style="max-width:100%; height:auto; border-radius:8px; border:1px solid var(--border); margin:1.5rem 0;" width="750"/></div><div><img alt="iPhone Talks Settings screen showing Keychain credentials and on-device intelligence readiness" data-nimg="1" decoding="async" height="1630" loading="lazy" src="../../images/projects/talks/iphone-settings.png" style="max-width:100%; height:auto; border-radius:8px; border:1px solid var(--border); margin:1.5rem 0;" width="750"/></div></div><h3>iPhone Processing &amp; Talk Intelligence</h3><p>Structured meeting deliverables generated on-device via Foundation Models, paired with Keychain-secured Notion sync.</p></div></div></section>
+
+<section class="space-y-4"><h2 id="1-the-problem-physical-constraints-in-distributed-wearable-capture">1. The Problem: Physical Constraints in Distributed Wearable Capture</h2><p>Recording meetings from an Apple Watch appears deceptively simple at the UI layer: present a button, invoke an audio recorder, and display a timer. In reality, reliable capture across an Apple Watch and iPhone is a distributed systems problem governed by aggressive mobile operating system constraints:</p><ul><li><strong>Transient Physical Connectivity:</strong> Users walk away from their desks, pace seminar rooms, or step outside Bluetooth range during 90-minute lectures. Streaming raw audio over Bluetooth is fragile, highly vulnerable to packet loss, and rapidly drains wearable battery life.</li><li><strong>Hostile Lifecycle Limits:</strong> Both watchOS and iOS aggressively terminate background processes and revoke CPU execution slots. Any pipeline that assumes uninterrupted execution or in-memory state across stages will drop audio segments.</li><li><strong>Confidentiality &amp; Cloud Leaks:</strong> Academic advising, research planning, and lab discussions frequently touch unpublished intellectual property and confidential student evaluations. Sending unencrypted voice streams to third-party commercial transcription and LLM cloud providers introduces unacceptable privacy violations and recurring per-minute API fees.</li><li><strong>External Sync Idempotency:</strong> When mobile networks drop midway through an external sync, naive upload pipelines create duplicate pages or corrupt notes.</li></ul><p>Talks was built to solve these exact physical constraints through a strictly decoupled, local-first architecture.</p></section>
+
+<section class="space-y-4"><h2 id="2-end-to-end-architecture">2. End-to-End Architecture</h2><p>The system splits responsibilities strictly between wearable capture, phone persistence, on-device compute, and external archiving:</p><div><pre class="text-ink overflow-x-auto">┌────────────────────────────────────────────────────────────────────────┐
+│                        Apple Watch (TalksWatch)                        │
+│                                                                        │
+│  • AVAudioSession (.playAndRecord, .spokenAudio, 24kHz mono AAC)       │
+│  • WKExtendedRuntimeSession keeps capture alive throughout long talks  │
+│  • Screen Off Mode blanks display with subtle 4px dim dot              │
+│  • Verifies file integrity (&gt; 1024 bytes) in Documents/WatchRecordings │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    │ Out-of-process background file transfer
+                                    │ WCSession.transferFile (system daemon wcd)
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                            iPhone (Talks)                              │
+│                                                                        │
+│  1. Ingest audio file atomically into Documents/Recordings/            │
+│  2. Send durable background ACK back to Watch via transferUserInfo     │
+│  3. Atomically persist job transition to Documents/queue.json          │
+│                                                                        │
+│  ┌──────────────────────────────────────────────────────────────────┐  │
+│  │                    Crash-Resilient Job Queue                     │  │
+│  │  • UUID-indexed single-ownership processing lock                 │  │
+│  │  • Reconciles interrupted jobs across app restarts               │  │
+│  │  • UIBackgroundTaskIdentifier expiration safety                  │  │
+│  └────────────────────────────────┬─────────────────────────────────┘  │
+│                                   │
+│  ┌────────────────────────────────▼─────────────────────────────────┐  │
+│  │                     On-Device Speech Pipeline                    │  │
+│  │  • Primary: SpeechAnalyzer + SpeechTranscriber (#available iOS 26)│  │
+│  │  • Fallback: SFSpeechRecognizer (strict on-device, zero cloud)    │  │
+│  │  • withTimeout watchdog isolates speech finalization hangs        │  │
+│  │  • Session circuit breaker triggers immediate fallback           │  │
+│  │  • Invariant: Immutable raw transcript preserved verbatim         │  │
+│  └────────────────────────────────┬─────────────────────────────────┘  │
+│                                   │
+│  ┌────────────────────────────────▼─────────────────────────────────┐  │
+│  │                  Apple Intelligence Structuring                  │  │
+│  │  • Foundation Models SystemLanguageModel schema generation       │  │
+│  │  • Context-aware chunking for long transcripts                    │  │
+│  │  • Structured extraction: Title, Summary, Key Points, Decisions, │  │
+│  │    Action Items, and Follow-Ups                                  │  │
+│  └────────────────────────────────┬─────────────────────────────────┘  │
+│                                   │
+│  ┌────────────────────────────────▼─────────────────────────────────┐  │
+│  │                       Direct Notion Upload                       │  │
+│  │  • Keychain-secured credentials (Token + Parent Page ID)         │  │
+│  │  • Reconciled block upload with 2,000-character boundary chunking│  │
+│  │  • Zero-duplicate page creation idempotency                      │  │
+│  │  • Raw transcript archived in collapsible bottom toggle block    │  │
+│  └──────────────────────────────────────────────────────────────────┘  │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │ Direct HTTPS API (URLSession)
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                        User Notion Workspace                           │
+│  • Cleanly nested under designated 'Talks' parent page                 │
+│  • Searchable, formatted meeting records with actionable todo blocks   │
+└────────────────────────────────────────────────────────────────────────┘</pre></div></section>
+
+<section class="space-y-4"><h2 id="3-watch-side-reliability-deletion-invariants">3. Watch-Side Reliability &amp; Deletion Invariants</h2><p>Audio integrity begins on the wrist. Talks avoids live wireless streaming entirely in favor of an offline-first recording loop engineered to survive physical disconnection:</p><div><div><div><svg aria-hidden="true" class="lucide lucide-watch h-5 w-5 text-signal" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10v2.2l1.6 1"></path><path d="m16.13 7.66-.81-4.05a2 2 0 0 0-2-1.61h-2.68a2 2 0 0 0-2 1.61l-.78 4.05"></path><path d="m7.88 16.36.8 4a2 2 0 0 0 2 1.61h2.72a2 2 0 0 0 2-1.61l.81-4.05"></path><circle cx="12" cy="12" r="6"></circle></svg><h3>Audio Session &amp; Runtime</h3></div><p>The watch captures audio using <code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">AVAudioSession</code> configured with <code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">.playAndRecord</code> and mode <code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">.spokenAudio</code>. It encodes directly to high-efficiency AAC at 24,000 Hz mono (sample rate optimized for spoken voice fidelity while keeping storage under 15 MB per hour). A <code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">WKExtendedRuntimeSession</code> keeps the capture thread alive even when the wrist is lowered.</p></div><div><div><svg aria-hidden="true" class="lucide lucide-cpu h-5 w-5 text-signal" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 20v2"></path><path d="M12 2v2"></path><path d="M17 20v2"></path><path d="M17 2v2"></path><path d="M2 12h2"></path><path d="M2 17h2"></path><path d="M2 7h2"></path><path d="M20 12h2"></path><path d="M20 17h2"></path><path d="M20 7h2"></path><path d="M7 20v2"></path><path d="M7 2v2"></path><rect height="16" rx="2" width="16" x="4" y="4"></rect><rect height="8" rx="1" width="8" x="8" y="8"></rect></svg><h3>Screen Off Academic Mode</h3></div><p>Bright smart watch displays are distracting in seminar rooms and office hours. Talks introduces a dedicated Screen Off mode that paints the entire canvas pitch black (<code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">Color.black</code>) with a single, 15% opacity 4px red dot in the corner to confirm active telemetry. A tap anywhere on the glass wakes the UI back to controls without interrupting the audio session.</p></div></div><div><h3>The Deletion Acknowledgement Invariant</h3><p>When the user taps <em>Stop</em>, the watch verifies the generated <code class="font-mono text-xs">.m4a</code> container is non-empty and exceeds the 1,024-byte header threshold. It queues the file via <code class="rounded bg-mist px-1 py-0.5 font-mono text-xs">WCSession.default.transferFile</code>. Because <code class="font-mono text-xs">transferFile</code> is managed out-of-process by watchOS’s <code class="font-mono text-xs">wcd</code> daemon, the transfer completes even if the TalksWatch app is suspended immediately after tapping Stop.</p><p><strong>Crucially:</strong> The watch does <em>not</em> delete the audio file upon stopping. The local recording remains safely stored in <code class="font-mono text-xs">Documents/WatchRecordings/</code> until the iPhone sends a durable, verified acknowledgement payload via <code class="rounded bg-mist px-1 py-0.5 font-mono text-xs">WCSession.transferUserInfo</code>. If the user walks out of Bluetooth range before transfer completes, the recording remains on the watch and transfers automatically the next time the devices reconnect.</p></div></section>
+
+<section class="space-y-4"><h2 id="4-iphone-durable-queue-state-recovery">4. iPhone Durable Queue &amp; State Recovery</h2><p>Mobile apps are frequently killed by the operating system due to memory pressure or background execution limits. Talks is designed to recover in-flight jobs across app restarts by persisting state transitions atomically to disk:</p><ul><li><strong>Atomic Disk Serialization:</strong> Every state change is serialized via <code class="font-mono text-xs">JSONEncoder</code> and written atomically to <code class="font-mono text-xs">Documents/queue.json</code>. No state exists solely in volatile UI memory.</li><li><strong>UUID Claim Ownership:</strong> Jobs are tracked by UUID rather than array indices. The queue maintains an <code class="font-mono text-xs">activeProcessingJobId</code> lock that prevents race conditions, duplicate concurrent processing loops, or index shifts when new recordings arrive.</li><li><strong>Lifecycle Restart Reconciliation:</strong> When the app launches or wakes via a background task,<code class="rounded bg-mist px-1 py-0.5 font-mono text-xs">JobQueueManager.reconcileInterruptedJobs</code> scans the queue and reconciles any job left in an active state: an interrupted <code class="font-mono text-xs">.transcribing</code> job resets to <code class="font-mono text-xs">.received</code> if the audio file exists on disk; an interrupted <code class="font-mono text-xs">.formatting</code> job resets to <code class="font-mono text-xs">.waitingForAI</code> using the cached raw transcript; and an interrupted <code class="font-mono text-xs">.uploadingToNotion</code> job safely resets to <code class="font-mono text-xs">.waitingForNotion</code>.</li><li><strong>Strict Local Deletion Boundaries:</strong> Users can swipe left on completed or failed jobs to delete the local iPhone recording and metadata. The deletion routine explicitly validates that active processing jobs cannot be deleted, never triggers deletion on Apple Watch, and never attempts to delete or mutate published Notion pages.</li></ul></section>
+
+<section class="space-y-4"><h2 id="5-on-device-speech-pipeline-speechanalyzer-watchdog-fallback">5. On-Device Speech Pipeline: SpeechAnalyzer &amp; Watchdog Fallback</h2><p>Speech recognition executes 100% on device, ensuring that zero audio streams leave the user’s hardware for transcription. To balance cutting-edge speech models with platform backwards compatibility, Talks implements an adaptive dual-engine pipeline:</p><div><table><thead><tr><th>Pipeline Component</th><th>Environment / Target</th><th>Operational Role &amp; Safeguard</th></tr></thead><tbody><tr><td>SpeechAnalyzer + SpeechTranscriber</td><td>#available(iOS 26.0, *)</td><td>Modern streaming speech architecture with enhanced acoustic modeling.</td></tr><tr><td>SFSpeechRecognizer Fallback</td><td>iOS 18.0–25.x / Fallback Engine</td><td>Strict on-device mode (requiresOnDeviceRecognition = true). Zero cloud fallback.</td></tr><tr><td>Timeout Watchdog (withTimeout)</td><td>TranscriptionService with AtomicCompletionState</td><td>Enforces duration-scaled deadlines and isolates speech finalization hangs.</td></tr><tr><td>Session Circuit Breaker</td><td>Runtime Lock Protected</td><td>Trips after uncooperative analyzer timeouts, immediately routing subsequent jobs to SFSpeechRecognizer.</td></tr></tbody></table></div><div><h3>The Full Fallback Invariant</h3><p>A subtle failure mode discovered during iOS speech testing was finalization hangs: occasionally, the primary speech analyzer would transcribe audio successfully but hang indefinitely while attempting to close its audio input stream or yield final recognition tokens. To guard against this, <code class="font-mono text-xs">TranscriptionService</code> implements watchdog behavior using an asynchronous <code class="font-mono text-xs">withTimeout(...)</code> mechanism paired with an <code class="font-mono text-xs">AtomicCompletionState</code> flag. If an analyzer task exceeds its calculated timeout window (proportional to audio length: <code class="font-mono text-xs">max(30s, duration * 2)</code>), the watchdog fires, trips the session circuit breaker, and abandons the primary task.</p><p>Rather than trusting potentially truncated partial results from an uncooperative engine, Talks discards the partial buffer and invokes a complete, clean transcription pass from the beginning using <code class="font-mono text-xs">SFSpeechRecognizer</code>. Once transcribed, the raw transcript is marked strictly immutable and stored untouched.</p></div></section>
+
+<section class="space-y-4"><h2 id="6-on-device-foundation-models-apple-intelligence">6. On-Device Foundation Models &amp; Apple Intelligence</h2><p>Transcripts alone are overwhelming after a 60-minute research sync. Talks leverages Apple’s on-device Foundation Models (<code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">SystemLanguageModel</code>) via Swift’s <code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">@Generable</code> schema-guided generation to extract structured deliverables:</p><div><div><p>Polished Transcript</p><p>Removes disfluencies, false starts, and filler words while preserving speaker cadence and technical terminology.</p></div><div><p>Executive Summary</p><p>Concise overview capturing the core context, background, and outcomes of the conversation.</p></div><div><p>Key Points &amp; Advice</p><p>Bullet points extracting methodological guidance, mathematical formulations, and research feedback.</p></div><div><p>Decisions &amp; Action Items</p><p>Agreed deadlines, assigned responsibilities, and upcoming check-ins formatted as actionable checkboxes.</p></div></div><p>For long transcripts that exceed the on-device model’s token window, <code class="font-mono text-xs">MeetingAIService.splitIntoChunks</code> performs context-aware chunking: it divides text along natural paragraph and turn boundaries into bounded chunks (target size ~3,500 characters), generates structured summaries per section, and synthesizes a consolidated executive summary (<code class="font-mono text-xs">ConsolidatedSummaryOutput</code>) without dropping a single character from the source transcript.</p></section>
+
+<section class="space-y-4"><h2 id="7-direct-notion-api-sync-idempotency">7. Direct Notion API Sync &amp; Idempotency</h2><p>Once structured by Foundation Models, notes are uploaded directly from the iPhone to the user’s private Notion workspace using the official Notion REST API over <code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">URLSession</code>. There is no intermediary cloud server or proxy.</p><ul><li><strong>Keychain Credential Security:</strong> Integration tokens and parent page IDs are saved exclusively in the hardware-backed iOS Keychain via <code class="font-mono text-xs">KeychainHelper</code> and never logged or serialized to queue files.</li><li><strong>Structured Block Layout:</strong> Notion pages follow a rigid structural hierarchy: AI-Formatted Transcript → Summary Callout → Key Points → Decisions → Action Items (native <code class="font-mono text-xs">to_do</code> blocks) → Follow-Ups → and finally the verbatim Raw Transcript enclosed in an expandable toggle block at the absolute bottom.</li><li><strong>2,000-Character Notion Block Boundary Splitting:</strong> The Notion API rejects any block whose rich text content exceeds 2,000 characters. Talks automatically splits long transcript paragraphs across safe sentence boundaries to prevent API payload rejections.</li><li><strong>Zero Duplicate Page Invariant:</strong> If an upload fails midway through block insertion, the job persists the created Notion page ID. Upon retry, <code class="font-mono text-xs">NotionService</code> queries existing block children and appends only missing blocks, preventing duplicate pages or repeated blocks.</li></ul></section>
+
+<section class="space-y-6"><h2 id="8-real-failure-modes-engineering-lessons">8. Real Failure Modes &amp; Engineering Lessons</h2><div><div><div><svg aria-hidden="true" class="lucide lucide-shield-alert h-5 w-5 text-signal" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg><h3>Avoiding 0xbaadca11 Watchdog Kills</h3></div><p>iOS background tasks (<code class="font-mono text-xs">UIBackgroundTaskIdentifier</code>) grant a brief window to complete work when suspended. If an expiration handler blocks or attempts asynchronous cleanup, iOS immediately terminates the process with exception code <code class="font-mono text-xs">0xbaadca11</code>. Talks encapsulates background task identifiers in an isolated, thread-safe <code class="font-mono text-xs">BackgroundTaskBox</code>: when the expiration handler fires, it invokes <code class="font-mono text-xs">getAndClear()</code> synchronously, cleans up state immediately, and signals task completion without attempting blocking network operations.</p></div><div><div><svg aria-hidden="true" class="lucide lucide-circle-check-big h-5 w-5 text-signal" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg><h3>Why Live-Message ACKs Fail</h3></div><p>Early iterations attempted to acknowledge file receipt from iPhone to Apple Watch using <code class="font-mono text-xs">WCSession.sendMessage</code>. However, <code class="font-mono text-xs">sendMessage</code> requires both apps to be active and reachable simultaneously. If the watch went to sleep immediately after finishing capture, the ACK would fail with an error, leaving the watch uncertain whether the file had arrived. Replacing live messages with <code class="font-mono text-xs">WCSession.transferUserInfo</code> resolved the problem: the system queues the acknowledgement dictionary out-of-process, delivering it reliably when watchOS wakes.</p></div></div></section>
+
+<section class="space-y-4 border-t border-line pt-10"><h2 id="9-verification-test-suite">9. Verification &amp; Test Suite</h2><p>The entire audio, transfer, queue, and sync pipeline is verified by a suite of <strong>54 unit and integration tests</strong> in<code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">TalksTests/PipelineTests.swift</code>:</p><div><span>Audio Format &amp; Integrity</span><span>Corrupt Audio Rejection</span><span>Transfer ACK Invariant</span><span>Raw Transcript Immutability</span><span>Hierarchical Chunking</span><span>Notion Block Ordering</span><span>Notion Page ID Parsing</span><span>Rate Limit &amp; 429 Retry</span><span>Idempotent Block Upload</span><span>Job Queue Persistence</span><span>Crash Resumption Logic</span><span>Speech Watchdog Timeout</span></div></section>
+
+<section class="space-y-4 border-t border-line pt-10"><h2 id="10-source-code-open-source">10. Source Code &amp; Open Source</h2><p>Talks is fully open source under the MIT License. The repository includes complete Xcode project specifications (<code class="font-mono text-xs">project.yml</code>), SwiftUI views, watchOS background audio configurations, and test runners.</p><div><a href="https://github.com/sonawaneutkarsh/Talks" rel="noopener noreferrer" target="_blank">Explore the Talks repository on GitHub <svg aria-hidden="true" class="lucide lucide-arrow-up-right h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></a></div></section>
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <p>Utkarsh Sonawane — Pennsylvania State University</p>
+  </footer>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

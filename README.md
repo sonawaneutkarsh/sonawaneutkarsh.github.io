@@ -1,43 +1,48 @@
-# Portfolio
+# Utkarsh Sonawane — Personal Portfolio
 
-A minimal, premium portfolio site built with Next.js 14 (App Router), TypeScript, and Tailwind CSS. Static-exported and deployed to GitHub Pages. Includes a Recruiter / Experience mode toggle, with all content driven by the `/data` directory.
+Clean, fast, static portfolio and personal site deployable directly to **GitHub Pages**. Modeled directly on [Alisa Liu's site](https://alisawuffles.github.io/).
 
-## Run locally
+## Design Language & System
 
-```bash
-npm install
-npm run dev
+- **Background:** Near-white (`#FAFAFA`) in pure light mode.
+- **Cards:** Crisp white (`#FFFFFF`) with thin light-gray border (`#E5E7EB`) and subtle shadow (`0 1px 3px rgba(0, 0, 0, 0.04)`).
+- **Typography:** System sans-serif stack (`-apple-system`, `BlinkMacSystemFont`, `Segoe UI`, `Source Sans 3`, `Inter`).
+- **Accent:** Deep violet / purple (`#6D28D9`) used for inline links, active filter pills, outlined pill buttons, and section subheadings.
+- **Projects Showcase:** Replicates academic publication section with client-side instant filtering across topics (`AI Agents`, `Mobile`, `ML Research`), key metric callouts, and purple pill buttons (`Code`, `Deep Dive`).
+- **Deep Dives:** Comprehensive standalone case studies for Nytr, Talks, Clage, Devvy, and ScholarAI featuring sticky left `CONTENTS` scrollspy navigation, local video demo, architecture breakdowns, and benchmarks.
+- **Blog:** Minimal blog index with clean date alignment (`YYYY-MM-DD Title`) and individual post pages.
+- **Performance:** Zero framework dependencies, pure static HTML5 / CSS3 / ES6.
+
+## Directory Structure
+
+```text
+.
+├── index.html              # Main single-scrolling portfolio
+├── styles.css              # Custom responsive stylesheet (light mode & typography)
+├── script.js               # Client-side topic filtering and TOC scrollspy
+├── avatar.jpg              # High-DPI circular profile photo
+├── resume.pdf              # PDF résumé
+├── favicon.ico             # Favicon
+├── favicon-32x32.png       # High-res Favicon
+├── .nojekyll               # Disables Jekyll processing on GitHub Pages
+├── assets/                 # Brand icons (alphaXiv, Hugging Face, Google Scholar)
+├── images/                 # Project screenshots and diagrams
+├── videos/                 # Project demo videos
+├── blog/
+│   └── hello-world/
+│       └── index.html      # Blog post page
+└── projects/
+    ├── nytr/index.html     # Nytr technical case study
+    ├── talks/index.html    # Talks technical case study
+    ├── clage/index.html    # Clage technical case study
+    ├── devvy/index.html    # Devvy technical case study
+    └── scholarai/index.html# ScholarAI technical case study
 ```
 
-Open [http://localhost:3000](http://localhost:3000). `npm run build` produces a static export in `/out`; `npm start` previews that export locally (via `npx serve out`).
+## Local Preview
 
-## How deployment works
+```bash
+python3 -m http.server 8000
+```
 
-Pushing to `main` triggers the GitHub Action in `.github/workflows/deploy.yml`:
-
-1. Installs dependencies (`npm ci`)
-2. Builds the static export (`npm run build` → `/out`)
-3. Deploys `/out` to GitHub Pages via the `deploy-pages` action
-
-The site is then live at `https://sonawaneutkarsh.github.io/`. The empty `public/.nojekyll` file ships with the export so GitHub Pages doesn't run Jekyll (which would ignore Next.js's `_next` folder).
-
-## Editing content
-
-All site content lives in `/data` — the UI reads these files directly. Edit a file and push; the site rebuilds automatically.
-
-| File | What it controls |
-|---|---|
-| `data/projects.ts` | Projects (title, one-liner, description, role, tech, metrics, links, status). Order in the array = display order. `featured: true` marks Clage for the hero featured card. |
-| `data/education.ts` | School, degree, GPA, and expected graduation (surfaced in the hero credential line). |
-| `data/skills.ts` | Skill groups and their tag lists. |
-| `data/achievements.ts` | Achievements with optional detail. |
-| `data/certifications.ts` | Certifications (one entry: Ethics of AI). |
-| `data/contact.ts` | Name, email, phone, LinkedIn, GitHub, Discord, resume URL, location. Only non-empty fields render. |
-| `data/types.ts` | TypeScript types for all of the above. |
-| `app/layout.tsx` | Page metadata (title, description, OG, theme color, no-Flash theme script). |
-
-### Still TODO
-- `data/contact.ts` resume URL (intentionally left empty — no resume to link)
-- A real favicon and `og:image` social card
-
-`/.commandcode/` (Command Code agent state) is git-ignored and never committed.
+Open `http://localhost:8000` in your browser.

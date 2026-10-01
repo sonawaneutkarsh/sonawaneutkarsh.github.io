@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nytr: Evidence-Driven Nutrition & Training Decision Platform — Utkarsh Sonawane</title>
+  <meta name="description" content="Penn State dining changes every day, while nutrition and training targets don’t. I built Nytr around Penn State Harrisburg’s Stacks Market to combine daily dining availability with verified food logs, Apple HealthKit telemetry, and Hevy strength history into deterministic meal recommendations and progressive-overload guidance.">
+  <meta name="author" content="Utkarsh Sonawane">
+  
+  <link rel="icon" href="../../favicon.ico" sizes="any">
+  <link rel="icon" href="../../favicon-32x32.png" type="image/png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="blog-post-page">
+
+  <!-- Sticky Left CONTENTS Sidebar (Desktop) -->
+  <nav class="toc-sidebar" aria-label="Contents">
+    <p class="toc-title">Contents</p>
+    <ol class="toc-list">
+      <li><a href="#product-demo">Product Demo</a></li>
+      <li><a href="#1-overview-system-philosophy">1. Overview & System Philosophy</a></li>
+      <li><a href="#2-explicit-source-authority">2. Explicit Source Authority</a></li>
+      <li><a href="#3-architecture-public-safe-topology">3. Architecture & Public-Safe Topology</a></li>
+      <li><a href="#4-key-engineering-challenges">4. Key Engineering Challenges</a></li>
+      <li><a href="#5-verification-production-discipline">5. Verification & Production Discipline</a></li>
+      <li><a href="#6-engineering-lessons">6. Engineering Lessons</a></li>
+    </ol>
+  </nav>
+
+  <main class="container">
+    <article class="blog-post-article">
+      <a href="../../#projects" class="back-link">← Projects</a>
+
+      <header class="post-header">
+        <h1>Nytr: Evidence-Driven Nutrition & Training Decision Platform</h1>
+        <p class="post-subtitle">Penn State dining changes every day, while nutrition and training targets don’t. I built Nytr around Penn State Harrisburg’s Stacks Market to combine daily dining availability with verified food logs, Apple HealthKit telemetry, and Hevy strength history into deterministic meal recommendations and progressive-overload guidance.</p>
+        
+        <div class="case-study-meta">
+          <div class="meta-links">
+            <a href="https://github.com/sonawaneutkarsh/Nytr" target="_blank" rel="noopener" class="pill-btn">Code Repository</a>
+          </div>
+        </div>
+      </header>
+
+      <div class="prose">
+        <section aria-labelledby="product-demo-heading" class="mt-10 border-b border-line pb-12"><div><h2 id="product-demo">Product Demo</h2><span>1:08 · 1080p · Stereo Audio</span></div><div><video aria-label="Nytr product demo showing Penn State dining recommendations, food logging, deterministic training coaching, progress tracking, and on-device AI explanation" controls="True" playsinline="" poster="/images/projects/nytr/nytr-demo-poster.png" preload="metadata" style="max-width:100%; border-radius:8px; border:1px solid var(--border); margin:1.5rem 0;"><source src="../../videos/nytr-demo.mp4" type="video/mp4"/>Your browser does not support the video tag.</video></div><p>Dining availability, deterministic meal guidance, training coaching, progress tracking, and optional on-device explanation.</p></section>
+
+<section class="space-y-4"><h2 id="1-overview-system-philosophy">1. Overview &amp; System Philosophy</h2><p>Many consumer nutrition tools couple unverified inputs with heuristic auto-adjustments, silently mutating historical records or altering daily calorie targets based on noisy wearable burn estimates (“exercise-calorie eat-back”). When decision logic relies on non-authoritative estimates, recommendations quickly diverge from measurable progress.</p><p>Nytr separates authoritative source data, deterministic computation, and user-approved policy changes so constrained decisions do not depend on non-authoritative estimates:</p><div><span>Core Principle</span><p>DATA → DETERMINISTIC CALCULATION → DECISION</p><p>Raw facts are ingested with immutable provenance. Math runs deterministically in pure domain logic. Decisions belong exclusively to the human user.</p></div><p>Nytr is <strong>not</strong> a generic calorie tracker, an LLM chatbot wrapper, or an automated health dashboard. It is an operational decision platform deployed for daily life at Penn State Harrisburg, specifically bounded to campus dining (Stacks Market), Apple HealthKit weight observations, and Hevy strength logs. Authoritative meal scoring and progressive-overload decisions are computed deterministically. An optional Apple Foundation Models integration operates downstream purely to provide private, on-device explanations and second opinions without affecting authoritative calculations.</p></section>
+
+<section class="space-y-4"><h2 id="2-explicit-source-authority">2. Explicit Source Authority</h2><p>Distributed data systems fail when multiple sources claim ownership over the same domain concept. Nytr prevents source confusion through a strict, non-negotiable authority matrix:</p><div><table><thead><tr><th>Upstream Source</th><th>Exclusive Authority</th><th>Deliberately Forbidden Scope</th></tr></thead><tbody><tr><td>Penn State Dining (Stacks)</td><td>Menu availability, serving units, recipe names, published macro profiles</td><td>Cannot dictate meal timing, user schedule, or daily calorie targets</td></tr><tr><td>Apple HealthKit (via iOS Companion)</td><td>Historical body mass, workout session timing context</td><td>Active calorie burn cannot alter food recommendations; no on-device trend math</td></tr><tr><td>Hevy Official API</td><td>Workout exercise sets, reps, load, and volume progression revisions</td><td>Cannot alter HealthKit session authority or create unlogged sessions</td></tr><tr><td>FastAPI / PostgreSQL Backend</td><td>Deterministic plan scoring, target policies, 28-day trends, audit logs</td><td>Cannot auto-apply target modifications without explicit user approval</td></tr></tbody></table></div></section>
+
+<section class="space-y-4"><h2 id="3-architecture-public-safe-topology">3. Architecture &amp; Public-Safe Topology</h2><p>Nytr avoids fragile microservices in favor of a <strong>Python + FastAPI modular monolith</strong> backed by Supabase PostgreSQL and a native SwiftUI iOS companion client:</p><div><pre class="text-ink overflow-x-auto">┌────────────────────────┐      ┌─────────────────────────┐      ┌─────────────────────────┐
+│   Penn State Stacks    │      │    Apple HealthKit      │      │     Hevy Cloud API      │
+│  Daily Menu Scraper    │      │   (Native iOS Client)   │      │ (Official Developer API)│
+└───────────┬────────────┘      └────────────┬────────────┘      └────────────┬────────────┘
+            │ Bounded Ingestion              │ Idempotent Sync                │ Append-Only Sync
+            ▼ Compliance Gate                ▼ Dual Anchors                   ▼ Token Redacted
+┌──────────────────────────────────────────────────────────────────────────────────────────┐
+│                                FastAPI Modular Monolith                                  │
+│                                                                                          │
+│  ┌──────────────────────┐  ┌───────────────────────┐  ┌───────────────────────────────┐  │
+│  │   Dining Ingestion   │  │   HealthKit Receiver  │  │    Training Syncer (Hevy)     │  │
+│  │  • Complete vs Usable│  │  • Tombstone Deletion │  │  • Session Revisions          │  │
+│  │  • Mid Identity Reuse│  │  • kg Unit Canonical  │  │  • Volume &amp; Progression Math  │  │
+│  └──────────┬───────────┘  └───────────┬───────────┘  └───────────────┬───────────────┘  │
+│             │                          │                              │                  │
+│             ▼                          ▼                              ▼                  │
+│  ┌────────────────────────────────────────────────────────────────────────────────────┐  │
+│  │                               Pure Domain Engine                                   │  │
+│  │  • Deterministic Decimal Arithmetic (exact numeric precision)                      │  │
+│  │  • Schedule Resolution (Class schedule + workout timing context)                   │  │
+│  │  • Strict Dietary Eligibility Gates (Diet-Specific Filtering)                     │  │
+│  │  • Bounded Candidate Scoring &amp; Frozen Plan Generation (SHA-256 Fingerprint)        │  │
+│  │  • 28-Day Theil-Sen Body-Mass Trend &amp; Explicit Target Review Policy                │  │
+│  └─────────────────────────────────────┬──────────────────────────────────────────────┘  │
+└────────────────────────────────────────┼─────────────────────────────────────────────────┘
+                                         │ Authenticated RLS / Backend Service Connection
+                                         ▼
+┌──────────────────────────────────────────────────────────────────────────────────────────┐
+│                                 Supabase PostgreSQL                                      │
+│  • Immutable Plan Runs, Items &amp; Target Policy Versions (Append-Only)                     │
+│  • Controlled Tombstone Updates (tombstoned_at) on HealthKit Sync Records                │
+│  • Shared Dining Menus &amp; Station Cache (Read via Backend Service Connection)             │
+│  • User-Owned Tables Protected by Row-Level Security (RLS) Bound to Auth Identity        │
+└──────────────────────────────────────────────────────────────────────────────────────────┘</pre></div></section>
+
+<section class="space-y-6"><h2 id="4-key-engineering-challenges">4. Key Engineering Challenges</h2><div><div><div><svg aria-hidden="true" class="lucide lucide-activity h-5 w-5 text-signal" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"></path></svg><h3>Dual-Anchor HealthKit Synchronization &amp; Tombstone Semantics</h3></div><p>Syncing mobile health telemetry over cellular networks requires distinguishing between transient query state and durable storage:</p><ul><li><strong>Transient vs Durable Anchors:</strong> The iOS companion uses an in-memory<!-- --> <code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">HKQueryAnchor</code> during anchored queries. However, the durable sync anchor (<code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">health.sync.*.durableState.v1</code>) advances in device keychain storage <em>only after</em> the backend confirms a successful database transaction commit. If a crash occurs mid-flight, the batch safely replays without duplication.</li><li><strong>Idempotent Tombstone Deletions:</strong> When samples are deleted in Apple Health, a tombstone record is committed (<code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">tombstoned_at</code>). If an out-of-order add arrives for an already-tombstoned UUID, the backend immediately drops it—preventing ghost resurrection of deleted data.</li></ul></div><div><div><svg aria-hidden="true" class="lucide lucide-database h-5 w-5 text-signal" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></svg><h3>Database-Enforced Immutability &amp; Row-Level Security</h3></div><p>Traditional web apps mutate historical logs when user settings or nutritional profiles change. In Nytr, historical truth is permanent:</p><ul><li><strong>PostgreSQL Row-Level Security:</strong> User-owned tables enforce RLS policies bound directly to the authenticated user ID. Plan runs, daily items, and target policy versions are strictly immutable insert-only records.</li><li><strong>Controlled Tombstone Semantics:</strong> Health telemetry synchronizations avoid physical row deletion in favor of explicit <code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">tombstoned_at</code> timestamps, maintaining historical auditability. Shared global dining menus and station caches are accessed via a dedicated backend service connection without per-user RLS.</li><li><strong>Versioned Pinning:</strong> When a daily plan is generated, it pins the exact<!-- --> <code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">nutrition_profile_version_id</code> and<!-- --> <code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">target_policy_version_id</code>. Historical plans never re-query modern food profiles; they represent a verifiable snapshot sealed with a SHA-256 fingerprint.</li></ul></div><div><div><svg aria-hidden="true" class="lucide lucide-cpu h-5 w-5 text-signal" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 20v2"></path><path d="M12 2v2"></path><path d="M17 20v2"></path><path d="M17 2v2"></path><path d="M2 12h2"></path><path d="M2 17h2"></path><path d="M2 7h2"></path><path d="M20 12h2"></path><path d="M20 17h2"></path><path d="M20 7h2"></path><path d="M7 20v2"></path><path d="M7 2v2"></path><rect height="16" rx="2" width="16" x="4" y="4"></rect><rect height="8" rx="1" width="8" x="8" y="8"></rect></svg><h3>Deterministic Decimal Arithmetic &amp; No Exercise Eat-Back</h3></div><p>Using Decimal/numeric arithmetic avoids binary floating-point rounding error in persisted nutrition and body-mass calculations:</p><ul><li><strong>End-to-End Decimal Types:</strong> All continuous quantities (calories, protein, carbs, fats, body mass) parse through Python’s <code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">Decimal</code> module and persist into PostgreSQL <code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">numeric(6,3)</code> columns, maintaining exact precision across domain calculations and database storage.</li><li><strong>Strict Anti-Eat-Back Doctrine:</strong> Workouts observed via HealthKit or Hevy provide timing context (e.g., qualifying a dated lunch slot as a <code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">post_workout_lunch</code> with 40% daily calorie allocation). Workouts <em>never</em> add extra calories to the daily target. This protects lean-bulk goals from exercise overcompensation.</li></ul></div><div><div><svg aria-hidden="true" class="lucide lucide-shield-alert h-5 w-5 text-signal" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg><h3>28-Day Theil–Sen Body-Mass Evidence Window &amp; Target Reviews</h3></div><p>Instead of automatic recalibration that alters meal sizes without warning, Nytr runs an on-demand 28-day body-mass evidence window using robust Theil–Sen slope estimation:</p><ul><li>The median-of-slopes Theil–Sen estimator calculates an outlier-resistant rate of change (kg/week) over a 28-day rolling window, remaining resilient against single-day hydration fluctuations.</li><li>If the trend indicates a persistent rate outside target boundaries, the backend formulates a bounded review proposal (strictly limited to ±100 kcal).</li><li>The review is purely advisory. The proposal can only become active policy when the authenticated user explicitly approves it on iOS, which atomically writes a new versioned target policy row and a mandatory decision-log rationale.</li></ul></div></div></section>
+
+<section class="space-y-4"><h2 id="5-verification-production-discipline">5. Verification &amp; Production Discipline</h2><p>Because Nytr is trusted with personal health and nutrition in production, it is backed by a rigorous test and verification suite:</p><div><div><p>940+</p><p>Backend Tests</p><p>Pytest suite covering domain algorithms, candidate scoring, date windows, idempotency, and PostgreSQL RLS integration.</p></div><div><p>250+</p><p>iOS Tests</p><p>XCTest suite covering HealthKit sync state machines, offline persistence, and view-model transitions.</p></div><div><p>Dual Anchors</p><p>Sync Engine</p><p>Durable anchors and idempotent writes support replay-safe mobile synchronization.</p></div><div><p>Hardware</p><p>Physical Validation</p><p>Physical-device validated with real iPhone hardware, authentic Apple HealthKit permissions, and Stacks Market food offerings.</p></div></div></section>
+
+<section class="space-y-4 border-t border-line pt-10"><h2 id="6-engineering-lessons">6. Engineering Lessons</h2><div><p><strong>1. Use deterministic computation where constraints must be exact:</strong> Meal scoring, dietary exclusions, target math, and historical reconstruction operate over verified, versioned data rather than probabilistic model output.</p><p><strong>2. Treat data provenance as a tier-1 property:</strong> In production systems, knowing<em>where</em> a datum originated (e.g. verified Stacks label vs user estimated portion vs HealthKit sensor) is just as critical as the value itself.</p><p><strong>3. Contained failure modes:</strong> Append-only history, controlled tombstones, and idempotent writes prevent specific mutation, replay, and accidental-overwrite failure modes.</p></div></section>
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <p>Utkarsh Sonawane — Pennsylvania State University</p>
+  </footer>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

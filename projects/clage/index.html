@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clage: Neuroevolution & Artificial Life from Scratch — Utkarsh Sonawane</title>
+  <meta name="description" content="A pure Python implementation of NeuroEvolution of Augmenting Topologies (NEAT) built withoutneat-pythonor machine-learning libraries. Paired with an energy-constrained 2D simulation world, reproducible multi-seed experiments, and behavioral diversity metrics.">
+  <meta name="author" content="Utkarsh Sonawane">
+  
+  <link rel="icon" href="../../favicon.ico" sizes="any">
+  <link rel="icon" href="../../favicon-32x32.png" type="image/png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="blog-post-page">
+
+  <!-- Sticky Left CONTENTS Sidebar (Desktop) -->
+  <nav class="toc-sidebar" aria-label="Contents">
+    <p class="toc-title">Contents</p>
+    <ol class="toc-list">
+      <li><a href="#1-why-build-neat-from-scratch">1. Why Build NEAT from Scratch?</a></li>
+      <li><a href="#2-core-algorithm-architecture">2. Core Algorithm Architecture</a></li>
+      <li><a href="#3-2d-artificial-life-environment">3. 2D Artificial-Life Environment</a></li>
+      <li><a href="#4-behavioral-diversity-empirical-rigor">4. Behavioral Diversity & Empirical Rigor</a></li>
+      <li><a href="#5-verification-test-suite">5. Verification & Test Suite</a></li>
+    </ol>
+  </nav>
+
+  <main class="container">
+    <article class="blog-post-article">
+      <a href="../../#projects" class="back-link">← Projects</a>
+
+      <header class="post-header">
+        <h1>Clage: Neuroevolution & Artificial Life from Scratch</h1>
+        <p class="post-subtitle">A pure Python implementation of NeuroEvolution of Augmenting Topologies (NEAT) built withoutneat-pythonor machine-learning libraries. Paired with an energy-constrained 2D simulation world, reproducible multi-seed experiments, and behavioral diversity metrics.</p>
+        
+        <div class="case-study-meta">
+          <div class="meta-links">
+            <a href="https://github.com/sonawaneutkarsh/Clage" target="_blank" rel="noopener" class="pill-btn">Code Repository</a>
+          </div>
+        </div>
+      </header>
+
+      <div class="prose">
+        <section class="space-y-4"><h2 id="1-why-build-neat-from-scratch">1. Why Build NEAT from Scratch?</h2><p>Modern deep learning treats neural network topologies as static, fixed computation graphs where only connection weights are optimized via backpropagation. In contrast, Kenneth Stanley’s <em>NeuroEvolution of Augmenting Topologies (NEAT)</em> <!-- -->evolves both connection weights <strong>and</strong> the graph structure simultaneously.</p><p>While standard packages like <code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">neat-python</code> exist, they obscure the subtle graph mechanics: how to cross over two neural networks of radically different shapes without combinatorial explosion, how to prevent destructive competition among novel structures, and how to verify topological correctness.</p><p>I built Clage from first principles to understand exactly what happens underneath evolutionary graph abstractions. Every line of code—from gene encoding to speciation distance equations—is implemented in pure Python, backed by a rigorous 300-test suite.</p></section>
+
+<section class="space-y-6"><h2 id="2-core-algorithm-architecture">2. Core Algorithm Architecture</h2><div><div><div><svg aria-hidden="true" class="lucide lucide-git-branch h-5 w-5 text-signal" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M15 6a9 9 0 0 0-9 9V3"></path><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle></svg><h3>Global Innovation Ledger</h3></div><p>To align matching genes between two arbitrarily evolved neural networks during crossover, Clage maintains a global innovation database. When a structural mutation adds a connection between node <code class="font-mono text-xs">in</code> and node <code class="font-mono text-xs">out</code>, the ledger checks if that exact innovation occurred elsewhere in the current generation. If so, it reuses the historical innovation number; otherwise, it increments the global counter. This makes linear-time topological alignment possible.</p></div><div><div><svg aria-hidden="true" class="lucide lucide-dna h-5 w-5 text-signal" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m10 16 1.5 1.5"></path><path d="m14 8-1.5-1.5"></path><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"></path><path d="m16.5 10.5 1 1"></path><path d="m17 6-2.891-2.891"></path><path d="M2 15c6.667-6 13.333 0 20-6"></path><path d="m20 9 .891.891"></path><path d="M3.109 14.109 4 15"></path><path d="m6.5 12.5 1 1"></path><path d="m7 18 2.891 2.891"></path><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"></path></svg><h3>Speciation &amp; Compatibility</h3></div><p>Structural additions initially decrease fitness because new connections have unoptimized weights. Clage partitions the population into evolutionary niches (species) using Kenneth Stanley’s compatibility distance:</p><div>δ = (c1 · E / N) + (c2 · D / N) + c3 · ΔW</div><p>where E is excess genes, D is disjoint genes, and ΔW is average weight difference across matching genes. The normalizer N is set to 1 for small genomes (&lt; 20 connections) to prevent distance collapse. Species maintain persistent representative champions, age counters, and stagnation tracking with explicit shared fitness.</p></div><div><div><svg aria-hidden="true" class="lucide lucide-network h-5 w-5 text-signal" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><rect height="6" rx="1" width="6" x="16" y="16"></rect><rect height="6" rx="1" width="6" x="2" y="16"></rect><rect height="6" rx="1" width="6" x="9" y="2"></rect><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"></path><path d="M12 12V8"></path></svg><h3>Phenotype Network Construction</h3></div><p>Clage decodes genome connection lists into executable feed-forward neural networks in pure Python. A deterministic evaluation order is established using Kahn’s topological sort with min-heap tie-breaking on node IDs. Active graph cycles raise a <code class="rounded bg-mist px-1 py-0.5 font-mono text-xs">ValueError</code> at decode time (strictly feed-forward, cyclic graphs rejected at decode time), and node activations compute <code class="rounded bg-mist px-1 py-0.5 font-mono text-xs">math.tanh</code> over incoming weighted sums plus bias.</p></div><div><div><svg aria-hidden="true" class="lucide lucide-flask-conical h-5 w-5 text-signal" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2"></path><path d="M6.453 15h11.094"></path><path d="M8.5 2h7"></path></svg><h3>Benchmark Validation</h3></div><p>Before deploying the engine in an open-ended simulation, the evolutionary implementation was validated across fixed random seeds against:<strong>OR</strong>, <strong>AND</strong>, non-linearly separable <strong>XOR</strong> (requiring evolved hidden nodes), and continuous <strong>sine wave regression</strong>.</p></div></div></section>
+
+<section class="space-y-4"><h2 id="3-2d-artificial-life-environment">3. 2D Artificial-Life Environment</h2><p>Once benchmarked, the NEAT engine was connected to an embodied 2D walled grid world with energy dynamics:</p><ul><li><strong>9-Number Observation Vector:</strong> At every tick, an organism observes its surroundings via a normalized 9-element array:<code class="mt-1 block overflow-x-auto rounded bg-mist p-2 font-mono text-xs text-ink">[food_dx, food_dy, food_density, organism_density, normalized_energy, boundary_x, boundary_y, prev_move, prev_eat]</code>where <code class="font-mono text-xs">food_dx</code> and <code class="font-mono text-xs">food_dy</code> are normalized offsets to the nearest food item in [-1.0, 1.0],<code class="font-mono text-xs">food_density</code> and <code class="font-mono text-xs">organism_density</code> count entities within a radial window,<code class="font-mono text-xs">normalized_energy</code> represents remaining energy fraction,<code class="font-mono text-xs">boundary_x</code> / <code class="font-mono text-xs">boundary_y</code> measure wall proximity (1.0 at walls, 0.0 at center), and <code class="font-mono text-xs">prev_move</code> / <code class="font-mono text-xs">prev_eat</code> are binary indicators of the organism’s previous action.</li><li><strong>4 Discrete Network Actions:</strong> The neural network outputs 4 values; the organism executes the action corresponding to <code class="font-mono text-xs">argmax(outputs)</code>:<div><span>0: MOVE (Forward)</span><span>1: TURN_LEFT (90°)</span><span>2: TURN_RIGHT (90°)</span><span>3: EAT (Facing Cell)</span></div></li><li><strong>Lifecycle Reproduction (Not a Neural Trigger):</strong> Reproduction is not an action emitted by the network. Instead, it is a separate lifecycle event evaluated after action execution and metabolic deduction: if an organism’s energy meets or exceeds the reproduction threshold and an adjacent grid cell is vacant, the organism reproduces asexually, transferring a configured energy fraction to an offspring placed in the adjacent cell.</li><li><strong>Metabolic &amp; World Dynamics:</strong> Each tick incurs an unavoidable baseline metabolic cost. Food regenerates dynamically across configurable spatial distributions to prevent trivial static feeding.</li></ul></section>
+
+<section class="space-y-4"><h2 id="4-behavioral-diversity-empirical-rigor">4. Behavioral Diversity &amp; Empirical Rigor</h2><p>In evolutionary simulations, it is easy to mistake accidental spatial clustering for genuine behavioral intelligence. To measure whether populations actually developed diverse survival strategies, I designed a set of quantitative behavioral metrics computed from per-tick traces, including:</p><div><div><p>Action Entropy</p><p>Shannon entropy across the 4-action distribution, distinguishing active multi-action policies from degenerate fixed agents.</p></div><div><p>Transition Entropy Rate</p><p>Conditional entropy H(a<sub>t</sub> | a<sub>t-1</sub>) measuring sequential action structure and temporal predictability beyond raw marginal frequencies.</p></div><div><p>Spatial Grid Coverage</p><p>Fraction of distinct grid cells visited over the total world area, quantifying dispersion without assuming navigation intent.</p></div><div><p>Food Alignment Cosine</p><p>Mean cosine between effective movement vectors and nearest-food direction vectors, tracking statistical directional coupling.</p></div></div><div><h3>Empirical Finding: Food Density Confound</h3><p>During experimental sweeps across food abundance conditions, initial analytics appeared to show that certain conditions yielded significantly higher “food navigation intelligence.” However, rigorous ablation revealed that <code class="rounded bg-mist px-1 py-0.5 font-mono text-xs">food_alignment_cosine</code> was base-rate confounded by local food replenishment density: in dense food environments, random walks naturally align with food items purely due to geometric proximity. Once diagnosed, food alignment was excluded from cross-condition comparisons and restricted strictly to within-condition baselines with equalized resource distributions.</p></div></section>
+
+<section class="space-y-4 border-t border-line pt-10"><h2 id="5-verification-test-suite">5. Verification &amp; Test Suite</h2><p>The entire engine is validated by <strong>300 unit and integration tests</strong> covering:</p><div><span>test_genome.py</span><span>test_innovation.py</span><span>test_crossover.py</span><span>test_mutation.py</span><span>test_speciation.py</span><span>test_phenotype.py</span><span>test_population.py</span><span>test_world.py</span><span>test_benchmarks.py</span></div></section>
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <p>Utkarsh Sonawane — Pennsylvania State University</p>
+  </footer>
+
+  <script src="../../script.js"></script>
+</body>
+</html>
