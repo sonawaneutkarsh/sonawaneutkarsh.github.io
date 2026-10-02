@@ -52,7 +52,11 @@
 
 <section class="space-y-4"><h2 id="1-the-problem-unstructured-government-scheme-portals">1. The Problem: Unstructured Government Scheme Portals</h2><p>Government welfare and scholarship programs in India are published across dozens of federal and state portals. While vast financial aid is allocated each fiscal year, citizen discovery suffers from critical data engineering bottlenecks:</p><ul><li><strong>Highly Heterogeneous Text:</strong> Public portals contain no unified schema. One scheme lists document requirements as clean bullet points, another as an unformatted run-on paragraph, and another as camelCase-concatenated text strings without punctuation or delimiters.</li><li><strong>Multi-Tiered Eligibility Rules:</strong> Criteria involve strict numerical thresholds (e.g., family annual income ≤ ₹2.5 Lakh), categorical constraints (Scheduled Tribe, OBC, General, PwD), geographic jurisdiction (State domicile vs. Central eligibility), and academic status (enrolled in recognized post-matric course).</li><li><strong>Pure Keyword Search Fails:</strong> A student searching for “tuition fee waiver for engineering” will miss “Post Matric Financial Assistance to ST Scholars” under simple keyword matching, because official scheme titles rarely match colloquial student queries.</li></ul></section>
 
-<section class="space-y-4"><h2 id="2-data-pipeline-architecture">2. Data Pipeline Architecture</h2><p>To power reliable retrieval and deterministic rule verification, I built a multi-stage data engineering pipeline that transforms raw public portal dumps into queryable relational and vector records:</p><div><pre class="text-ink overflow-x-auto">┌────────────────────────────────────────────────────────────────────────┐
+        <section class="space-y-4">
+          <h2 id="2-data-pipeline-architecture">2. Data Pipeline Architecture</h2>
+          <p>To power reliable retrieval and deterministic rule verification, I built a multi-stage data engineering pipeline that transforms raw public portal dumps into queryable relational and vector records:</p>
+          <div class="architecture-diagram">
+            <pre><code>┌────────────────────────────────────────────────────────────────────────┐
 │                        Raw Public Scheme Data                          │
 │  • Web scraper extraction across central and state welfare portals     │
 │  • 1,008 raw JSON files in data-engineering/scraped_schemes/           │
@@ -99,21 +103,106 @@
 │  • LangGraph 11-Node Agent Pipeline &amp; Local Qwen2.5:3B LLM             │
 │  • Deterministic Eligibility Gates &amp; Multi-Factor Comparison Engine    │
 │  • React 19 Citizen Discovery Dashboard &amp; What-If Simulator            │
-└────────────────────────────────────────────────────────────────────────┘</pre></div></section>
+└────────────────────────────────────────────────────────────────────────┘</code></pre>
+          </div>
+        </section>
 
-<section class="space-y-4"><h2 id="3-robust-regex-based-normalization">3. Robust Regex-Based Normalization</h2><p>A major engineering hurdle in <code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">batch_normalizer.py</code> was repairing unstructured text scraped from government web forms. Two parsing techniques proved essential:</p><div><div><div><svg aria-hidden="true" class="lucide lucide-database h-5 w-5 text-signal" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></svg><h3>CamelCase Document Splitting</h3></div><p>Scraped document lists frequently lacked whitespace or commas (e.g. <code class="font-mono text-xs">AadhaarCardIncomeCertificateHostelCertificate</code>). A regex lookaround pattern detected lowercase-to-uppercase character transitions:</p><div>re.sub(r'(?&lt;=[a-z])(?=[A-Z])', '|', doc_string)</div><p>Splitting by delimiter transformed run-on blocks into structured arrays of required certificates.</p></div><div><div><svg aria-hidden="true" class="lucide lucide-layers h-5 w-5 text-signal" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"></path><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"></path><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"></path></svg><h3>Workflow Step Extraction</h3></div><p>Application workflows were buried within dense paragraphs. A non-greedy regular expression parsed sequential steps:</p><div>re.findall(r'Step \d+:.*?(?=Step \d+:|$)', s, re.DOTALL)</div><p>Cleaned steps were isolated into actionable, ordered instructions for citizen guidance.</p></div></div><p>The batch pipeline processed all 1,008 raw files, validated required fields (rejecting corrupt or empty entries), and exported clean, schema-compliant JSON ready for database ingestion and vectorization.</p></section>
+        <section class="space-y-4">
+          <h2 id="3-robust-regex-based-normalization">3. Robust Regex-Based Normalization</h2>
+          <p>A major engineering hurdle in <code>batch_normalizer.py</code> was repairing unstructured text scraped from government web forms. Two parsing techniques proved essential:</p>
+          <div>
+            <div>
+              <h3>CamelCase Document Splitting</h3>
+              <p>Scraped document lists frequently lacked whitespace or commas (e.g. <code>AadhaarCardIncomeCertificateHostelCertificate</code>). A regex lookaround pattern detected lowercase-to-uppercase character transitions:</p>
+              <div class="callout-box">
+                <span class="callout-tag">Regex Transform</span>
+                <div class="callout-title">re.sub(r'(?&lt;=[a-z])(?=[A-Z])', '|', doc_string)</div>
+                <p class="metric-sub">Splitting by delimiter transformed run-on blocks into structured arrays of required certificates.</p>
+              </div>
+            </div>
+            <div>
+              <h3>Workflow Step Extraction</h3>
+              <p>Application workflows were buried within dense paragraphs. A non-greedy regular expression parsed sequential steps:</p>
+              <div class="callout-box">
+                <span class="callout-tag">Regex Extraction</span>
+                <div class="callout-title">re.findall(r'Step \d+:.*?(?=Step \d+:|$)', s, re.DOTALL)</div>
+                <p class="metric-sub">Cleaned steps were isolated into actionable, ordered instructions for citizen guidance.</p>
+              </div>
+            </div>
+          </div>
+          <p>The batch pipeline processed all 1,008 raw files, validated required fields (rejecting corrupt or empty entries), and exported clean, schema-compliant JSON ready for database ingestion and vectorization.</p>
+        </section>
 
-<section class="space-y-4"><h2 id="4-semantic-vector-embeddings-gte-small">4. Semantic Vector Embeddings (gte-small)</h2><p>To allow natural language retrieval against administrative scheme descriptions, I integrated<code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">thenlper/gte-small</code> via SentenceTransformers. GTE-small generates <strong>384-dimensional dense vectors</strong>, providing an optimal balance of semantic clustering quality and lightweight memory footprint for local and cloud PostgreSQL deployment.</p><p>Rather than embedding scheme titles alone, <code class="font-mono text-xs">generate_embeddings.py</code> constructed a composite text block:</p><div>[scheme_name] + [description] + [benefits] + [eligibility_summary]</div><p>Encoding was executed in batches of 32 (<code class="font-mono text-xs">batch_size = 32</code>), generating dense vectors for all 1,008 schemes in minutes. Vectors were serialized directly alongside relational records for atomic loading.</p></section>
+        <section class="space-y-4">
+          <h2 id="4-semantic-vector-embeddings-gte-small">4. Semantic Vector Embeddings (gte-small)</h2>
+          <p>To allow natural language retrieval against administrative scheme descriptions, I integrated <code>thenlper/gte-small</code> via SentenceTransformers. GTE-small generates <strong>384-dimensional dense vectors</strong>, providing an optimal balance of semantic clustering quality and lightweight memory footprint for local and cloud PostgreSQL deployment.</p>
+          <p>Rather than embedding scheme titles alone, <code>generate_embeddings.py</code> constructed a composite text block:</p>
+          <div class="callout-box">
+            <span class="callout-tag">Vector Payload</span>
+            <div class="callout-title">[scheme_name] + [description] + [benefits] + [eligibility_summary]</div>
+          </div>
+          <p>Encoding was executed in batches of 32 (<code>batch_size = 32</code>), generating dense vectors for all 1,008 schemes in minutes. Vectors were serialized directly alongside relational records for atomic loading.</p>
+        </section>
 
-<section class="space-y-4"><h2 id="5-postgresql-pgvector-database-architecture">5. PostgreSQL &amp; pgvector Database Architecture</h2><p>The persistence layer was designed around PostgreSQL with the <code class="rounded bg-mist px-1.5 py-0.5 font-mono text-xs">pgvector</code> extension:</p><ul><li><strong>Relational Models:</strong> SQLAlchemy models partitioned data across<code class="font-mono text-xs">schemes</code> (authoritative title, benefits, ministry, URL),<code class="font-mono text-xs">rules</code> (structured income upper-bounds, category constraints, student requirements), and <code class="font-mono text-xs">faqs</code> (official government question-and-answer pairs).</li><li><strong>Hybrid Search Indexing:</strong> Queries execute across three complementary indices: pgvector cosine distance (<code class="font-mono text-xs">&lt;=&gt;</code>) for semantic similarity, PostgreSQL <code class="font-mono text-xs">tsvector</code> for full-text keyword matching, and<code class="font-mono text-xs">pg_trgm</code> for typo-tolerant trigram search on scheme titles.</li><li><strong>Batched Ingestion Pipeline:</strong> To avoid network timeouts when populating Supabase,<code class="rounded bg-mist px-1 py-0.5 font-mono text-xs">bulk_insert.py</code> streams records in batches of 50, verifying foreign key constraints and vector dimensionality before committing each transaction.</li></ul></section>
+        <section class="space-y-4">
+          <h2 id="5-postgresql-pgvector-database-architecture">5. PostgreSQL &amp; pgvector Database Architecture</h2>
+          <p>The persistence layer was designed around PostgreSQL with the <code>pgvector</code> extension:</p>
+          <ul>
+            <li><strong>Relational Models:</strong> SQLAlchemy models partitioned data across <code>schemes</code> (authoritative title, benefits, ministry, URL), <code>rules</code> (structured income upper-bounds, category constraints, student requirements), and <code>faqs</code> (official government question-and-answer pairs).</li>
+            <li><strong>Hybrid Search Indexing:</strong> Queries execute across three complementary indices: pgvector cosine distance (<code>&lt;=&gt;</code>) for semantic similarity, PostgreSQL <code>tsvector</code> for full-text keyword matching, and <code>pg_trgm</code> for typo-tolerant trigram search on scheme titles.</li>
+            <li><strong>Batched Ingestion Pipeline:</strong> To avoid network timeouts when populating Supabase, <code>bulk_insert.py</code> streams records in batches of 50, verifying foreign key constraints and vector dimensionality before committing each transaction.</li>
+          </ul>
+        </section>
 
-<section class="space-y-4"><h2 id="6-downstream-system-architecture-team-contributions">6. Downstream System Architecture (Team Contributions)</h2><p>With the clean data foundation in place, my teammates built the surrounding application services:</p><div><div><p>LangGraph 11-Node Pipeline</p><p>StateGraph orchestrating intent extraction, question planning, eligibility filtering, vector retrieval, and verification.</p></div><div><p>Local LLM Reasoning</p><p>Qwen2.5:3B running via GGUF for private, on-device eligibility verification, decision reports, and side-by-side comparison scoring.</p></div><div><p>3-Tier Caching</p><p>Memory → Redis → PostgreSQL multi-layer caching reducing redundant LLM inferences and vector queries.</p></div><div><p>React 19 Frontend</p><p>Vite + Tailwind CSS interface featuring citizen onboarding, interactive comparison matrices, and What-If profile simulations.</p></div></div></section>
+        <section class="space-y-4">
+          <h2 id="6-downstream-system-architecture-team-contributions">6. Downstream System Architecture (Team Contributions)</h2>
+          <p>With the clean data foundation in place, my teammates built the surrounding application services:</p>
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-label">LangGraph 11-Node Pipeline</div>
+              <p class="metric-sub">StateGraph orchestrating intent extraction, question planning, eligibility filtering, vector retrieval, and verification.</p>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Local LLM Reasoning</div>
+              <p class="metric-sub">Qwen2.5:3B running via GGUF for private, on-device eligibility verification, decision reports, and side-by-side comparison scoring.</p>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">3-Tier Caching</div>
+              <p class="metric-sub">Memory → Redis → PostgreSQL multi-layer caching reducing redundant LLM inferences and vector queries.</p>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">React 19 Frontend</div>
+              <p class="metric-sub">Vite + Tailwind CSS interface featuring citizen onboarding, interactive comparison matrices, and What-If profile simulations.</p>
+            </div>
+          </div>
+        </section>
 
-<section class="space-y-6"><h2 id="7-engineering-tradeoffs-lessons">7. Engineering Tradeoffs &amp; Lessons</h2><div><div><div><svg aria-hidden="true" class="lucide lucide-shield-check h-5 w-5 text-signal" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg><h3>Deterministic Rules vs. Pure LLM Filtering</h3></div><p>Early design discussions considered passing all 1,000+ schemes directly to an LLM for eligibility determination. This was rejected due to latency, token costs, and hallucination risks. Instead, the architecture enforces a strict two-stage gate: the relational database first filters out impossible candidates using deterministic numerical constraints (<code class="font-mono text-xs">income_max</code>, category, state domicile). Filtering deterministic eligibility constraints before LLM reasoning substantially reduces the candidate set passed to the model, invoking LLM inference only on top candidates for nuanced qualitative evaluation.</p></div><div><div><svg aria-hidden="true" class="lucide lucide-circle-check-big h-5 w-5 text-signal" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg><h3>Pre-Computed Embeddings vs. Dynamic Ingestion</h3></div><p>Because government scheme details change infrequently (primarily during annual budget cycles), pre-computing embeddings offline during data ingestion proved far superior to dynamic runtime embedding generation. The backend queries the pgvector index directly with the user query vector in milliseconds without incurring per-scheme embedding latency.</p></div></div></section>
+        <section class="space-y-6">
+          <h2 id="7-engineering-tradeoffs-lessons">7. Engineering Tradeoffs &amp; Lessons</h2>
+          <div>
+            <div>
+              <h3>Deterministic Rules vs. Pure LLM Filtering</h3>
+              <p>Early design discussions considered passing all 1,000+ schemes directly to an LLM for eligibility determination. This was rejected due to latency, token costs, and hallucination risks. Instead, the architecture enforces a strict two-stage gate: the relational database first filters out impossible candidates using deterministic numerical constraints (<code>income_max</code>, category, state domicile). Filtering deterministic eligibility constraints before LLM reasoning substantially reduces the candidate set passed to the model, invoking LLM inference only on top candidates for nuanced qualitative evaluation.</p>
+            </div>
+            <div>
+              <h3>Pre-Computed Embeddings vs. Dynamic Ingestion</h3>
+              <p>Because government scheme details change infrequently (primarily during annual budget cycles), pre-computing embeddings offline during data ingestion proved far superior to dynamic runtime embedding generation. The backend queries the pgvector index directly with the user query vector in milliseconds without incurring per-scheme embedding latency.</p>
+            </div>
+          </div>
+        </section>
 
-<section class="space-y-4 border-t border-line pt-10"><h2 id="8-hackathon-verification-results">8. Hackathon Verification &amp; Results</h2><p>ScholarAI was developed for the <strong>USAII Global AI Hackathon 2026</strong>, competing against <strong>6,081+ participants</strong> worldwide across multi-disciplinary software engineering and AI tracks. The project was selected as a <strong>Finalist</strong> based on its working hybrid retrieval system, accurate eligibility matching, and end-to-end user experience across 1,008 live schemes.</p></section>
+        <section class="space-y-4">
+          <h2 id="8-hackathon-verification-results">8. Hackathon Verification &amp; Results</h2>
+          <p>ScholarAI was developed for the <strong>USAII Global AI Hackathon 2026</strong>, competing against <strong>6,081+ participants</strong> worldwide across multi-disciplinary software engineering and AI tracks. The project was selected as a <strong>Finalist</strong> based on its working hybrid retrieval system, accurate eligibility matching, and end-to-end user experience across 1,008 live schemes.</p>
+        </section>
 
-<section class="space-y-4 border-t border-line pt-10"><h2 id="9-source-code-team-repository">9. Source Code &amp; Team Repository</h2><p>ScholarAI is open source under the MIT License. The team repository includes the data engineering scripts, FastAPI backend, LangGraph state graph implementations, and React 19 frontend application.</p><div><a href="https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI" rel="noopener noreferrer" target="_blank">Explore the ScholarAI repository on GitHub <svg aria-hidden="true" class="lucide lucide-arrow-up-right h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></a></div></section>
+        <section class="space-y-4">
+          <h2 id="9-source-code-team-repository">9. Source Code &amp; Team Repository</h2>
+          <p>ScholarAI is open source under the MIT License. The team repository includes the data engineering scripts, FastAPI backend, LangGraph state graph implementations, and React 19 frontend application.</p>
+          <div>
+            <a href="https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI" rel="noopener noreferrer" target="_blank" class="pill-btn">Explore the ScholarAI repository on GitHub</a>
+          </div>
+        </section>
       </div>
     </article>
   </main>
