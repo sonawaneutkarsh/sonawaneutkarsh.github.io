@@ -80,28 +80,63 @@ function initCopyEmail() {
 // Sticky TOC Sidebar (Scrollspy for Blog & Deep Dive Case Studies)
 // ==========================================================================
 function initTOC() {
-  const tocLinks = document.querySelectorAll('.toc-list a');
-  const headings = Array.from(document.querySelectorAll('.prose h2, .prose h3'));
+  const tocLinks = Array.from(document.querySelectorAll('.toc-list a'));
+  if (!tocLinks.length) return;
 
-  if (!tocLinks.length || !headings.length) return;
+  const targetElements = tocLinks.map(link => {
+    const href = link.getAttribute('href');
+    if (!href || !href.startsWith('#')) return null;
+    const id = href.slice(1);
+    const el = document.getElementById(id);
+    return el ? { link, el, id } : null;
+  }).filter(Boolean);
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const id = entry.target.id;
-        tocLinks.forEach(link => {
-          link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
-        });
-      }
+  if (!targetElements.length) return;
+
+  function setActive(activeLink) {
+    tocLinks.forEach(link => {
+      link.classList.toggle('active', link === activeLink);
     });
-  }, {
-    rootMargin: '0px 0px -70% 0px',
-    threshold: 0.1
+  }
+
+  function updateTOC() {
+    const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+    const scrollBottom = window.innerHeight + scrollY;
+    const docHeight = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.offsetHeight
+    );
+
+    // 1. If at or near bottom of page (within 100px), highlight the very last TOC item
+    if (scrollBottom >= docHeight - 100) {
+      setActive(targetElements[targetElements.length - 1].link);
+      return;
+    }
+
+    // 2. Otherwise find the current active section based on top offset
+    let activeItem = targetElements[0];
+    for (let i = 0; i < targetElements.length; i++) {
+      const rect = targetElements[i].el.getBoundingClientRect();
+      if (rect.top <= 140) {
+        activeItem = targetElements[i];
+      } else {
+        break;
+      }
+    }
+    setActive(activeItem.link);
+  }
+
+  tocLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      setActive(link);
+    });
   });
 
-  headings.forEach(h => {
-    if (h.id) observer.observe(h);
-  });
+  window.addEventListener('scroll', updateTOC, { passive: true });
+  window.addEventListener('resize', updateTOC, { passive: true });
+  updateTOC();
 }
 
 // ==========================================================================

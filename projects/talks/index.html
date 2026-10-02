@@ -245,6 +245,14 @@
               <div class="metric-label">Decisions &amp; Action Items</div>
               <p class="metric-sub">Agreed deadlines, assigned responsibilities, and upcoming check-ins formatted as actionable checkboxes.</p>
             </div>
+            <div class="metric-card">
+              <div class="metric-label">Context-Aware Chunking</div>
+              <p class="metric-sub">Splits 60-minute transcripts along natural pauses into token-bounded ~3,500-character windows to fit on-device context.</p>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">100% On-Device Privacy</div>
+              <p class="metric-sub">Apple Foundation Models run strictly on the Apple Neural Engine with zero cloud API reliance and offline data sovereignty.</p>
+            </div>
           </div>
           <p>For long transcripts that exceed the on-device model’s token window, <code>MeetingAIService.splitIntoChunks</code> performs context-aware chunking: it divides text along natural paragraph and turn boundaries into bounded chunks (target size ~3,500 characters), generates structured summaries per section, and synthesizes a consolidated executive summary (<code>ConsolidatedSummaryOutput</code>) without dropping a single character from the source transcript.</p>
         </section>
