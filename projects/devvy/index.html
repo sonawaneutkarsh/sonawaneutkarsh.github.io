@@ -46,10 +46,27 @@
         </div>
       </header>
 
-      <div class="prose">
-        <section aria-labelledby="devvy-visuals-heading" class="mt-10 border-b border-line pb-12"><div><h2 id="live-presence-output">Live Presence Output</h2><span>Discord Rich Presence (V4 Activity)</span></div><div><div><img alt="Devvy Discord Rich Presence preview showing project name, activity mode Thinking, and detected AI model GPT 5.6" data-nimg="1" decoding="async" height="320" loading="lazy" src="../../images/projects/devvy/discord-presence.png" style="max-width:100%; height:auto; border-radius:8px; border:1px solid var(--border); margin:1.5rem 0;" width="878"/></div><p>Real Discord V4 presence: Project name, high-level activity mode (<code class="font-mono text-xs">Thinking</code>), and detected model (<code class="font-mono text-xs">GPT 5.6</code>) with deliberate context limitation (no file paths or raw prompts).</p></div></section>
+        <section aria-labelledby="devvy-visuals-heading" class="visuals-section">
+          <div>
+            <h2 id="live-presence-output">Live Presence Output</h2>
+            <p class="section-subtitle">Discord Rich Presence (V4 Activity)</p>
+          </div>
+          <div>
+            <img src="../../images/projects/devvy/discord-presence.png" alt="Devvy Discord Rich Presence preview showing project name, activity mode Thinking, and detected AI model GPT 5.6" class="project-img" width="878" height="320">
+            <p>Real Discord V4 presence: Project name, high-level activity mode (<code>Thinking</code>), and detected model (<code>GPT 5.6</code>) with deliberate context limitation (no file paths or raw prompts).</p>
+          </div>
+        </section>
 
-<section class="space-y-4"><h2 id="1-design-motivations-problem-space">1. Design Motivations &amp; Problem Space</h2><p>Displaying editor status in Discord should be a straightforward background utility. However, running multiple developer tools simultaneously (such as a GUI editor alongside terminal coding agents) creates clear architectural trade-offs that shaped Devvy’s design:</p><ul><li><strong>Preventing Multiple Local Integrations from Competing for Presence State:</strong> When developers run VS Code alongside autonomous agents like OpenCode or Command Code, having separate tools connect independently to Discord’s local pipe leads to presence fighting and rapid status changes. Devvy introduces a centralized local daemon that arbitrates priority so only the most relevant active context updates Discord.</li><li><strong>Avoiding Unnecessary Dependency Overhead:</strong> Establishing a local Unix domain socket connection and sending periodic JSON payloads does not require large third-party client libraries, native compiled binaries, or dozens of transitive dependencies. Devvy implements the protocol directly using Node.js built-in modules (<code class="font-mono text-xs">node:net</code>, <code class="font-mono text-xs">node:buffer</code>) with <strong>zero external runtime dependencies</strong>.</li><li><strong>Deliberately Limiting Exposed Context:</strong> Detailed file paths, full repository branches, or sensitive agent prompts should never be broadcast over a public presence payload. Devvy intentionally restricts presence to high-level metadata: project name, coarse activity mode (<code class="font-mono text-xs">Thinking</code>, <code class="font-mono text-xs">Editing</code>), and normalized model family names.</li></ul><p>By decoupling editor telemetry from the Discord connection, Devvy centralizes multi-editor workflows into a single predictable, lightweight service.</p></section>
+        <section class="space-y-4">
+          <h2 id="1-design-motivations-problem-space">1. Design Motivations &amp; Problem Space</h2>
+          <p>Displaying editor status in Discord should be a straightforward background utility. However, running multiple developer tools simultaneously (such as a GUI editor alongside terminal coding agents) creates clear architectural trade-offs that shaped Devvy’s design:</p>
+          <ul>
+            <li><strong>Preventing Multiple Local Integrations from Competing for Presence State:</strong> When developers run VS Code alongside autonomous agents like OpenCode or Command Code, having separate tools connect independently to Discord’s local pipe leads to presence fighting and rapid status changes. Devvy introduces a centralized local daemon that arbitrates priority so only the most relevant active context updates Discord.</li>
+            <li><strong>Avoiding Unnecessary Dependency Overhead:</strong> Establishing a local Unix domain socket connection and sending periodic JSON payloads does not require large third-party client libraries, native compiled binaries, or dozens of transitive dependencies. Devvy implements the protocol directly using Node.js built-in modules (<code>node:net</code>, <code>node:buffer</code>) with <strong>zero external runtime dependencies</strong>.</li>
+            <li><strong>Deliberately Limiting Exposed Context:</strong> Detailed file paths, full repository branches, or sensitive agent prompts should never be broadcast over a public presence payload. Devvy intentionally restricts presence to high-level metadata: project name, coarse activity mode (<code>Thinking</code>, <code>Editing</code>), and normalized model family names.</li>
+          </ul>
+          <p>By decoupling editor telemetry from the Discord connection, Devvy centralizes multi-editor workflows into a single predictable, lightweight service.</p>
+        </section>
 
         <section class="space-y-4">
           <h2 id="2-architecture-control-topology">2. Architecture &amp; Control Topology</h2>

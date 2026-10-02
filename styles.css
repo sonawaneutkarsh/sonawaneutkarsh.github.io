@@ -540,6 +540,8 @@ main > section h2 {
 
 .blog-post-article {
   padding: 3rem 0 4rem;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .back-link {
@@ -654,6 +656,8 @@ main > section h2 {
   line-height: 1.8;
   font-size: 1.05rem;
   color: var(--text);
+  max-width: 100%;
+  overflow-wrap: break-word;
 }
 
 .prose section {
@@ -725,7 +729,30 @@ main > section h2 {
   color: var(--accent);
 }
 
-.architecture-diagram,
+.architecture-diagram {
+  background: #F8F9FA;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.15rem 1.35rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.5rem 0;
+  max-width: 100%;
+}
+
+.architecture-diagram pre {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  overflow-x: visible;
+  font-family: "SF Mono", "Menlo", "Monaco", "Consolas", "Courier New", monospace;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--text-heading);
+  white-space: pre;
+}
+
 .prose pre {
   background: #F8F9FA;
   border: 1px solid var(--border);
@@ -734,6 +761,7 @@ main > section h2 {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   margin: 1.5rem 0;
+  max-width: 100%;
   font-family: "SF Mono", "Menlo", "Monaco", "Consolas", "Courier New", monospace;
   font-size: 0.75rem;
   line-height: 1.35;
@@ -762,12 +790,15 @@ main > section h2 {
 
 .prose table {
   width: 100%;
+  max-width: 100%;
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-collapse: collapse;
   margin: 1.75rem 0;
   font-size: 0.95rem;
   border: 1px solid var(--border);
   border-radius: 6px;
-  overflow: hidden;
 }
 
 .prose th, .prose td {
@@ -830,6 +861,12 @@ main > section h2 {
   gap: 1.25rem;
   margin: 1.5rem 0;
   align-items: start;
+}
+
+@media (max-width: 480px) {
+  .image-pair-grid {
+    gap: 0.65rem;
+  }
 }
 
 .image-pair-grid img,
