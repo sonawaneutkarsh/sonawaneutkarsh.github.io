@@ -29,8 +29,10 @@ Clean, fast, static portfolio and personal site deployable directly to **GitHub 
 ├── images/                 # Project screenshots and diagrams
 ├── videos/                 # Project demo videos
 ├── blog/
+│   ├── thoughts-on-slms-for-businesses/
+│   │   └── index.html      # Blog post page
 │   └── hello-world/
-│       └── index.html      # Blog post page
+│       └── index.html      # Redirect to thoughts-on-slms-for-businesses
 └── projects/
     ├── nytr/index.html     # Nytr technical case study
     ├── talks/index.html    # Talks technical case study
