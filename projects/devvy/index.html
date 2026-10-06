@@ -93,8 +93,8 @@
 │                                                                        │
 │  ┌───────────────────────┐  ┌───────────────────────────────────────┐  │
 │  │   Loopback HTTP API   │  │         Priority Arbitration          │  │
-│  │  • 127.0.0.1:17377    │  │  • Precedence: OpenCode &gt; Command Code│  │
-│  │  • Healthcheck /health│  │    &gt; VS Code                          │  │
+│  │  • 127.0.0.1:17377    │  │  • Precedence: OpenCode &gt;             │  │
+│  │  • GET /health check  │  │    Command Code &gt; VS Code             │  │
 │  │  • Max payload 64 KB  │  │  • Intra-kind: Active &gt; Inactive      │  │
 │  │  • EADDRINUSE exit 0  │  │  • Window focus &amp; transition recency  │  │
 │  └──────────┬────────────┘  └───────────────────┬───────────────────┘  │
@@ -106,11 +106,11 @@
 │  │  • 2,000ms minimum IPC rate-limit gate (MIN_IPC_INTERVAL_MS)     │  │
 │  │  • Source expiry sweeper: 15s TTL sweeps stale crashed tools     │  │
 │  └──────────────────────────────────┬───────────────────────────────┘  │
-│                                     │
-│                                     ▼
+│                                     │                                  │
+│                                     ▼                                  │
 │  ┌──────────────────────────────────────────────────────────────────┐  │
 │  │                    Direct Discord IPC Engine                     │  │
-│  │  • Custom 8-byte binary opcode framing (readUInt32LE/writeUInt32)│  │
+│  │  • 8-byte binary header: opcode + length (UInt32LE)              │  │
 │  │  • Handshake negotiation (OP 0) &amp; V4 Activity dispatch (OP 1)    │  │
 │  │  • Exponential backoff reconnects (1,000ms → 30,000ms)           │  │
 │  └──────────────────────────────────┬───────────────────────────────┘  │
