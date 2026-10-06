@@ -6,7 +6,7 @@
   <title>Talks: On-Device Meeting Intelligence Across Apple Watch & iPhone — Utkarsh Sonawane</title>
   <meta name="description" content="Recording lectures, advising sessions, and research office hours should not require pulling out a phone, tolerating wireless audio dropouts, or transmitting sensitive conversations to third-party AI clouds. I engineered Talks as a reliable, distributed iOS and watchOS system: one-tap distraction-free recording from Apple Watch, durable background file transfer, on-device speech transcription, and local structuring via Apple Foundation Models before synchronizing structured notes directly to a private Notion workspace.">
   <meta name="author" content="Utkarsh Sonawane">
-  
+
   <link rel="icon" href="../../favicon.ico" sizes="any">
   <link rel="icon" href="../../favicon-32x32.png" type="image/png">
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
@@ -40,7 +40,7 @@
       <header class="post-header">
         <h1>Talks: On-Device Meeting Intelligence Across Apple Watch & iPhone</h1>
         <p class="post-subtitle">Recording lectures, advising sessions, and research office hours should not require pulling out a phone, tolerating wireless audio dropouts, or transmitting sensitive conversations to third-party AI clouds. I engineered Talks as a reliable, distributed iOS and watchOS system: one-tap distraction-free recording from Apple Watch, durable background file transfer, on-device speech transcription, and local structuring via Apple Foundation Models before synchronizing structured notes directly to a private Notion workspace.</p>
-        
+
         <div class="case-study-meta">
           <div class="meta-links">
             <a href="https://github.com/sonawaneutkarsh/Talks" target="_blank" rel="noopener" class="pill-btn">Code Repository</a>
@@ -118,17 +118,17 @@
 │                                   │
 │  ┌────────────────────────────────▼─────────────────────────────────┐  │
 │  │                     On-Device Speech Pipeline                    │  │
-│  │  • Primary: SpeechAnalyzer + SpeechTranscriber (#available iOS 26)│  │
-│  │  • Fallback: SFSpeechRecognizer (strict on-device, zero cloud)    │  │
-│  │  • withTimeout watchdog isolates speech finalization hangs        │  │
+│  │  • Primary: SpeechAnalyzer + SpeechTranscriber (iOS 26+)         │  │
+│  │  • Fallback: SFSpeechRecognizer (strict on-device, zero cloud)   │  │
+│  │  • withTimeout watchdog isolates speech finalization hangs       │  │
 │  │  • Session circuit breaker triggers immediate fallback           │  │
-│  │  • Invariant: Immutable raw transcript preserved verbatim         │  │
+│  │  • Invariant: Immutable raw transcript preserved verbatim        │  │
 │  └────────────────────────────────┬─────────────────────────────────┘  │
 │                                   │
 │  ┌────────────────────────────────▼─────────────────────────────────┐  │
 │  │                  Apple Intelligence Structuring                  │  │
 │  │  • Foundation Models SystemLanguageModel schema generation       │  │
-│  │  • Context-aware chunking for long transcripts                    │  │
+│  │  • Paragraph-boundary chunking for long transcripts              │  │
 │  │  • Structured extraction: Title, Summary, Key Points, Decisions, │  │
 │  │    Action Items, and Follow-Ups                                  │  │
 │  └────────────────────────────────┬─────────────────────────────────┘  │
@@ -136,9 +136,9 @@
 │  ┌────────────────────────────────▼─────────────────────────────────┐  │
 │  │                       Direct Notion Upload                       │  │
 │  │  • Keychain-secured credentials (Token + Parent Page ID)         │  │
-│  │  • Reconciled block upload with 2,000-character boundary chunking│  │
-│  │  • Zero-duplicate page creation idempotency                      │  │
-│  │  • Raw transcript archived in collapsible bottom toggle block    │  │
+│  │  • Rich text split into ≤1,950-character blocks (limit 2,000)    │  │
+│  │  • Retry appends only the blocks that are missing                │  │
+│  │  • Raw transcript kept verbatim at the bottom of the page        │  │
 │  └──────────────────────────────────────────────────────────────────┘  │
 └───────────────────────────────────┬────────────────────────────────────┘
                                     │ Direct HTTPS API (URLSession)
@@ -202,7 +202,7 @@
                 </tr>
                 <tr>
                   <td>SFSpeechRecognizer Fallback</td>
-                  <td>iOS 18.0–25.x / Fallback Engine</td>
+                  <td>iOS 18.x / Fallback Engine</td>
                   <td>Strict on-device mode (requiresOnDeviceRecognition = true). Zero cloud fallback.</td>
                 </tr>
                 <tr>
@@ -247,14 +247,14 @@
             </div>
             <div class="metric-card">
               <div class="metric-label">Context-Aware Chunking</div>
-              <p class="metric-sub">Splits 60-minute transcripts along natural pauses into token-bounded ~3,500-character windows to fit on-device context.</p>
+              <p class="metric-sub">Splits long transcripts at paragraph breaks into chunks sized from the on-device model’s context window.</p>
             </div>
             <div class="metric-card">
-              <div class="metric-label">100% On-Device Privacy</div>
-              <p class="metric-sub">Apple Foundation Models run strictly on the Apple Neural Engine with zero cloud API reliance and offline data sovereignty.</p>
+              <div class="metric-label">On-Device Processing</div>
+              <p class="metric-sub">Transcription and structuring run on the iPhone with Apple’s on-device models. No cloud speech or LLM API is called; only the finished notes go to Notion.</p>
             </div>
           </div>
-          <p>For long transcripts that exceed the on-device model’s token window, <code>MeetingAIService.splitIntoChunks</code> performs context-aware chunking: it divides text along natural paragraph and turn boundaries into bounded chunks (target size ~3,500 characters), generates structured summaries per section, and synthesizes a consolidated executive summary (<code>ConsolidatedSummaryOutput</code>) without dropping a single character from the source transcript.</p>
+          <p>For long transcripts that exceed the on-device model’s token window, <code>MeetingAIService.splitIntoChunks</code> divides the text at paragraph breaks into chunks sized from the model’s context window (about 2.5 characters per token, minimum 4,000 characters). Talks formats and summarizes each chunk, then merges the results into one consolidated summary (<code>ConsolidatedSummaryOutput</code>). If a chunk fails to format, its original text is kept, so no section is dropped.</p>
         </section>
 
         <section class="space-y-4">
@@ -262,9 +262,9 @@
           <p>Once structured by Foundation Models, notes are uploaded directly from the iPhone to the user’s private Notion workspace using the official Notion REST API over <code>URLSession</code>. There is no intermediary cloud server or proxy.</p>
           <ul>
             <li><strong>Keychain Credential Security:</strong> Integration tokens and parent page IDs are saved exclusively in the hardware-backed iOS Keychain via <code>KeychainHelper</code> and never logged or serialized to queue files.</li>
-            <li><strong>Structured Block Layout:</strong> Notion pages follow a rigid structural hierarchy: AI-Formatted Transcript → Summary Callout → Key Points → Decisions → Action Items (native <code>to_do</code> blocks) → Follow-Ups → and finally the verbatim Raw Transcript enclosed in an expandable toggle block at the absolute bottom.</li>
-            <li><strong>2,000-Character Notion Block Boundary Splitting:</strong> The Notion API rejects any block whose rich text content exceeds 2,000 characters. Talks automatically splits long transcript paragraphs across safe sentence boundaries to prevent API payload rejections.</li>
-            <li><strong>Zero Duplicate Page Invariant:</strong> If an upload fails midway through block insertion, the job persists the created Notion page ID. Upon retry, <code>NotionService</code> queries existing block children and appends only missing blocks, preventing duplicate pages or repeated blocks.</li>
+            <li><strong>Structured Block Layout:</strong> Every page has the same order: AI-Formatted Transcript → Summary → Key Points → Decisions → Action Items (native <code>to_do</code> blocks) → Follow-Ups → the verbatim Raw Transcript at the bottom. Each section is a heading followed by paragraphs, bullets, or to-dos.</li>
+            <li><strong>2,000-Character Block Limit:</strong> The Notion API rejects any rich-text block longer than 2,000 characters. Talks splits long text into pieces of at most 1,950 characters so no request is rejected.</li>
+            <li><strong>Duplicate-Safe Retry:</strong> If an upload fails midway through block insertion, the job keeps the created Notion page ID. On retry, <code>NotionService</code> counts the existing blocks on that page and appends only the missing ones. If the count cannot be completed, the retry fails instead of guessing, so blocks are not repeated. One narrow window remains: a crash after Notion creates the page but before the app saves its ID can leave a second page.</li>
           </ul>
         </section>
 
@@ -284,7 +284,8 @@
 
         <section class="space-y-4">
           <h2 id="9-verification-test-suite">9. Verification &amp; Test Suite</h2>
-          <p>The entire audio, transfer, queue, and sync pipeline is verified by a suite of <strong>54 unit and integration tests</strong> in <code>TalksTests/PipelineTests.swift</code>:</p>
+          <p>Talks has <strong>57 XCTest cases passing in CI</strong> on the iOS Simulator, in <code>JobQueueTests</code>, <code>NotionServiceTests</code>, <code>TranscriptionTests</code>, and <code>ConnectivityAndLaunchTests</code>. CI also builds the watchOS app. The simulator cannot pair a Watch or run real speech recognition and Apple Intelligence, so end-to-end transfer and model output are checked on physical devices.</p>
+          <p>Areas covered:</p>
           <div class="tag-cloud">
             <span class="tag-pill">Audio Format &amp; Integrity</span>
             <span class="tag-pill">Corrupt Audio Rejection</span>

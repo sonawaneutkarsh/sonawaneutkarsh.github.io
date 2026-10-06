@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Clage: Neuroevolution & Artificial Life from Scratch — Utkarsh Sonawane</title>
-  <meta name="description" content="A pure Python implementation of NeuroEvolution of Augmenting Topologies (NEAT) built withoutneat-pythonor machine-learning libraries. Paired with an energy-constrained 2D simulation world, reproducible multi-seed experiments, and behavioral diversity metrics.">
+  <meta name="description" content="A pure Python implementation of NeuroEvolution of Augmenting Topologies (NEAT) built without neat-python or machine-learning libraries. Paired with an energy-constrained 2D simulation world, reproducible multi-seed experiments, and behavioral diversity metrics.">
   <meta name="author" content="Utkarsh Sonawane">
-  
+
   <link rel="icon" href="../../favicon.ico" sizes="any">
   <link rel="icon" href="../../favicon-32x32.png" type="image/png">
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
@@ -19,6 +19,7 @@
   <nav class="toc-sidebar" aria-label="Contents">
     <p class="toc-title">Contents</p>
     <ol class="toc-list">
+      <li><a href="#results">Results</a></li>
       <li><a href="#1-why-build-neat-from-scratch">1. Why Build NEAT from Scratch?</a></li>
       <li><a href="#2-core-algorithm-architecture">2. Core Algorithm Architecture</a></li>
       <li><a href="#3-2d-artificial-life-environment">3. 2D Artificial-Life Environment</a></li>
@@ -33,8 +34,8 @@
 
       <header class="post-header">
         <h1>Clage: Neuroevolution & Artificial Life from Scratch</h1>
-        <p class="post-subtitle">A pure Python implementation of NeuroEvolution of Augmenting Topologies (NEAT) built withoutneat-pythonor machine-learning libraries. Paired with an energy-constrained 2D simulation world, reproducible multi-seed experiments, and behavioral diversity metrics.</p>
-        
+        <p class="post-subtitle">A pure Python implementation of NeuroEvolution of Augmenting Topologies (NEAT) built without <code>neat-python</code> or machine-learning libraries. Paired with an energy-constrained 2D simulation world, reproducible multi-seed experiments, and behavioral diversity metrics.</p>
+
         <div class="case-study-meta">
           <div class="meta-links">
             <a href="https://github.com/sonawaneutkarsh/Clage" target="_blank" rel="noopener" class="pill-btn">Code Repository</a>
@@ -43,11 +44,38 @@
       </header>
 
       <div class="prose">
+        <section class="visuals-section">
+          <div>
+            <h2 id="results">Results</h2>
+            <p class="section-subtitle">Real outputs from the repository (5 seeds each, deterministic)</p>
+          </div>
+          <p><strong>Engine validation</strong> (300 generations per trial):</p>
+          <table>
+            <thead>
+              <tr><th scope="col">Problem</th><th scope="col">Solved (of 5)</th><th scope="col">Generations to solve (min / median / max)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>OR</td><td>5</td><td>7 / 13 / 13</td></tr>
+              <tr><td>AND</td><td>5</td><td>19 / 27 / 105</td></tr>
+              <tr><td>XOR</td><td>4</td><td>147 / 184.5 / 243</td></tr>
+              <tr><td>sin</td><td>0</td><td>not solved in 300 (mean best fitness 0.91)</td></tr>
+            </tbody>
+          </table>
+          <div class="visuals-block">
+            <div class="image-pair-grid">
+              <img src="../../images/projects/clage/best-fitness-food-abundance.png" alt="Best fitness per generation for the food_low, control, and food_high conditions, mean and spread over 5 seeds" class="project-img" width="880" height="550" loading="lazy">
+              <img src="../../images/projects/clage/replay-food-high-gen9.png" alt="Replay of generation 9 in the food_high condition at tick 40: organisms as circles coloured by genome, food as green squares" class="project-img" width="649" height="662" loading="lazy">
+            </div>
+            <h3>Food-Abundance Experiment</h3>
+            <p>Left: best fitness per generation for three food levels (20 organisms, 25 generations). More food gives fitter populations, more foraging, and more in-world reproduction, and the three conditions separate consistently. This is <strong>not</strong> a learning curve: each generation reseeds the world, and best fitness is flat within noise over 25 generations. Right: a recorded generation replayed from the repository’s viewer.</p>
+          </div>
+        </section>
+
         <section class="space-y-4">
           <h2 id="1-why-build-neat-from-scratch">1. Why Build NEAT from Scratch?</h2>
           <p>Modern deep learning treats neural network topologies as static, fixed computation graphs where only connection weights are optimized via backpropagation. In contrast, Kenneth Stanley’s <em>NeuroEvolution of Augmenting Topologies (NEAT)</em> evolves both connection weights <strong>and</strong> the graph structure simultaneously.</p>
           <p>While standard packages like <code>neat-python</code> exist, they obscure the subtle graph mechanics: how to cross over two neural networks of radically different shapes without combinatorial explosion, how to prevent destructive competition among novel structures, and how to verify topological correctness.</p>
-          <p>I built Clage from first principles to understand exactly what happens underneath evolutionary graph abstractions. Every line of code—from gene encoding to speciation distance equations—is implemented in pure Python, backed by a rigorous 300-test suite.</p>
+          <p>I built Clage from first principles to understand exactly what happens underneath evolutionary graph abstractions. Every line of code—from gene encoding to speciation distance equations—is implemented in pure Python, backed by 300 tests that pass in CI.</p>
         </section>
 
         <section class="space-y-6">
@@ -72,7 +100,7 @@
             </div>
             <div>
               <h3>Benchmark Validation</h3>
-              <p>Before deploying the engine in an open-ended simulation, the evolutionary implementation was validated across fixed random seeds against: <strong>OR</strong>, <strong>AND</strong>, non-linearly separable <strong>XOR</strong> (requiring evolved hidden nodes), and continuous <strong>sine wave regression</strong>.</p>
+              <p>Before deploying the engine in an open-ended simulation, the evolutionary implementation was validated across fixed random seeds against: <strong>OR</strong>, <strong>AND</strong>, non-linearly separable <strong>XOR</strong> (requiring evolved hidden nodes), and continuous <strong>sine wave regression</strong>. OR and AND solve in every seed and XOR in 4 of 5; sine regression is not solved within 300 generations (see Results).</p>
             </div>
           </div>
         </section>
@@ -135,7 +163,7 @@
 
         <section class="space-y-4">
           <h2 id="5-verification-test-suite">5. Verification &amp; Test Suite</h2>
-          <p>The entire engine is validated by <strong>300 unit and integration tests</strong> covering:</p>
+          <p>The engine has <strong>300 unit and integration tests, passing in CI</strong> on Python 3.10 and 3.12, covering:</p>
           <div class="tag-cloud">
             <span class="tag-pill">test_genome.py</span>
             <span class="tag-pill">test_innovation.py</span>

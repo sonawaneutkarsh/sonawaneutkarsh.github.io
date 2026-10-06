@@ -1,50 +1,34 @@
-# Utkarsh Sonawane — Personal Portfolio
+# sonawaneutkarsh.github.io
 
-Clean, fast, static portfolio and personal site deployable directly to **GitHub Pages**. Modeled directly on [Alisa Liu's site](https://alisawuffles.github.io/).
+Source for **https://sonawaneutkarsh.github.io**, my portfolio: projects, case studies, blog, and résumé.
 
-## Design Language & System
+Plain HTML, CSS, and a little JavaScript. No framework and no build step.
 
-- **Background:** Near-white (`#FAFAFA`) in pure light mode.
-- **Cards:** Crisp white (`#FFFFFF`) with thin light-gray border (`#E5E7EB`) and subtle shadow (`0 1px 3px rgba(0, 0, 0, 0.04)`).
-- **Typography:** System sans-serif stack (`-apple-system`, `BlinkMacSystemFont`, `Segoe UI`, `Source Sans 3`, `Inter`).
-- **Accent:** Deep violet / purple (`#6D28D9`) used for inline links, active filter pills, outlined pill buttons, and section subheadings.
-- **Projects Showcase:** Replicates academic publication section with client-side instant filtering across topics (`AI Agents`, `Mobile`, `ML Research`), key metric callouts, and purple pill buttons (`Code`, `Deep Dive`).
-- **Deep Dives:** Comprehensive standalone case studies for Nytr, Talks, Clage, Devvy, and ScholarAI featuring sticky left `CONTENTS` scrollspy navigation, local video demo, architecture breakdowns, and benchmarks.
-- **Blog:** Minimal blog index with clean date alignment (`YYYY-MM-DD Title`) and individual post pages.
-- **Performance:** Zero framework dependencies, pure static HTML5 / CSS3 / ES6.
+## Contents
 
-## Directory Structure
+| Path | What it is |
+|---|---|
+| `index.html` | Bio, filterable project list, experience, blog index |
+| `projects/<name>/` | Case studies: Nytr (with a demo video), Talks, Clage, Devvy, ScholarAI |
+| `blog/` | Posts (`hello-world/` only redirects to the first post) |
+| `resume.pdf` | Résumé (built separately from LaTeX; the source is not in this repo) |
+| `images/`, `videos/`, `icons/` | Screenshots, the Nytr demo, social icons |
+| `styles.css`, `script.js` | Styles (light theme), project filter, contents scrollspy, copy-email button |
 
-```text
-.
-├── index.html              # Main single-scrolling portfolio
-├── styles.css              # Custom responsive stylesheet (light mode & typography)
-├── script.js               # Client-side topic filtering and TOC scrollspy
-├── avatar.jpg              # High-DPI circular profile photo
-├── resume.pdf              # PDF résumé
-├── favicon.ico             # Favicon
-├── favicon-32x32.png       # High-res Favicon
-├── .nojekyll               # Disables Jekyll processing on GitHub Pages
-├── assets/                 # Brand icons (alphaXiv, Hugging Face, Google Scholar)
-├── images/                 # Project screenshots and diagrams
-├── videos/                 # Project demo videos
-├── blog/
-│   ├── thoughts-on-slms-for-businesses/
-│   │   └── index.html      # Blog post page
-│   └── hello-world/
-│       └── index.html      # Redirect to thoughts-on-slms-for-businesses
-└── projects/
-    ├── nytr/index.html     # Nytr technical case study
-    ├── talks/index.html    # Talks technical case study
-    ├── clage/index.html    # Clage technical case study
-    ├── devvy/index.html    # Devvy technical case study
-    └── scholarai/index.html# ScholarAI technical case study
-```
+Project facts on the site (years, test counts, results) follow each project's own README.
 
-## Local Preview
+## Run locally
 
 ```bash
 python3 -m http.server 8000
+# open http://localhost:8000
 ```
 
-Open `http://localhost:8000` in your browser.
+## Deploy
+
+Every push to `main` runs [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml):
+
+1. **check**: validates the HTML (`html-validate`, rules in `.htmlvalidate.json`) and checks every internal link and asset (`scripts/check_links.py`).
+2. **deploy**: publishes the site to GitHub Pages, only if the check passes.
+
+Layout inspired by [Alisa Liu's site](https://alisawuffles.github.io/).

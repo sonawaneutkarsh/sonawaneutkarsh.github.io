@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ScholarAI: Large-Scale Government Scheme Ingestion & Vector Retrieval — Utkarsh Sonawane</title>
-  <meta name="description" content="India hosts hundreds of welfare and educational support programs across central ministries and state departments, yet navigating eligibility criteria remains a barrier for millions of students. Built for the USAII Global AI Hackathon 2026 (6,081+ participants worldwide, 5-person team), ScholarAI is an AI-powered discovery platform. As the team’sData Engineer, I engineered the complete data pipeline: scraping and regex-normalizing 1,008 heterogeneous scheme records, generating 384-dimensional dense semantic embeddings, and architecting the PostgreSQL + pgvector storage foundation that powers downstream hybrid search and agentic reasoning.">
+  <meta name="description" content="India hosts hundreds of welfare and educational support programs across central ministries and state departments, yet navigating eligibility criteria remains a barrier for millions of students. ScholarAI is a scheme-discovery platform that our 5-person team built for the USAII Global AI Hackathon 2026 (June 2026; 6,081+ participants worldwide). As the team’s data engineer, I wrote the ingestion pipeline: regex normalization of 1,008 scraped scheme records, 384-dimensional gte-small embeddings, and batched loading into Supabase PostgreSQL with pgvector. My teammates built the backend search, the agent pipeline, and the frontend on top of that data.">
   <meta name="author" content="Utkarsh Sonawane">
-  
+
   <link rel="icon" href="../../favicon.ico" sizes="any">
   <link rel="icon" href="../../favicon-32x32.png" type="image/png">
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
@@ -38,27 +38,43 @@
 
       <header class="post-header">
         <h1>ScholarAI: Large-Scale Government Scheme Ingestion & Vector Retrieval</h1>
-        <p class="post-subtitle">India hosts hundreds of welfare and educational support programs across central ministries and state departments, yet navigating eligibility criteria remains a barrier for millions of students. Built for the USAII Global AI Hackathon 2026 (6,081+ participants worldwide, 5-person team), ScholarAI is an AI-powered discovery platform. As the team’sData Engineer, I engineered the complete data pipeline: scraping and regex-normalizing 1,008 heterogeneous scheme records, generating 384-dimensional dense semantic embeddings, and architecting the PostgreSQL + pgvector storage foundation that powers downstream hybrid search and agentic reasoning.</p>
-        
+        <p class="post-subtitle">India hosts hundreds of welfare and educational support programs across central ministries and state departments, yet navigating eligibility criteria remains a barrier for millions of students. ScholarAI is a scheme-discovery platform that our 5-person team built for the USAII Global AI Hackathon 2026 (June 2026; 6,081+ participants worldwide). As the team’s data engineer, I wrote the ingestion pipeline: regex normalization of 1,008 scraped scheme records, 384-dimensional gte-small embeddings, and batched loading into Supabase PostgreSQL with pgvector. My teammates built the backend search, the agent pipeline, and the frontend on top of that data.</p>
+
         <div class="case-study-meta">
           <div class="meta-links">
-            <a href="https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI" target="_blank" rel="noopener" class="pill-btn">Code Repository</a>
+            <a href="https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI" target="_blank" rel="noopener" class="pill-btn">Team Repository</a>
+            <a href="https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI/tree/main/data-engineering" target="_blank" rel="noopener" class="pill-btn">My Pipeline (data-engineering/)</a>
           </div>
         </div>
       </header>
 
       <div class="prose">
-        <section aria-labelledby="scholarai-visuals-heading" class="mt-10 border-b border-line pb-12"><div><h2 id="application-interfaces">Application Interfaces</h2><span>Frontend Powered by Vector &amp; Relational Store</span></div><div><div><div><img alt="ScholarAI Dashboard displaying personalized recommended government schemes with match percentage badges" data-nimg="1" decoding="async" height="768" loading="lazy" src="../../images/projects/scholarai/scholarai-dashboard.png" style="max-width:100%; height:auto; border-radius:8px; border:1px solid var(--border); margin:1.5rem 0;" width="1200"/></div><h3>Discovery Dashboard</h3><p>Personalized scheme recommendations ranked by hybrid semantic similarity and rule-based profile matching.</p></div><div><div><img alt="ScholarAI Scheme Comparison interface with multi-factor scoring breakdown bars and matched criteria badges" data-nimg="1" decoding="async" height="768" loading="lazy" src="../../images/projects/scholarai/scholarai-comparison.png" style="max-width:100%; height:auto; border-radius:8px; border:1px solid var(--border); margin:1.5rem 0;" width="1200"/></div><h3>Multi-Factor Scheme Comparison</h3><p>Side-by-side comparison displaying eligibility scores, benefit metrics, matched criteria badges, and difficulty assessments.</p></div></div></section>
+        <section aria-labelledby="scholarai-visuals-heading" class="visuals-section">
+          <div>
+            <h2 id="application-interfaces">Application Interfaces</h2>
+            <p class="section-subtitle">Team-built frontend on top of the vector and relational store</p>
+          </div>
+          <div class="visuals-block">
+            <img alt="ScholarAI Dashboard displaying personalized recommended government schemes with match percentage badges" decoding="async" height="768" loading="lazy" src="../../images/projects/scholarai/scholarai-dashboard.png" width="1200" class="project-img">
+            <h3>Discovery Dashboard</h3>
+            <p>Personalized scheme recommendations ranked by hybrid semantic similarity and rule-based profile matching.</p>
+          </div>
+          <div class="visuals-block">
+            <img alt="ScholarAI Scheme Comparison interface with multi-factor scoring breakdown bars and matched criteria badges" decoding="async" height="768" loading="lazy" src="../../images/projects/scholarai/scholarai-comparison.png" width="1200" class="project-img">
+            <h3>Multi-Factor Scheme Comparison</h3>
+            <p>Side-by-side comparison displaying eligibility scores, benefit metrics, matched criteria badges, and difficulty assessments.</p>
+          </div>
+        </section>
 
 <section class="space-y-4"><h2 id="1-the-problem-unstructured-government-scheme-portals">1. The Problem: Unstructured Government Scheme Portals</h2><p>Government welfare and scholarship programs in India are published across dozens of federal and state portals. While vast financial aid is allocated each fiscal year, citizen discovery suffers from critical data engineering bottlenecks:</p><ul><li><strong>Highly Heterogeneous Text:</strong> Public portals contain no unified schema. One scheme lists document requirements as clean bullet points, another as an unformatted run-on paragraph, and another as camelCase-concatenated text strings without punctuation or delimiters.</li><li><strong>Multi-Tiered Eligibility Rules:</strong> Criteria involve strict numerical thresholds (e.g., family annual income ≤ ₹2.5 Lakh), categorical constraints (Scheduled Tribe, OBC, General, PwD), geographic jurisdiction (State domicile vs. Central eligibility), and academic status (enrolled in recognized post-matric course).</li><li><strong>Pure Keyword Search Fails:</strong> A student searching for “tuition fee waiver for engineering” will miss “Post Matric Financial Assistance to ST Scholars” under simple keyword matching, because official scheme titles rarely match colloquial student queries.</li></ul></section>
 
         <section class="space-y-4">
           <h2 id="2-data-pipeline-architecture">2. Data Pipeline Architecture</h2>
-          <p>To power reliable retrieval and deterministic rule verification, I built a multi-stage data engineering pipeline that transforms raw public portal dumps into queryable relational and vector records:</p>
+          <p>The data flows through four stages. I wrote the normalization, embedding, and insert scripts; the scraped JSON was the input, and the database schema, hybrid search, and everything downstream were built by teammates:</p>
           <div class="architecture-diagram">
             <pre><code>┌────────────────────────────────────────────────────────────────────────┐
 │                        Raw Public Scheme Data                          │
-│  • Web scraper extraction across central and state welfare portals     │
+│  • Scraped scheme pages from central and state welfare portals         │
 │  • 1,008 raw JSON files in data-engineering/scraped_schemes/           │
 └───────────────────────────────────┬────────────────────────────────────┘
                                     │
@@ -69,7 +85,7 @@
 │                     Text Normalization &amp; Parsing                       │
 │  • CamelCase boundary splitting: re.sub(r'(?&lt;=[a-z])(?=[A-Z])', '|')   │
 │  • Process workflow extraction: re.findall(r'Step \d+:.*?', re.DOTALL) │
-│  • Relational schema mapping: metadata, rules, benefits, and FAQs      │
+│  • Field mapping: name, state, benefits, eligibility, docs, FAQs       │
 └───────────────────────────────────┬────────────────────────────────────┘
                                     │
                                     │ Dense Semantic Vector Generation
@@ -86,7 +102,7 @@
                                     │ (bulk_insert.py, batch_size = 50)
                                     ▼
 ┌────────────────────────────────────────────────────────────────────────┐
-│                    PostgreSQL + pgvector Database                      │
+│        PostgreSQL + pgvector Database (schema and search: team)        │
 │                                                                        │
 │  ┌───────────────────────┐  ┌───────────────────────────────────────┐  │
 │  │   Relational Schema   │  │             Vector Index              │  │
@@ -130,7 +146,7 @@
               </div>
             </div>
           </div>
-          <p>The batch pipeline processed all 1,008 raw files, validated required fields (rejecting corrupt or empty entries), and exported clean, schema-compliant JSON ready for database ingestion and vectorization.</p>
+          <p>The batch script processed all 1,008 raw files, skipped files that failed to parse or had no scheme name, and wrote one combined JSON file for embedding and loading.</p>
         </section>
 
         <section class="space-y-4">
@@ -141,16 +157,16 @@
             <span class="callout-tag">Vector Payload</span>
             <div class="callout-title">[scheme_name] + [description] + [benefits] + [eligibility_summary]</div>
           </div>
-          <p>Encoding was executed in batches of 32 (<code>batch_size = 32</code>), generating dense vectors for all 1,008 schemes in minutes. Vectors were serialized directly alongside relational records for atomic loading.</p>
+          <p>Encoding ran in batches of 32 (<code>batch_size = 32</code>). Each vector was stored as a plain list on its scheme record, so one JSON file carried both the fields and the embedding into the database.</p>
         </section>
 
         <section class="space-y-4">
           <h2 id="5-postgresql-pgvector-database-architecture">5. PostgreSQL &amp; pgvector Database Architecture</h2>
-          <p>The persistence layer was designed around PostgreSQL with the <code>pgvector</code> extension:</p>
+          <p>The persistence layer is PostgreSQL with the <code>pgvector</code> extension. The relational models and search indexes live in the team’s backend; my part was the loader:</p>
           <ul>
-            <li><strong>Relational Models:</strong> SQLAlchemy models partitioned data across <code>schemes</code> (authoritative title, benefits, ministry, URL), <code>rules</code> (structured income upper-bounds, category constraints, student requirements), and <code>faqs</code> (official government question-and-answer pairs).</li>
-            <li><strong>Hybrid Search Indexing:</strong> Queries execute across three complementary indices: pgvector cosine distance (<code>&lt;=&gt;</code>) for semantic similarity, PostgreSQL <code>tsvector</code> for full-text keyword matching, and <code>pg_trgm</code> for typo-tolerant trigram search on scheme titles.</li>
-            <li><strong>Batched Ingestion Pipeline:</strong> To avoid network timeouts when populating Supabase, <code>bulk_insert.py</code> streams records in batches of 50, verifying foreign key constraints and vector dimensionality before committing each transaction.</li>
+            <li><strong>Relational Models (team backend):</strong> SQLAlchemy models partitioned data across <code>schemes</code> (authoritative title, benefits, ministry, URL), <code>rules</code> (structured income upper-bounds, category constraints, student requirements), and <code>faqs</code> (official government question-and-answer pairs).</li>
+            <li><strong>Hybrid Search Indexing (team backend):</strong> Queries execute across three complementary indices: pgvector cosine distance (<code>&lt;=&gt;</code>) for semantic similarity, PostgreSQL <code>tsvector</code> for full-text keyword matching, and <code>pg_trgm</code> for typo-tolerant trigram search on scheme titles.</li>
+            <li><strong>Batched Ingestion (mine):</strong> <code>bulk_insert.py</code> inserts records into the Supabase <code>schemes</code> table in batches of 50 rather than one large request. A failed batch is logged and the run continues, and the script reports how many batches failed.</li>
           </ul>
         </section>
 
@@ -190,7 +206,7 @@
           <div>
             <div>
               <h3>Deterministic Rules vs. Pure LLM Filtering</h3>
-              <p>Early design discussions considered passing all 1,000+ schemes directly to an LLM for eligibility determination. This was rejected due to latency, token costs, and hallucination risks. Instead, the architecture enforces a strict two-stage gate: the relational database first filters out impossible candidates using deterministic numerical constraints (<code>income_max</code>, category, state domicile). Filtering deterministic eligibility constraints before LLM reasoning substantially reduces the candidate set passed to the model, invoking LLM inference only on top candidates for nuanced qualitative evaluation.</p>
+              <p>This was a team design decision. Early discussions considered passing all 1,000+ schemes directly to an LLM for eligibility determination. This was rejected due to latency, token costs, and hallucination risks. Instead, the architecture enforces a strict two-stage gate: the relational database first filters out impossible candidates using deterministic numerical constraints (<code>income_max</code>, category, state domicile). Filtering deterministic eligibility constraints before LLM reasoning substantially reduces the candidate set passed to the model, invoking LLM inference only on top candidates for nuanced qualitative evaluation.</p>
             </div>
             <div>
               <h3>Pre-Computed Embeddings vs. Dynamic Ingestion</h3>
@@ -201,14 +217,14 @@
 
         <section class="space-y-4">
           <h2 id="8-hackathon-verification-results">8. Hackathon Verification &amp; Results</h2>
-          <p>ScholarAI was developed for the <strong>USAII Global AI Hackathon 2026</strong>, competing against <strong>6,081+ participants</strong> worldwide across multi-disciplinary software engineering and AI tracks. The project was selected as a <strong>Finalist</strong> based on its working hybrid retrieval system, accurate eligibility matching, and end-to-end user experience across 1,008 live schemes.</p>
+          <p>Our team built ScholarAI during the <strong>USAII Global AI Hackathon 2026</strong> (June 14–21, 2026), which had <strong>6,081+ participants</strong> worldwide. The team advanced to the final round as a <strong>finalist</strong>.</p>
         </section>
 
         <section class="space-y-4">
           <h2 id="9-source-code-team-repository">9. Source Code &amp; Team Repository</h2>
-          <p>ScholarAI is open source under the MIT License. The team repository includes the data engineering scripts, FastAPI backend, LangGraph state graph implementations, and React 19 frontend application.</p>
+          <p>The code lives in the team repository, owned by a teammate, where we collaborated. It contains my <code>data-engineering/</code> scripts and the team’s FastAPI backend, LangGraph agent pipeline, and React 19 frontend.</p>
           <div>
-            <a href="https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI" rel="noopener noreferrer" target="_blank" class="pill-btn">Explore the ScholarAI repository on GitHub</a>
+            <a href="https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI" rel="noopener noreferrer" target="_blank" class="pill-btn">Explore the ScholarAI team repository on GitHub</a>
           </div>
         </section>
       </div>

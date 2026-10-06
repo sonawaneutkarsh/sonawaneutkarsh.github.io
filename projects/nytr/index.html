@@ -6,7 +6,7 @@
   <title>Nytr: Evidence-Driven Nutrition & Training Decision Platform — Utkarsh Sonawane</title>
   <meta name="description" content="Penn State dining changes every day, while nutrition and training targets don’t. I built Nytr around Penn State Harrisburg’s Stacks Market to combine daily dining availability with verified food logs, Apple HealthKit telemetry, and Hevy strength history into deterministic meal recommendations and progressive-overload guidance.">
   <meta name="author" content="Utkarsh Sonawane">
-  
+
   <link rel="icon" href="../../favicon.ico" sizes="any">
   <link rel="icon" href="../../favicon-32x32.png" type="image/png">
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
@@ -24,7 +24,7 @@
       <li><a href="#2-explicit-source-authority">2. Explicit Source Authority</a></li>
       <li><a href="#3-architecture-public-safe-topology">3. Architecture & Public-Safe Topology</a></li>
       <li><a href="#4-key-engineering-challenges">4. Key Engineering Challenges</a></li>
-      <li><a href="#5-verification-production-discipline">5. Verification & Production Discipline</a></li>
+      <li><a href="#5-verification-production-discipline">5. Verification & Testing</a></li>
       <li><a href="#6-engineering-lessons">6. Engineering Lessons</a></li>
     </ol>
   </nav>
@@ -36,7 +36,7 @@
       <header class="post-header">
         <h1>Nytr: Evidence-Driven Nutrition & Training Decision Platform</h1>
         <p class="post-subtitle">Penn State dining changes every day, while nutrition and training targets don’t. I built Nytr around Penn State Harrisburg’s Stacks Market to combine daily dining availability with verified food logs, Apple HealthKit telemetry, and Hevy strength history into deterministic meal recommendations and progressive-overload guidance.</p>
-        
+
         <div class="case-study-meta">
           <div class="meta-links">
             <a href="https://github.com/sonawaneutkarsh/Nytr" target="_blank" rel="noopener" class="pill-btn">Code Repository</a>
@@ -191,18 +191,18 @@
         </section>
 
         <section class="space-y-4">
-          <h2 id="5-verification-production-discipline">5. Verification &amp; Production Discipline</h2>
-          <p>Because Nytr is trusted with personal health and nutrition in production, it is backed by a rigorous test and verification suite:</p>
+          <h2 id="5-verification-production-discipline">5. Verification &amp; Testing</h2>
+          <p>I use Nytr daily on my own data, so the backend is covered by a large automated suite that runs in CI against Postgres:</p>
           <div class="metrics-grid">
             <div class="metric-card">
-              <div class="metric-val">1,134</div>
+              <div class="metric-val">1,135</div>
               <div class="metric-label">Backend Tests</div>
-              <p class="metric-sub">Pytest suite covering domain algorithms, candidate scoring, date windows, idempotency, and PostgreSQL RLS integration.</p>
+              <p class="metric-sub">1,124 pass in CI with Postgres (11 skip: they need private dining fixtures). Pytest suite covering domain algorithms, candidate scoring, date windows, idempotency, and PostgreSQL RLS integration.</p>
             </div>
             <div class="metric-card">
               <div class="metric-val">251</div>
-              <div class="metric-label">iOS Tests</div>
-              <p class="metric-sub">XCTest suite covering HealthKit sync state machines, offline persistence, and view-model transitions.</p>
+              <div class="metric-label">iOS XCTest Cases</div>
+              <p class="metric-sub">Covering HealthKit sync state machines, offline persistence, and view-model transitions. Run in Xcode; not part of CI yet.</p>
             </div>
             <div class="metric-card">
               <div class="metric-val">Dual Anchors</div>
@@ -231,7 +231,7 @@
           <h2 id="6-engineering-lessons">6. Engineering Lessons</h2>
           <div>
             <p><strong>1. Use deterministic computation where constraints must be exact:</strong> Meal scoring, dietary exclusions, target math, and historical reconstruction operate over verified, versioned data rather than probabilistic model output.</p>
-            <p><strong>2. Treat data provenance as a tier-1 property:</strong> In production systems, knowing <em>where</em> a datum originated (e.g. verified Stacks label vs user estimated portion vs HealthKit sensor) is just as critical as the value itself.</p>
+            <p><strong>2. Treat data provenance as a tier-1 property:</strong> In any system that makes recommendations, knowing <em>where</em> a datum originated (e.g. verified Stacks label vs user estimated portion vs HealthKit sensor) is just as critical as the value itself.</p>
             <p><strong>3. Contained failure modes:</strong> Append-only history, controlled tombstones, and idempotent writes prevent specific mutation, replay, and accidental-overwrite failure modes.</p>
           </div>
         </section>

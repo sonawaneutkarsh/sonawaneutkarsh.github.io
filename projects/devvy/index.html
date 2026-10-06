@@ -6,7 +6,7 @@
   <title>Devvy: Multi-Environment Discord Presence & Local IPC Daemon — Utkarsh Sonawane</title>
   <meta name="description" content="Modern software engineering blends traditional text editors with autonomous agentic tools. When running VS Code, OpenCode, and Command Code side by side, having multiple uncoordinated integrations compete for Discord’s local presence pipe causes status flip-flopping and inconsistent activity states. I engineered Devvy around three core design motivations: avoiding unnecessary dependency overhead, preventing multiple local integrations from competing for presence state, and deliberately limiting exposed context. Devvy operates as a zero-dependency background daemon that speaks Discord’s binary IPC protocol directly over Unix domain sockets and Windows named pipes, arbitrating active developer environments with deterministic priority rules.">
   <meta name="author" content="Utkarsh Sonawane">
-  
+
   <link rel="icon" href="../../favicon.ico" sizes="any">
   <link rel="icon" href="../../favicon-32x32.png" type="image/png">
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
@@ -38,7 +38,7 @@
       <header class="post-header">
         <h1>Devvy: Multi-Environment Discord Presence & Local IPC Daemon</h1>
         <p class="post-subtitle">Modern software engineering blends traditional text editors with autonomous agentic tools. When running VS Code, OpenCode, and Command Code side by side, having multiple uncoordinated integrations compete for Discord’s local presence pipe causes status flip-flopping and inconsistent activity states. I engineered Devvy around three core design motivations: avoiding unnecessary dependency overhead, preventing multiple local integrations from competing for presence state, and deliberately limiting exposed context. Devvy operates as a zero-dependency background daemon that speaks Discord’s binary IPC protocol directly over Unix domain sockets and Windows named pipes, arbitrating active developer environments with deterministic priority rules.</p>
-        
+
         <div class="case-study-meta">
           <div class="meta-links">
             <a href="https://github.com/sonawaneutkarsh/devvy" target="_blank" rel="noopener" class="pill-btn">Code Repository</a>
@@ -46,6 +46,7 @@
         </div>
       </header>
 
+      <div class="prose">
         <section aria-labelledby="devvy-visuals-heading" class="visuals-section">
           <div>
             <h2 id="live-presence-output">Live Presence Output</h2>
@@ -226,20 +227,20 @@
 
         <section class="space-y-4">
           <h2 id="7-verification-automated-test-suite">7. Verification &amp; Automated Test Suite</h2>
-          <p>Devvy is validated by a <strong>22-scenario automated test suite</strong> executing against both mock Discord IPC endpoints and physical loopback sockets:</p>
+          <p>Devvy has <strong>26 test scripts, all run in CI</strong>: 22 daemon unit and integration tests (the integration tests start the real daemon against a mock Discord IPC server), a Windows helper test, a VS Code CLI discovery test, and 2 release-payload checks. Examples:</p>
           <div class="tag-cloud">
             <span class="tag-pill">test-arbitration.mjs</span>
             <span class="tag-pill">test-presence.mjs</span>
             <span class="tag-pill">test-model-display.mjs</span>
             <span class="tag-pill">test-reconnect.sh</span>
             <span class="tag-pill">test-unfocused.sh</span>
-            <span class="tag-pill">test-multi-daemon.sh</span>
+            <span class="tag-pill">test-multi-opencode.sh</span>
             <span class="tag-pill">test-leak.mjs</span>
             <span class="tag-pill">test-race.mjs</span>
             <span class="tag-pill">test-vscode.mjs</span>
             <span class="tag-pill">test-commandcode.sh</span>
             <span class="tag-pill">test-launchagent.sh</span>
-            <span class="tag-pill">test-fallback.sh</span>
+            <span class="tag-pill">test-fallback-expiry.sh</span>
           </div>
         </section>
 

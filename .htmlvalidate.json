@@ -1,0 +1,8 @@
+{
+  "extends": ["html-validate:recommended"],
+  "rules": {
+    "valid-id": "off",
+    "no-raw-characters": "off",
+    "long-title": "off"
+  }
+}
