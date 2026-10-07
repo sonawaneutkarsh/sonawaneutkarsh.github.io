@@ -3,9 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nytr: Evidence-Driven Nutrition & Training Decision Platform — Utkarsh Sonawane</title>
-  <meta name="description" content="Penn State dining changes every day, while nutrition and training targets don’t. I built Nytr around Penn State Harrisburg’s Stacks Market to combine daily dining availability with verified food logs, Apple HealthKit telemetry, and Hevy strength history into deterministic meal recommendations and progressive-overload guidance.">
+  <title>Nytr: nutrition and training guidance from real dining data — Utkarsh Sonawane</title>
+  <meta name="description" content="Case study: Nytr combines Penn State dining menus, HealthKit, and training history into deterministic meal and training guidance. FastAPI, PostgreSQL, SwiftUI. 1,135 backend tests (1,124 passing in CI with Postgres).">
   <meta name="author" content="Utkarsh Sonawane">
+  <link rel="canonical" href="https://sonawaneutkarsh.github.io/projects/nytr/">
+
+  <meta property="og:title" content="Nytr: nutrition and training guidance from real dining data — Utkarsh Sonawane">
+  <meta property="og:description" content="Case study: Nytr combines Penn State dining menus, HealthKit, and training history into deterministic meal and training guidance. FastAPI, PostgreSQL, SwiftUI. 1,135 backend tests (1,124 passing in CI with Postgres).">
+  <meta property="og:url" content="https://sonawaneutkarsh.github.io/projects/nytr/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Utkarsh Sonawane">
+  <meta property="og:image" content="https://sonawaneutkarsh.github.io/images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Utkarsh Sonawane — portfolio">
+  <meta name="twitter:card" content="summary_large_image">
 
   <link rel="icon" href="../../favicon.ico" sizes="any">
   <link rel="icon" href="../../favicon-32x32.png" type="image/png">
@@ -14,233 +26,150 @@
   <link rel="stylesheet" href="../../styles.css">
 </head>
 <body class="blog-post-page">
+  <a class="skip-link" href="#content">Skip to content</a>
 
-  <!-- Sticky Left CONTENTS Sidebar (Desktop) -->
   <nav class="toc-sidebar" aria-label="Contents">
     <p class="toc-title">Contents</p>
     <ol class="toc-list">
-      <li><a href="#product-demo">Product Demo</a></li>
-      <li><a href="#1-overview-system-philosophy">1. Overview & System Philosophy</a></li>
-      <li><a href="#2-explicit-source-authority">2. Explicit Source Authority</a></li>
-      <li><a href="#3-architecture-public-safe-topology">3. Architecture & Public-Safe Topology</a></li>
-      <li><a href="#4-key-engineering-challenges">4. Key Engineering Challenges</a></li>
-      <li><a href="#5-verification-production-discipline">5. Verification & Testing</a></li>
-      <li><a href="#6-engineering-lessons">6. Engineering Lessons</a></li>
+      <li><a href="#demo">Demo</a></li>
+      <li><a href="#problem">The problem</a></li>
+      <li><a href="#built">What I built</a></li>
+      <li><a href="#hard">The hard part</a></li>
+      <li><a href="#decision">Key decision</a></li>
+      <li><a href="#evidence">Evidence</a></li>
+      <li><a href="#limits">Limitations</a></li>
     </ol>
   </nav>
 
-  <main class="container">
+  <main class="container" id="content">
     <article class="blog-post-article">
-      <a href="../../#projects" class="back-link">← Projects</a>
+      <a href="../../#projects" class="back-link">← All projects</a>
 
       <header class="post-header">
-        <h1>Nytr: Evidence-Driven Nutrition & Training Decision Platform</h1>
-        <p class="post-subtitle">Penn State dining changes every day, while nutrition and training targets don’t. I built Nytr around Penn State Harrisburg’s Stacks Market to combine daily dining availability with verified food logs, Apple HealthKit telemetry, and Hevy strength history into deterministic meal recommendations and progressive-overload guidance.</p>
-
+        <h1>Nytr</h1>
+        <p class="post-subtitle">Campus dining changes every day. My nutrition targets do not. Nytr takes what the dining hall serves today, my food log, HealthKit body data, and my training history, and computes what to eat next. A language model never makes the decision.</p>
+        <p class="case-meta">2026 · Solo project · Python, FastAPI, PostgreSQL (Supabase) · Swift, SwiftUI, HealthKit</p>
         <div class="case-study-meta">
-          <div class="meta-links">
-            <a href="https://github.com/sonawaneutkarsh/Nytr" target="_blank" rel="noopener" class="pill-btn">Code Repository</a>
-          </div>
+            <a href="https://github.com/sonawaneutkarsh/Nytr" class="pill-btn" target="_blank" rel="noopener">Code</a>
+            <a href="https://github.com/sonawaneutkarsh/Nytr/blob/main/docs/ARCHITECTURE.md" class="pill-btn" target="_blank" rel="noopener">Architecture notes</a>
         </div>
       </header>
 
       <div class="prose">
-        <section aria-labelledby="product-demo-heading" class="visuals-section">
-          <div>
-            <h2 id="product-demo">Product Demo</h2>
-            <p class="section-subtitle">1:08 · 1080p · Stereo Audio</p>
+        <div class="metrics-grid glance">
+          <div class="metric-card">
+            <div class="metric-val">1,135 tests</div>
+            <p class="metric-sub">Backend. 1,124 pass in CI with Postgres; 11 need private fixtures.</p>
           </div>
+          <div class="metric-card">
+            <div class="metric-val">251 XCTest</div>
+            <p class="metric-sub">iOS cases, run in Xcode. Not in CI yet.</p>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val">Decimal only</div>
+            <p class="metric-sub">No floats in nutrition, target, or trend math. Records are append-only.</p>
+          </div>
+        </div>
+
+        <section aria-labelledby="demo">
+          <h2 id="demo">Demo</h2>
           <div class="video-container">
-            <video controls playsinline preload="metadata" poster="../../images/projects/nytr/nytr-demo-poster.png" class="project-video" aria-label="Nytr product demo showing Penn State dining recommendations, food logging, deterministic training coaching, progress tracking, and on-device AI explanation">
+            <video controls playsinline preload="none" poster="../../images/projects/nytr/nytr-demo-poster.jpg" class="project-video" aria-label="Nytr demo: dining recommendations, food logging, training coaching, progress, and the optional on-device explanation">
               <source src="../../videos/nytr-demo.mp4" type="video/mp4">
-              Your browser does not support the video tag.
+              <a href="../../videos/nytr-demo.mp4">Download the demo video (MP4)</a>.
             </video>
           </div>
-          <p>Dining availability, deterministic meal guidance, training coaching, progress tracking, and optional on-device explanation.</p>
-        </section>
-
-        <section class="space-y-4">
-          <h2 id="1-overview-system-philosophy">1. Overview &amp; System Philosophy</h2>
-          <p>Many consumer nutrition tools couple unverified inputs with heuristic auto-adjustments, silently mutating historical records or altering daily calorie targets based on noisy wearable burn estimates (“exercise-calorie eat-back”). When decision logic relies on non-authoritative estimates, recommendations quickly diverge from measurable progress.</p>
-          <p>Nytr separates authoritative source data, deterministic computation, and user-approved policy changes so constrained decisions do not depend on non-authoritative estimates:</p>
-          <div class="callout-box">
-            <span class="callout-tag">Core Principle</span>
-            <div class="callout-title">DATA → DETERMINISTIC CALCULATION → DECISION</div>
-            <p class="metric-sub">Raw facts are ingested with immutable provenance. Math runs deterministically in pure domain logic. Decisions belong exclusively to the human user.</p>
-          </div>
-          <p>Nytr is <strong>not</strong> a generic calorie tracker, an LLM chatbot wrapper, or an automated health dashboard. It is an operational decision platform deployed for daily life at Penn State Harrisburg, specifically bounded to campus dining (Stacks Market), Apple HealthKit weight observations, and Hevy strength logs. Authoritative meal scoring and progressive-overload decisions are computed deterministically. An optional Apple Foundation Models integration operates downstream purely to provide private, on-device explanations and second opinions without affecting authoritative calculations.</p>
-        </section>
-
-        <section class="space-y-4">
-          <h2 id="2-explicit-source-authority">2. Explicit Source Authority</h2>
-          <p>Distributed data systems fail when multiple sources claim ownership over the same domain concept. Nytr prevents source confusion through a strict, non-negotiable authority matrix:</p>
-          <div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Upstream Source</th>
-                  <th>Exclusive Authority</th>
-                  <th>Deliberately Forbidden Scope</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Penn State Dining (Stacks)</td>
-                  <td>Menu availability, serving units, recipe names, published macro profiles</td>
-                  <td>Cannot dictate meal timing, user schedule, or daily calorie targets</td>
-                </tr>
-                <tr>
-                  <td>Apple HealthKit (via iOS Companion)</td>
-                  <td>Historical body mass, workout session timing context</td>
-                  <td>Active calorie burn cannot alter food recommendations; no on-device trend math</td>
-                </tr>
-                <tr>
-                  <td>Hevy Official API</td>
-                  <td>Workout exercise sets, reps, load, and volume progression revisions</td>
-                  <td>Cannot alter HealthKit session authority or create unlogged sessions</td>
-                </tr>
-                <tr>
-                  <td>FastAPI / PostgreSQL Backend</td>
-                  <td>Deterministic plan scoring, target policies, 28-day trends, audit logs</td>
-                  <td>Cannot auto-apply target modifications without explicit user approval</td>
-                </tr>
-              </tbody>
-            </table>
+          <p class="section-subtitle">1:08 demo. Below: three screens. All screenshots use synthetic data.</p>
+          <div class="device-row">
+            <figure>
+              <img src="../../images/projects/nytr/today.jpg" alt="Today screen: calories and protein against targets, Next Meal button, food log" width="480" height="1040" loading="lazy" decoding="async">
+              <figcaption>Today</figcaption>
+            </figure>
+            <figure>
+              <img src="../../images/projects/nytr/training-coaching.jpg" alt="Training coaching screen: progressive-overload guidance for one exercise" width="480" height="1040" loading="lazy" decoding="async">
+              <figcaption>Training coaching</figcaption>
+            </figure>
+            <figure>
+              <img src="../../images/projects/nytr/review.jpg" alt="Review screen: deterministic analysis first, optional on-device AI second opinion below" width="480" height="1040" loading="lazy" decoding="async">
+              <figcaption>Review</figcaption>
+            </figure>
           </div>
         </section>
-
-        <section class="space-y-4">
-          <h2 id="3-architecture-public-safe-topology">3. Architecture &amp; Public-Safe Topology</h2>
-          <p>Nytr avoids fragile microservices in favor of a <strong>Python + FastAPI modular monolith</strong> backed by Supabase PostgreSQL and a native SwiftUI iOS companion client:</p>
-          <div class="architecture-diagram">
-            <pre><code>┌────────────────────────┐      ┌─────────────────────────┐      ┌─────────────────────────┐
-│   Penn State Stacks    │      │    Apple HealthKit      │      │     Hevy Cloud API      │
-│  Daily Menu Scraper    │      │   (Native iOS Client)   │      │ (Official Developer API)│
-└───────────┬────────────┘      └────────────┬────────────┘      └────────────┬────────────┘
-            │ Bounded Ingestion              │ Idempotent Sync                │ Append-Only Sync
-            ▼ Compliance Gate                ▼ Dual Anchors                   ▼ Token Redacted
-┌──────────────────────────────────────────────────────────────────────────────────────────┐
-│                                FastAPI Modular Monolith                                  │
-│                                                                                          │
-│  ┌──────────────────────┐  ┌───────────────────────┐  ┌───────────────────────────────┐  │
-│  │   Dining Ingestion   │  │   HealthKit Receiver  │  │    Training Syncer (Hevy)     │  │
-│  │  • Complete vs Usable│  │  • Tombstone Deletion │  │  • Session Revisions          │  │
-│  │  • Mid Identity Reuse│  │  • kg Unit Canonical  │  │  • Volume &amp; Progression Math  │  │
-│  └──────────┬───────────┘  └───────────┬───────────┘  └───────────────┬───────────────┘  │
-│             │                          │                              │                  │
-│             ▼                          ▼                              ▼                  │
-│  ┌────────────────────────────────────────────────────────────────────────────────────┐  │
-│  │                               Pure Domain Engine                                   │  │
-│  │  • Deterministic Decimal Arithmetic (exact numeric precision)                      │  │
-│  │  • Schedule Resolution (Class schedule + workout timing context)                   │  │
-│  │  • Strict Dietary Eligibility Gates (Diet-Specific Filtering)                      │  │
-│  │  • Bounded Candidate Scoring &amp; Frozen Plan Generation (SHA-256 Fingerprint)        │  │
-│  │  • 28-Day Theil-Sen Body-Mass Trend &amp; Explicit Target Review Policy                │  │
-│  └─────────────────────────────────────┬──────────────────────────────────────────────┘  │
-└────────────────────────────────────────┼─────────────────────────────────────────────────┘
-                                         │ Authenticated RLS / Backend Service Connection
-                                         ▼
-┌──────────────────────────────────────────────────────────────────────────────────────────┐
-│                                 Supabase PostgreSQL                                      │
-│  • Immutable Plan Runs, Items &amp; Target Policy Versions (Append-Only)                     │
-│  • Controlled Tombstone Updates (tombstoned_at) on HealthKit Sync Records                │
-│  • Shared Dining Menus &amp; Station Cache (Read via Backend Service Connection)             │
-│  • User-Owned Tables Protected by Row-Level Security (RLS) Bound to Auth Identity        │
-└──────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
-          </div>
+        <section aria-labelledby="problem">
+          <h2 id="problem">The problem</h2>
+          <p>Most nutrition apps ask you to search a generic food database and guess what you ate. My problem was different: my campus dining hall (Stacks Market at Penn State Harrisburg) serves a different menu every day, and I wanted to know what to eat <em>next</em> from that menu to stay on my calorie and protein targets.</p>
+          <p>To answer that well, the system must know things a simple tracker ignores. Is this item's nutrition published or estimated? Is the last weight reading recent enough to trust? Did I actually eat the meal it recommended? If the app guesses silently, the advice is wrong.</p>
         </section>
-
-        <section class="space-y-6">
-          <h2 id="4-key-engineering-challenges">4. Key Engineering Challenges</h2>
-          <div>
-            <div>
-              <h3>Dual-Anchor HealthKit Synchronization &amp; Tombstone Semantics</h3>
-              <p>Syncing mobile health telemetry over cellular networks requires distinguishing between transient query state and durable storage:</p>
-              <ul>
-                <li><strong>Transient vs Durable Anchors:</strong> The iOS companion uses an in-memory <code>HKQueryAnchor</code> during anchored queries. However, the durable sync anchor (<code>health.sync.*.durableState.v1</code>) advances in device keychain storage <em>only after</em> the backend confirms a successful database transaction commit. If a crash occurs mid-flight, the batch safely replays without duplication.</li>
-                <li><strong>Idempotent Tombstone Deletions:</strong> When samples are deleted in Apple Health, a tombstone record is committed (<code>tombstoned_at</code>). If an out-of-order add arrives for an already-tombstoned UUID, the backend immediately drops it—preventing ghost resurrection of deleted data.</li>
-              </ul>
-            </div>
-            <div>
-              <h3>Database-Enforced Immutability &amp; Row-Level Security</h3>
-              <p>Traditional web apps mutate historical logs when user settings or nutritional profiles change. In Nytr, historical truth is permanent:</p>
-              <ul>
-                <li><strong>PostgreSQL Row-Level Security:</strong> User-owned tables enforce RLS policies bound directly to the authenticated user ID. Plan runs, daily items, and target policy versions are strictly immutable insert-only records.</li>
-                <li><strong>Controlled Tombstone Semantics:</strong> Health telemetry synchronizations avoid physical row deletion in favor of explicit <code>tombstoned_at</code> timestamps, maintaining historical auditability. Shared global dining menus and station caches are accessed via a dedicated backend service connection without per-user RLS.</li>
-                <li><strong>Versioned Pinning:</strong> When a daily plan is generated, it pins the exact <code>nutrition_profile_version_id</code> and <code>target_policy_version_id</code>. Historical plans never re-query modern food profiles; they represent a verifiable snapshot sealed with a SHA-256 fingerprint.</li>
-              </ul>
-            </div>
-            <div>
-              <h3>Deterministic Decimal Arithmetic &amp; No Exercise Eat-Back</h3>
-              <p>Using Decimal/numeric arithmetic avoids binary floating-point rounding error in persisted nutrition and body-mass calculations:</p>
-              <ul>
-                <li><strong>End-to-End Decimal Types:</strong> All continuous quantities (calories, protein, carbs, fats, body mass) parse through Python’s <code>Decimal</code> module and persist into PostgreSQL <code>numeric(6,3)</code> columns, maintaining exact precision across domain calculations and database storage.</li>
-                <li><strong>Strict Anti-Eat-Back Doctrine:</strong> Workouts observed via HealthKit or Hevy provide timing context (e.g., qualifying a dated lunch slot as a <code>post_workout_lunch</code> with 40% daily calorie allocation). Workouts <em>never</em> add extra calories to the daily target. This protects lean-bulk goals from exercise overcompensation.</li>
-              </ul>
-            </div>
-            <div>
-              <h3>28-Day Theil–Sen Body-Mass Evidence Window &amp; Target Reviews</h3>
-              <p>Instead of automatic recalibration that alters meal sizes without warning, Nytr runs an on-demand 28-day body-mass evidence window using robust Theil–Sen slope estimation:</p>
-              <ul>
-                <li>The median-of-slopes Theil–Sen estimator calculates an outlier-resistant rate of change (kg/week) over a 28-day rolling window, remaining resilient against single-day hydration fluctuations.</li>
-                <li>If the trend indicates a persistent rate outside target boundaries, the backend formulates a bounded review proposal (strictly limited to ±100 kcal).</li>
-                <li>The review is purely advisory. The proposal can only become active policy when the authenticated user explicitly approves it on iOS, which atomically writes a new versioned target policy row and a mandatory decision-log rationale.</li>
-              </ul>
-            </div>
-          </div>
+        <section aria-labelledby="built">
+          <h2 id="built">What I built</h2>
+          <figure class="architecture-diagram" tabindex="0" aria-label="Nytr authority model: data, calculation, decision, optional explanation">
+            <pre><code>DATA          Stacks menus · HealthKit · Hevy · Open Food Facts · my own input
+   │
+   ▼
+CALCULATION   typed Python domain · exact Decimal math · versioned policies
+   │
+   ▼
+DECISION      a recommendation I can accept, edit, or reject
+   │
+   ▼
+EXPLANATION   optional on-device model: reads results, never changes them</code></pre>
+          </figure>
+          <ul>
+            <li><strong>Backend:</strong> a FastAPI modular monolith on PostgreSQL (Supabase) with row-level security. A typed domain layer owns all arithmetic and does not depend on FastAPI, the database driver, or any provider SDK.</li>
+            <li><strong>Ingestion:</strong> a fail-closed adapter for the dining menu, HealthKit sync from the iOS app, Hevy training import, and barcode lookup through Open Food Facts. Every value keeps its source, fetch time, and payload digest.</li>
+            <li><strong>Planning:</strong> a deterministic Next Meal planner that uses the remaining calories, protein, and meal times in the day; progressive-overload coaching from training history.</li>
+            <li><strong>iOS app:</strong> SwiftUI, HealthKit, Swift Charts, VisionKit barcode scanning. No third-party Swift packages.</li>
+          </ul>
         </section>
-
-        <section class="space-y-4">
-          <h2 id="5-verification-production-discipline">5. Verification &amp; Testing</h2>
-          <p>I use Nytr daily on my own data, so the backend is covered by a large automated suite that runs in CI against Postgres:</p>
-          <div class="metrics-grid">
-            <div class="metric-card">
-              <div class="metric-val">1,135</div>
-              <div class="metric-label">Backend Tests</div>
-              <p class="metric-sub">1,124 pass in CI with Postgres (11 skip: they need private dining fixtures). Pytest suite covering domain algorithms, candidate scoring, date windows, idempotency, and PostgreSQL RLS integration.</p>
-            </div>
-            <div class="metric-card">
-              <div class="metric-val">251</div>
-              <div class="metric-label">iOS XCTest Cases</div>
-              <p class="metric-sub">Covering HealthKit sync state machines, offline persistence, and view-model transitions. Run in Xcode; not part of CI yet.</p>
-            </div>
-            <div class="metric-card">
-              <div class="metric-val">Dual Anchors</div>
-              <div class="metric-label">Sync Engine</div>
-              <p class="metric-sub">Durable anchors and idempotent writes support replay-safe mobile synchronization.</p>
-            </div>
-            <div class="metric-card">
-              <div class="metric-val">Hardware</div>
-              <div class="metric-label">Physical Validation</div>
-              <p class="metric-sub">Physical-device validated with real iPhone hardware, authentic Apple HealthKit permissions, and Stacks Market food offerings.</p>
-            </div>
-            <div class="metric-card">
-              <div class="metric-val">Decimal Math</div>
-              <div class="metric-label">Exact Arithmetic</div>
-              <p class="metric-sub">Continuous quantities parse through Python's Decimal module and PostgreSQL numeric(6,3) to prevent floating-point rounding drift.</p>
-            </div>
-            <div class="metric-card">
-              <div class="metric-val">SHA-256</div>
-              <div class="metric-label">Cryptographic Audit</div>
-              <p class="metric-sub">Daily meal plans lock to immutable nutrition and target policy versions sealed with cryptographic fingerprints for verifiable historical replay.</p>
-            </div>
-          </div>
+        <section aria-labelledby="hard">
+          <h2 id="hard">The hard part: sync that survives crashes and deletions</h2>
+          <p>HealthKit data arrives from a phone that can lose its connection or be killed at any moment. Two rules keep the backend correct:</p>
+          <ul>
+            <li><strong>Two anchors.</strong> The app uses an in-memory query anchor while it reads HealthKit. It saves the durable anchor only after the backend confirms the database commit. If the app crashes mid-batch, it sends the batch again, and idempotent writes make the replay safe.</li>
+            <li><strong>Tombstones.</strong> A sample deleted in Apple Health becomes a tombstone row (<code>tombstoned_at</code>). If an older “add” for that sample arrives late, the backend drops it, so deleted data does not come back.</li>
+          </ul>
+          <p>A related rule runs through the whole domain: <strong>missing data is not zero</strong>. An unknown nutrient stays unknown and the day is marked as partial evidence.</p>
         </section>
-
-        <section class="space-y-4">
-          <h2 id="6-engineering-lessons">6. Engineering Lessons</h2>
-          <div>
-            <p><strong>1. Use deterministic computation where constraints must be exact:</strong> Meal scoring, dietary exclusions, target math, and historical reconstruction operate over verified, versioned data rather than probabilistic model output.</p>
-            <p><strong>2. Treat data provenance as a tier-1 property:</strong> In any system that makes recommendations, knowing <em>where</em> a datum originated (e.g. verified Stacks label vs user estimated portion vs HealthKit sensor) is just as critical as the value itself.</p>
-            <p><strong>3. Contained failure modes:</strong> Append-only history, controlled tombstones, and idempotent writes prevent specific mutation, replay, and accidental-overwrite failure modes.</p>
-          </div>
+        <section aria-labelledby="decision">
+          <h2 id="decision">Key decision: the model explains, it does not decide</h2>
+          <p>I did not let a language model produce any number. Meal scoring, dietary filters, targets, and trends are plain Python over versioned data, with <code>Decimal</code> arithmetic stored in PostgreSQL <code>numeric</code> columns. An optional Apple Foundation Models feature runs on the device and explains results that already exist. Remove it and every number stays the same.</p>
+          <p>Targets follow the same rule. A 28-day Theil–Sen body-mass trend can propose a 100&nbsp;kcal change, but nothing changes until I approve it in the app. Approval writes a new target version with a reason. Old plans keep the versions they were built from, so history is reproducible. Workouts give timing context only; they never add calories back to the target.</p>
         </section>
+        <section aria-labelledby="evidence">
+          <h2 id="evidence">Evidence</h2>
+          <ul>
+            <li><strong>1,135 backend tests.</strong> 1,124 pass in CI against Postgres; 11 skip because they need private dining fixtures that the public repository does not ship.</li>
+            <li><strong>251 iOS XCTest cases</strong>, including render and appearance regression tests. They run in Xcode; they are not in CI yet.</li>
+            <li>Strict <code>mypy</code> and Ruff on the backend in the same CI job.</li>
+            <li>Behavior changes are versioned (for example <code>next-meal.remaining-opportunities.v2</code>), so old records stay explainable.</li>
+            <li>I use Nytr with my own data. The public repository contains only synthetic fixtures.</li>
+          </ul>
+        </section>
+        <section aria-labelledby="limits">
+          <h2 id="limits">Limitations</h2>
+          <ul>
+            <li>It supports one dining location (Stacks Market). Other Penn State locations are the next step.</li>
+            <li>iOS tests are not part of CI yet.</li>
+            <li>The app is not on the App Store, and there is no Android client.</li>
+            <li>The on-device explanation needs an iPhone that supports Apple Intelligence.</li>
+          </ul>
+        </section>
+        <div class="repo-cta">
+          <p>The README has the architecture notes, the nutrition engine, the dining integration boundary, and setup steps.</p>
+          <a href="https://github.com/sonawaneutkarsh/Nytr" target="_blank" rel="noopener" class="pill-btn">Read the Nytr README</a>
+        </div>
       </div>
     </article>
   </main>
 
   <footer>
-    <p>Utkarsh Sonawane — Pennsylvania State University</p>
+    <nav class="footer-links" aria-label="Contact">
+      <a href="../../resume.pdf">Résumé (PDF)</a>
+      <a href="https://github.com/sonawaneutkarsh" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/sonawaneutkarsh/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="mailto:utkarshsonawane@psu.edu">utkarshsonawane@psu.edu</a>
+    </nav>
+    <p>Utkarsh Sonawane · Penn State Harrisburg</p>
   </footer>
 
   <script src="../../script.js"></script>

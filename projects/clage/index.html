@@ -3,9 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Clage: Neuroevolution & Artificial Life from Scratch — Utkarsh Sonawane</title>
-  <meta name="description" content="A pure Python implementation of NeuroEvolution of Augmenting Topologies (NEAT) built without neat-python or machine-learning libraries. Paired with an energy-constrained 2D simulation world, reproducible multi-seed experiments, and behavioral diversity metrics.">
+  <title>Clage: NEAT neuroevolution and artificial life from scratch — Utkarsh Sonawane</title>
+  <meta name="description" content="Case study: Clage is a from-scratch NEAT neuroevolution engine in Python with a 2D artificial-life world, seeded one-factor experiments, and honest benchmark results. 300 tests, passing in CI.">
   <meta name="author" content="Utkarsh Sonawane">
+  <link rel="canonical" href="https://sonawaneutkarsh.github.io/projects/clage/">
+
+  <meta property="og:title" content="Clage: NEAT neuroevolution and artificial life from scratch — Utkarsh Sonawane">
+  <meta property="og:description" content="Case study: Clage is a from-scratch NEAT neuroevolution engine in Python with a 2D artificial-life world, seeded one-factor experiments, and honest benchmark results. 300 tests, passing in CI.">
+  <meta property="og:url" content="https://sonawaneutkarsh.github.io/projects/clage/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Utkarsh Sonawane">
+  <meta property="og:image" content="https://sonawaneutkarsh.github.io/images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Utkarsh Sonawane — portfolio">
+  <meta name="twitter:card" content="summary_large_image">
 
   <link rel="icon" href="../../favicon.ico" sizes="any">
   <link rel="icon" href="../../favicon-32x32.png" type="image/png">
@@ -14,174 +26,134 @@
   <link rel="stylesheet" href="../../styles.css">
 </head>
 <body class="blog-post-page">
+  <a class="skip-link" href="#content">Skip to content</a>
 
-  <!-- Sticky Left CONTENTS Sidebar (Desktop) -->
   <nav class="toc-sidebar" aria-label="Contents">
     <p class="toc-title">Contents</p>
     <ol class="toc-list">
       <li><a href="#results">Results</a></li>
-      <li><a href="#1-why-build-neat-from-scratch">1. Why Build NEAT from Scratch?</a></li>
-      <li><a href="#2-core-algorithm-architecture">2. Core Algorithm Architecture</a></li>
-      <li><a href="#3-2d-artificial-life-environment">3. 2D Artificial-Life Environment</a></li>
-      <li><a href="#4-behavioral-diversity-empirical-rigor">4. Behavioral Diversity & Empirical Rigor</a></li>
-      <li><a href="#5-verification-test-suite">5. Verification & Test Suite</a></li>
+      <li><a href="#problem">Why from scratch</a></li>
+      <li><a href="#built">What I built</a></li>
+      <li><a href="#hard">The hard part</a></li>
+      <li><a href="#decision">Key decision</a></li>
+      <li><a href="#evidence">Evidence</a></li>
+      <li><a href="#limits">Limitations</a></li>
     </ol>
   </nav>
 
-  <main class="container">
+  <main class="container" id="content">
     <article class="blog-post-article">
-      <a href="../../#projects" class="back-link">← Projects</a>
+      <a href="../../#projects" class="back-link">← All projects</a>
 
       <header class="post-header">
-        <h1>Clage: Neuroevolution & Artificial Life from Scratch</h1>
-        <p class="post-subtitle">A pure Python implementation of NeuroEvolution of Augmenting Topologies (NEAT) built without <code>neat-python</code> or machine-learning libraries. Paired with an energy-constrained 2D simulation world, reproducible multi-seed experiments, and behavioral diversity metrics.</p>
-
+        <h1>Clage</h1>
+        <p class="post-subtitle">A NEAT neuroevolution engine written from first principles, connected to a 2D grid world where evolved networks move, eat, and reproduce. I built it to understand the algorithm, then used it for controlled, reproducible experiments.</p>
+        <p class="case-meta">2026 · Solo project · Python 3.10+ (matplotlib is the only runtime dependency) · pytest, mypy, Ruff</p>
         <div class="case-study-meta">
-          <div class="meta-links">
-            <a href="https://github.com/sonawaneutkarsh/Clage" target="_blank" rel="noopener" class="pill-btn">Code Repository</a>
-          </div>
+            <a href="https://github.com/sonawaneutkarsh/Clage" class="pill-btn" target="_blank" rel="noopener">Code</a>
         </div>
       </header>
 
       <div class="prose">
-        <section class="visuals-section">
-          <div>
-            <h2 id="results">Results</h2>
-            <p class="section-subtitle">Real outputs from the repository (5 seeds each, deterministic)</p>
+        <div class="metrics-grid glance">
+          <div class="metric-card">
+            <div class="metric-val">300 tests</div>
+            <p class="metric-sub">Passing in CI on Python 3.10 and 3.12.</p>
           </div>
-          <p><strong>Engine validation</strong> (300 generations per trial):</p>
+          <div class="metric-card">
+            <div class="metric-val">XOR 4/5</div>
+            <p class="metric-sub">OR and AND solved in 5/5 seeds. Sine not solved.</p>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val">Deterministic</div>
+            <p class="metric-sub">Same seed, same result. Every condition runs 5 seeds.</p>
+          </div>
+        </div>
+
+        <section aria-labelledby="results">
+          <h2 id="results">Results</h2>
+          <p>Engine validation, 5 seeds per problem, 300 generations per trial. Runs are deterministic.</p>
           <table>
             <thead>
-              <tr><th scope="col">Problem</th><th scope="col">Solved (of 5)</th><th scope="col">Generations to solve (min / median / max)</th></tr>
+              <tr><th>Problem</th><th>Solved (of 5)</th><th>Generations to solve (min / median / max)</th></tr>
             </thead>
             <tbody>
               <tr><td>OR</td><td>5</td><td>7 / 13 / 13</td></tr>
               <tr><td>AND</td><td>5</td><td>19 / 27 / 105</td></tr>
               <tr><td>XOR</td><td>4</td><td>147 / 184.5 / 243</td></tr>
-              <tr><td>sin</td><td>0</td><td>not solved in 300 (mean best fitness 0.91)</td></tr>
+              <tr><td>sine</td><td>0</td><td>not solved in 300 (mean best fitness 0.91)</td></tr>
             </tbody>
           </table>
-          <div class="visuals-block">
-            <div class="image-pair-grid">
-              <img src="../../images/projects/clage/best-fitness-food-abundance.png" alt="Best fitness per generation for the food_low, control, and food_high conditions, mean and spread over 5 seeds" class="project-img" width="880" height="550" loading="lazy">
-              <img src="../../images/projects/clage/replay-food-high-gen9.png" alt="Replay of generation 9 in the food_high condition at tick 40: organisms as circles coloured by genome, food as green squares" class="project-img" width="649" height="662" loading="lazy">
-            </div>
-            <h3>Food-Abundance Experiment</h3>
-            <p>Left: best fitness per generation for three food levels (20 organisms, 25 generations). More food gives fitter populations, more foraging, and more in-world reproduction, and the three conditions separate consistently. This is <strong>not</strong> a learning curve: each generation reseeds the world, and best fitness is flat within noise over 25 generations. Right: a recorded generation replayed from the repository’s viewer.</p>
+          <div class="image-pair-grid">
+            <figure>
+              <img src="../../images/projects/clage/best-fitness-food-abundance.png" alt="Line chart: best fitness per generation for low, control, and high food conditions, mean and spread over 5 seeds" width="880" height="550" loading="lazy" decoding="async">
+              <figcaption>Best fitness per generation for three food levels (20 organisms, 25 generations, 5 seeds).</figcaption>
+            </figure>
+            <figure>
+              <img src="../../images/projects/clage/replay-food-high-gen9.png" alt="Grid world replay: organisms as colored circles and food as green squares" width="649" height="662" loading="lazy" decoding="async">
+              <figcaption>A recorded generation replayed in the viewer. Color is genome.</figcaption>
+            </figure>
           </div>
+          <p>More food gives fitter populations, more foraging, and more reproduction, and the three conditions separate consistently across seeds. This is <strong>not</strong> a learning curve: each generation reseeds the world, and best fitness is flat within noise over the shipped 25 generations.</p>
         </section>
-
-        <section class="space-y-4">
-          <h2 id="1-why-build-neat-from-scratch">1. Why Build NEAT from Scratch?</h2>
-          <p>Modern deep learning treats neural network topologies as static, fixed computation graphs where only connection weights are optimized via backpropagation. In contrast, Kenneth Stanley’s <em>NeuroEvolution of Augmenting Topologies (NEAT)</em> evolves both connection weights <strong>and</strong> the graph structure simultaneously.</p>
-          <p>While standard packages like <code>neat-python</code> exist, they obscure the subtle graph mechanics: how to cross over two neural networks of radically different shapes without combinatorial explosion, how to prevent destructive competition among novel structures, and how to verify topological correctness.</p>
-          <p>I built Clage from first principles to understand exactly what happens underneath evolutionary graph abstractions. Every line of code—from gene encoding to speciation distance equations—is implemented in pure Python, backed by 300 tests that pass in CI.</p>
+        <section aria-labelledby="problem">
+          <h2 id="problem">Why build NEAT from scratch</h2>
+          <p>NEAT evolves both the weights and the shape of a neural network. Libraries such as <code>neat-python</code> hide the parts I wanted to understand: how to cross over two networks with different shapes, how to protect new structure before its weights are tuned, and how to check that a decoded network is valid. So I wrote the engine myself, then used it for small controlled experiments.</p>
         </section>
-
-        <section class="space-y-6">
-          <h2 id="2-core-algorithm-architecture">2. Core Algorithm Architecture</h2>
-          <div>
-            <div>
-              <h3>Global Innovation Ledger</h3>
-              <p>To align matching genes between two arbitrarily evolved neural networks during crossover, Clage maintains a global innovation database. When a structural mutation adds a connection between node <code>in</code> and node <code>out</code>, the ledger checks if that exact innovation occurred elsewhere in the current generation. If so, it reuses the historical innovation number; otherwise, it increments the global counter. This makes linear-time topological alignment possible.</p>
-            </div>
-            <div>
-              <h3>Speciation &amp; Compatibility</h3>
-              <p>Structural additions initially decrease fitness because new connections have unoptimized weights. Clage partitions the population into evolutionary niches (species) using Kenneth Stanley’s compatibility distance:</p>
-              <div class="callout-box">
-                <span class="callout-tag">Compatibility Metric</span>
-                <div class="callout-title">δ = (c1 · E / N) + (c2 · D / N) + c3 · ΔW</div>
-                <p class="metric-sub">where E is excess genes, D is disjoint genes, and ΔW is average weight difference across matching genes. The normalizer N is set to 1 for small genomes (&lt; 20 connections) to prevent distance collapse. Species maintain persistent representative champions, age counters, and stagnation tracking with explicit shared fitness.</p>
-              </div>
-            </div>
-            <div>
-              <h3>Phenotype Network Construction</h3>
-              <p>Clage decodes genome connection lists into executable feed-forward neural networks in pure Python. A deterministic evaluation order is established using Kahn’s topological sort with min-heap tie-breaking on node IDs. Active graph cycles raise a <code>ValueError</code> at decode time (strictly feed-forward, cyclic graphs rejected at decode time), and node activations compute <code>math.tanh</code> over incoming weighted sums plus bias.</p>
-            </div>
-            <div>
-              <h3>Benchmark Validation</h3>
-              <p>Before deploying the engine in an open-ended simulation, the evolutionary implementation was validated across fixed random seeds against: <strong>OR</strong>, <strong>AND</strong>, non-linearly separable <strong>XOR</strong> (requiring evolved hidden nodes), and continuous <strong>sine wave regression</strong>. OR and AND solve in every seed and XOR in 4 of 5; sine regression is not solved within 300 generations (see Results).</p>
-            </div>
-          </div>
-        </section>
-
-        <section class="space-y-4">
-          <h2 id="3-2d-artificial-life-environment">3. 2D Artificial-Life Environment</h2>
-          <p>Once benchmarked, the NEAT engine was connected to an embodied 2D walled grid world with energy dynamics:</p>
+        <section aria-labelledby="built">
+          <h2 id="built">What I built</h2>
           <ul>
-            <li><strong>9-Number Observation Vector:</strong> At every tick, an organism observes its surroundings via a normalized 9-element array:
-              <div class="architecture-diagram"><pre><code>[food_dx, food_dy, food_density, organism_density, normalized_energy, boundary_x, boundary_y, prev_move, prev_eat]</code></pre></div>
-              where <code>food_dx</code> and <code>food_dy</code> are normalized offsets to the nearest food item in [-1.0, 1.0], <code>food_density</code> and <code>organism_density</code> count entities within a radial window, <code>normalized_energy</code> represents remaining energy fraction, <code>boundary_x</code> / <code>boundary_y</code> measure wall proximity (1.0 at walls, 0.0 at center), and <code>prev_move</code> / <code>prev_eat</code> are binary indicators of the organism’s previous action.
-            </li>
-            <li><strong>4 Discrete Network Actions:</strong> The neural network outputs 4 values; the organism executes the action corresponding to <code>argmax(outputs)</code>:
-              <div class="tag-cloud">
-                <span class="tag-pill">0: MOVE (Forward)</span>
-                <span class="tag-pill">1: TURN_LEFT (90°)</span>
-                <span class="tag-pill">2: TURN_RIGHT (90°)</span>
-                <span class="tag-pill">3: EAT (Facing Cell)</span>
-              </div>
-            </li>
-            <li><strong>Lifecycle Reproduction (Not a Neural Trigger):</strong> Reproduction is not an action emitted by the network. Instead, it is a separate lifecycle event evaluated after action execution and metabolic deduction: if an organism’s energy meets or exceeds the reproduction threshold and an adjacent grid cell is vacant, the organism reproduces asexually, transferring a configured energy fraction to an offspring placed in the adjacent cell.</li>
-            <li><strong>Metabolic &amp; World Dynamics:</strong> Each tick incurs an unavoidable baseline metabolic cost. Food regenerates dynamically across configurable spatial distributions to prevent trivial static feeding.</li>
+            <li><strong>Engine:</strong> genomes, an innovation ledger that aligns matching genes during crossover, mutation, and speciation with the compatibility distance <code>δ = c1·E/N + c2·D/N + c3·ΔW</code>.</li>
+            <li><strong>Decoding:</strong> a genome becomes a feed-forward network through Kahn's topological sort with deterministic tie-breaking. Cycles are rejected at decode time.</li>
+            <li><strong>World:</strong> a walled 2D grid. Each organism sees 9 numbers and picks one of 4 actions (move, turn left, turn right, eat). Reproduction is a lifecycle rule based on energy, not a network output.</li>
+            <li><strong>Experiments:</strong> config files that change exactly one parameter per condition, with a control and 5 seeds each; behavioral metrics such as action entropy and grid coverage; a terminal and matplotlib viewer that reads recorded JSON only.</li>
           </ul>
         </section>
-
-        <section class="space-y-4">
-          <h2 id="4-behavioral-diversity-empirical-rigor">4. Behavioral Diversity &amp; Empirical Rigor</h2>
-          <p>In evolutionary simulations, it is easy to mistake accidental spatial clustering for genuine behavioral intelligence. To measure whether populations actually developed diverse survival strategies, I designed a set of quantitative behavioral metrics computed from per-tick traces, including:</p>
-          <div class="metrics-grid">
-            <div class="metric-card">
-              <div class="metric-label">Action Entropy</div>
-              <p class="metric-sub">Shannon entropy across the 4-action distribution, distinguishing active multi-action policies from degenerate fixed agents.</p>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Transition Entropy Rate</div>
-              <p class="metric-sub">Conditional entropy H(a<sub>t</sub> | a<sub>t-1</sub>) measuring sequential action structure and temporal predictability beyond raw marginal frequencies.</p>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Spatial Grid Coverage</div>
-              <p class="metric-sub">Fraction of distinct grid cells visited over the total world area, quantifying dispersion without assuming navigation intent.</p>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Food Alignment Cosine</div>
-              <p class="metric-sub">Mean cosine between effective movement vectors and nearest-food direction vectors, tracking statistical directional coupling.</p>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Lineage Depth</div>
-              <p class="metric-sub">Measures generational survival depth and phylogenic branch longevity across speciation boundaries.</p>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Metabolic Efficiency</div>
-              <p class="metric-sub">Tracks the ratio of food calories harvested to movement energy expended over total agent lifespan.</p>
-            </div>
-          </div>
-          <div>
-            <h3>Empirical Finding: Food Density Confound</h3>
-            <p>During experimental sweeps across food abundance conditions, initial analytics appeared to show that certain conditions yielded significantly higher “food navigation intelligence.” However, rigorous ablation revealed that <code>food_alignment_cosine</code> was base-rate confounded by local food replenishment density: in dense food environments, random walks naturally align with food items purely due to geometric proximity. Once diagnosed, food alignment was excluded from cross-condition comparisons and restricted strictly to within-condition baselines with equalized resource distributions.</p>
-          </div>
+        <section aria-labelledby="hard">
+          <h2 id="hard">The hard part: measuring behavior correctly</h2>
+          <p>In artificial-life work it is easy to see intelligence in noise. Three measurement problems mattered most:</p>
+          <ul>
+            <li>A “food alignment” metric looked like evidence of navigation, but it was confounded by food density: with more food nearby, random movement also points at food. I removed it from automatic charts and only compare it within one food condition.</li>
+            <li>Transition entropy first counted action pairs across the boundary between two organisms. Now it counts only pairs within one organism's trace. Results from before the fix are marked as not comparable.</li>
+            <li>The population is replaced by unevaluated offspring right after evaluation, so statistics are read from a per-generation record, never from the live population.</li>
+          </ul>
         </section>
-
-        <section class="space-y-4">
-          <h2 id="5-verification-test-suite">5. Verification &amp; Test Suite</h2>
-          <p>The engine has <strong>300 unit and integration tests, passing in CI</strong> on Python 3.10 and 3.12, covering:</p>
-          <div class="tag-cloud">
-            <span class="tag-pill">test_genome.py</span>
-            <span class="tag-pill">test_innovation.py</span>
-            <span class="tag-pill">test_crossover.py</span>
-            <span class="tag-pill">test_mutation.py</span>
-            <span class="tag-pill">test_speciation.py</span>
-            <span class="tag-pill">test_phenotype.py</span>
-            <span class="tag-pill">test_population.py</span>
-            <span class="tag-pill">test_world.py</span>
-            <span class="tag-pill">test_benchmarks.py</span>
-          </div>
+        <section aria-labelledby="decision">
+          <h2 id="decision">Key decision: explicit randomness</h2>
+          <p>The engine's random generator comes from the seed. The world's generator is derived from the trial seed and the generation number. The same seed gives identical results, and different trials are independent. Without this, a 5-seed comparison between conditions would not mean anything.</p>
         </section>
+        <section aria-labelledby="evidence">
+          <h2 id="evidence">Evidence</h2>
+          <ul>
+            <li><strong>300 tests</strong> pass in CI on Python 3.10 and 3.12, together with Ruff and mypy, on every push and pull request.</li>
+            <li>Every number on this page comes from a command in the README and can be reproduced on the current <code>main</code>.</li>
+          </ul>
+        </section>
+        <section aria-labelledby="limits">
+          <h2 id="limits">Limitations</h2>
+          <ul>
+            <li>Sine regression is not solved within 300 generations, and XOR fails in 1 of 5 seeds.</li>
+            <li>Evolved networks stay small, and almost no organism survives all 300 ticks of a generation.</li>
+            <li>The food experiment shows that conditions separate, not that organisms learn over time. A longer, unshipped 100-generation run showed only a modest rise.</li>
+            <li>The world has no sensor for other organisms, so no metric claims cooperation, competition, or avoidance.</li>
+          </ul>
+        </section>
+        <div class="repo-cta">
+          <p>The README has every command, the experiment configs, and notes on the measurement fixes.</p>
+          <a href="https://github.com/sonawaneutkarsh/Clage" target="_blank" rel="noopener" class="pill-btn">Read the Clage README</a>
+        </div>
       </div>
     </article>
   </main>
 
   <footer>
-    <p>Utkarsh Sonawane — Pennsylvania State University</p>
+    <nav class="footer-links" aria-label="Contact">
+      <a href="../../resume.pdf">Résumé (PDF)</a>
+      <a href="https://github.com/sonawaneutkarsh" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/sonawaneutkarsh/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="mailto:utkarshsonawane@psu.edu">utkarshsonawane@psu.edu</a>
+    </nav>
+    <p>Utkarsh Sonawane · Penn State Harrisburg</p>
   </footer>
 
   <script src="../../script.js"></script>

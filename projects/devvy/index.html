@@ -3,9 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Devvy: Multi-Environment Discord Presence & Local IPC Daemon — Utkarsh Sonawane</title>
-  <meta name="description" content="Modern software engineering blends traditional text editors with autonomous agentic tools. When running VS Code, OpenCode, and Command Code side by side, having multiple uncoordinated integrations compete for Discord’s local presence pipe causes status flip-flopping and inconsistent activity states. I engineered Devvy around three core design motivations: avoiding unnecessary dependency overhead, preventing multiple local integrations from competing for presence state, and deliberately limiting exposed context. Devvy operates as a zero-dependency background daemon that speaks Discord’s binary IPC protocol directly over Unix domain sockets and Windows named pipes, arbitrating active developer environments with deterministic priority rules.">
+  <title>Devvy: one local daemon for Discord presence across coding tools — Utkarsh Sonawane</title>
+  <meta name="description" content="Case study: Devvy is a local Node.js daemon that owns one Discord IPC connection, arbitrates between VS Code, OpenCode, and Command Code, and shows only high-level state. 26 test scripts, all run in CI.">
   <meta name="author" content="Utkarsh Sonawane">
+  <link rel="canonical" href="https://sonawaneutkarsh.github.io/projects/devvy/">
+
+  <meta property="og:title" content="Devvy: one local daemon for Discord presence across coding tools — Utkarsh Sonawane">
+  <meta property="og:description" content="Case study: Devvy is a local Node.js daemon that owns one Discord IPC connection, arbitrates between VS Code, OpenCode, and Command Code, and shows only high-level state. 26 test scripts, all run in CI.">
+  <meta property="og:url" content="https://sonawaneutkarsh.github.io/projects/devvy/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Utkarsh Sonawane">
+  <meta property="og:image" content="https://sonawaneutkarsh.github.io/images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Utkarsh Sonawane — portfolio">
+  <meta name="twitter:card" content="summary_large_image">
 
   <link rel="icon" href="../../favicon.ico" sizes="any">
   <link rel="icon" href="../../favicon-32x32.png" type="image/png">
@@ -14,249 +26,127 @@
   <link rel="stylesheet" href="../../styles.css">
 </head>
 <body class="blog-post-page">
+  <a class="skip-link" href="#content">Skip to content</a>
 
-  <!-- Sticky Left CONTENTS Sidebar (Desktop) -->
   <nav class="toc-sidebar" aria-label="Contents">
     <p class="toc-title">Contents</p>
     <ol class="toc-list">
-      <li><a href="#live-presence-output">Live Presence Output</a></li>
-      <li><a href="#1-design-motivations-problem-space">1. Design Motivations & Problem Space</a></li>
-      <li><a href="#2-architecture-control-topology">2. Architecture & Control Topology</a></li>
-      <li><a href="#3-direct-discord-ipc-binary-opcode-framing-from-scratch">3. Direct Discord IPC: Binary Opcode Framing from Scratch</a></li>
-      <li><a href="#4-multi-source-priority-the-anti-flip-flop-rule">4. Multi-Source Priority & The Anti-Flip-Flop Rule</a></li>
-      <li><a href="#5-daemon-lifecycle-source-ttl-service-management">5. Daemon Lifecycle, Source TTL & Service Management</a></li>
-      <li><a href="#6-privacy-boundaries-model-display-sanitization">6. Privacy Boundaries & Model Display Sanitization</a></li>
-      <li><a href="#7-verification-automated-test-suite">7. Verification & Automated Test Suite</a></li>
-      <li><a href="#8-source-code-open-source">8. Source Code & Open Source</a></li>
+      <li><a href="#presence">What it shows</a></li>
+      <li><a href="#problem">The problem</a></li>
+      <li><a href="#built">What I built</a></li>
+      <li><a href="#hard">The hard part</a></li>
+      <li><a href="#decision">Key decision</a></li>
+      <li><a href="#evidence">Evidence</a></li>
+      <li><a href="#limits">Limitations</a></li>
     </ol>
   </nav>
 
-  <main class="container">
+  <main class="container" id="content">
     <article class="blog-post-article">
-      <a href="../../#projects" class="back-link">← Projects</a>
+      <a href="../../#projects" class="back-link">← All projects</a>
 
       <header class="post-header">
-        <h1>Devvy: Multi-Environment Discord Presence & Local IPC Daemon</h1>
-        <p class="post-subtitle">Modern software engineering blends traditional text editors with autonomous agentic tools. When running VS Code, OpenCode, and Command Code side by side, having multiple uncoordinated integrations compete for Discord’s local presence pipe causes status flip-flopping and inconsistent activity states. I engineered Devvy around three core design motivations: avoiding unnecessary dependency overhead, preventing multiple local integrations from competing for presence state, and deliberately limiting exposed context. Devvy operates as a zero-dependency background daemon that speaks Discord’s binary IPC protocol directly over Unix domain sockets and Windows named pipes, arbitrating active developer environments with deterministic priority rules.</p>
-
+        <h1>Devvy</h1>
+        <p class="post-subtitle">Three coding tools, one Discord status. Devvy is a local daemon that owns the Discord connection, decides which tool to show, and shows only high-level state: never prompts, code, or paths.</p>
+        <p class="case-meta">2026 · Solo project · JavaScript (Node.js) with TypeScript integrations · macOS released; Windows on main, not released yet</p>
         <div class="case-study-meta">
-          <div class="meta-links">
-            <a href="https://github.com/sonawaneutkarsh/devvy" target="_blank" rel="noopener" class="pill-btn">Code Repository</a>
-          </div>
+            <a href="https://github.com/sonawaneutkarsh/devvy" class="pill-btn" target="_blank" rel="noopener">Code</a>
+            <a href="https://github.com/sonawaneutkarsh/devvy/releases" class="pill-btn" target="_blank" rel="noopener">Releases</a>
         </div>
       </header>
 
       <div class="prose">
-        <section aria-labelledby="devvy-visuals-heading" class="visuals-section">
-          <div>
-            <h2 id="live-presence-output">Live Presence Output</h2>
-            <p class="section-subtitle">Discord Rich Presence (V4 Activity)</p>
+        <div class="metrics-grid glance">
+          <div class="metric-card">
+            <div class="metric-val">26 scripts</div>
+            <p class="metric-sub">Test scripts, all run in CI, including real-daemon integration tests.</p>
           </div>
-          <div>
-            <img src="../../images/projects/devvy/discord-presence.png" alt="Devvy Discord Rich Presence preview showing project name, activity mode Thinking, and detected AI model GPT 5.6" class="project-img" width="878" height="320">
-            <p>Real Discord V4 presence: Project name, high-level activity mode (<code>Thinking</code>), and detected model (<code>GPT 5.6</code>) with deliberate context limitation (no file paths or raw prompts).</p>
+          <div class="metric-card">
+            <div class="metric-val">Release gate</div>
+            <p class="metric-sub">Releases publish only after CI passes on the tagged commit.</p>
           </div>
-        </section>
+          <div class="metric-card">
+            <div class="metric-val">0 runtime deps</div>
+            <p class="metric-sub">Discord IPC framing written on Node built-ins.</p>
+          </div>
+        </div>
 
-        <section class="space-y-4">
-          <h2 id="1-design-motivations-problem-space">1. Design Motivations &amp; Problem Space</h2>
-          <p>Displaying editor status in Discord should be a straightforward background utility. However, running multiple developer tools simultaneously (such as a GUI editor alongside terminal coding agents) creates clear architectural trade-offs that shaped Devvy’s design:</p>
+        <section aria-labelledby="presence">
+          <h2 id="presence">What it shows</h2>
+          <figure>
+            <img src="../../images/projects/devvy/discord-presence.png" class="project-img" alt="Discord profile card showing Devvy: project name, Thinking state, and the model name GPT 5.6" width="878" height="320" loading="lazy" decoding="async">
+            <figcaption>A real Devvy presence: project, high-level state, and model. No prompt, file, or path.</figcaption>
+          </figure>
+        </section>
+        <section aria-labelledby="problem">
+          <h2 id="problem">The problem</h2>
+          <p>I use VS Code, OpenCode, and Command Code at the same time. When each tool talks to Discord on its own, they overwrite each other and the status flips back and forth. Most presence plugins also show too much: file names, paths, or the task text.</p>
+        </section>
+        <section aria-labelledby="built">
+          <h2 id="built">What I built</h2>
+          <figure class="architecture-diagram" tabindex="0" aria-label="Devvy architecture: three integrations send state to one local daemon, which owns the Discord connection">
+            <pre><code>VS Code extension ──┐
+OpenCode plugin ────┼──▶ Devvy daemon (127.0.0.1:17377) ──▶ Discord IPC ──▶ Discord
+Command Code mod ───┘     arbitration · TTL · privacy filter</code></pre>
+          </figure>
           <ul>
-            <li><strong>Preventing Multiple Local Integrations from Competing for Presence State:</strong> When developers run VS Code alongside autonomous agents like OpenCode or Command Code, having separate tools connect independently to Discord’s local pipe leads to presence fighting and rapid status changes. Devvy introduces a centralized local daemon that arbitrates priority so only the most relevant active context updates Discord.</li>
-            <li><strong>Avoiding Unnecessary Dependency Overhead:</strong> Establishing a local Unix domain socket connection and sending periodic JSON payloads does not require large third-party client libraries, native compiled binaries, or dozens of transitive dependencies. Devvy implements the protocol directly using Node.js built-in modules (<code>node:net</code>, <code>node:buffer</code>) with <strong>zero external runtime dependencies</strong>.</li>
-            <li><strong>Deliberately Limiting Exposed Context:</strong> Detailed file paths, full repository branches, or sensitive agent prompts should never be broadcast over a public presence payload. Devvy intentionally restricts presence to high-level metadata: project name, coarse activity mode (<code>Thinking</code>, <code>Editing</code>), and normalized model family names.</li>
-          </ul>
-          <p>By decoupling editor telemetry from the Discord connection, Devvy centralizes multi-editor workflows into a single predictable, lightweight service.</p>
-        </section>
-
-        <section class="space-y-4">
-          <h2 id="2-architecture-control-topology">2. Architecture &amp; Control Topology</h2>
-          <p>Rather than having IDE plugins talk to Discord directly, Devvy introduces a local hub-and-spoke model. Integrations publish lightweight, structured state updates over a loopback HTTP interface, while the daemon alone arbitrates active work and owns the single connection to Discord:</p>
-          <div class="architecture-diagram">
-            <pre><code>┌───────────────────────┐
-│        VS Code        │──┐
-│   (extension.js)      │  │
-└───────────────────────┘  │
-                           │
-┌───────────────────────┐  │ PUT /state (127.0.0.1:17377)
-│       OpenCode        │──┼────────────────────────────────┐
-│ (discord-presence.ts) │  │ Safe structured JSON payloads  │
-└───────────────────────┘  │ (Project, High-Level State,    │
-                           │  Sanitized Model, Heartbeat)   │
-┌───────────────────────┐  │                                │
-│     Command Code      │──┘                                │
-│ (discord-presence.ts) │                                   │
-└───────────────────────┘                                   │
-                                                            ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│                        Local Devvy Daemon                              │
-│                                                                        │
-│  ┌───────────────────────┐  ┌───────────────────────────────────────┐  │
-│  │   Loopback HTTP API   │  │         Priority Arbitration          │  │
-│  │  • 127.0.0.1:17377    │  │  • Precedence: OpenCode &gt;             │  │
-│  │  • GET /health check  │  │    Command Code &gt; VS Code             │  │
-│  │  • Max payload 64 KB  │  │  • Intra-kind: Active &gt; Inactive      │  │
-│  │  • EADDRINUSE exit 0  │  │  • Window focus &amp; transition recency  │  │
-│  └──────────┬────────────┘  └───────────────────┬───────────────────┘  │
-│             │                                   │                      │
-│             ▼                                   ▼                      │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │                    Anti-Churn Flush Engine                       │  │
-│  │  • Critical Anti-Flip-Flop Rule: heartbeats preserve TTL only    │  │
-│  │  • 2,000ms minimum IPC rate-limit gate (MIN_IPC_INTERVAL_MS)     │  │
-│  │  • Source expiry sweeper: 15s TTL sweeps stale crashed tools     │  │
-│  └──────────────────────────────────┬───────────────────────────────┘  │
-│                                     │                                  │
-│                                     ▼                                  │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │                    Direct Discord IPC Engine                     │  │
-│  │  • 8-byte binary header: opcode + length (UInt32LE)              │  │
-│  │  • Handshake negotiation (OP 0) &amp; V4 Activity dispatch (OP 1)    │  │
-│  │  • Exponential backoff reconnects (1,000ms → 30,000ms)           │  │
-│  └──────────────────────────────────┬───────────────────────────────┘  │
-└─────────────────────────────────────┼──────────────────────────────────┘
-                                      │ Unix Domain Socket: /tmp/discord-ipc-0...9
-                                      │ Windows Named Pipe: \\?\pipe\discord-ipc-0...9
-                                      ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│                      Discord Client (Desktop)                          │
-│  • Single stable Rich Presence activity broadcast to friends &amp; servers │
-└────────────────────────────────────────────────────────────────────────┘</code></pre>
-          </div>
-        </section>
-
-        <section class="space-y-4">
-          <h2 id="3-direct-discord-ipc-binary-opcode-framing-from-scratch">3. Direct Discord IPC: Binary Opcode Framing from Scratch</h2>
-          <p>Instead of bundling third-party RPC libraries, Devvy implements Discord’s local IPC protocol directly using Node’s built-in <code>node:net</code> and <code>node:buffer</code> modules. Discord exposes local IPC on desktop operating systems via Unix domain sockets (<code>discord-ipc-0</code> through <code>discord-ipc-9</code> in <code>/tmp</code> or <code>XDG_RUNTIME_DIR</code>) or Windows named pipes.</p>
-          <p>Communication requires strict binary framing. Every packet sent and received over the socket begins with an <strong>8-byte header</strong>:</p>
-          <div class="callout-box">
-            <span class="callout-tag">Binary Framing</span>
-            <div class="callout-title">Bytes 0–3: Opcode (UInt32LE) · Bytes 4–7: Payload Length (UInt32LE)</div>
-            <p class="metric-sub">Followed immediately by Length bytes of UTF-8 JSON payload.</p>
-          </div>
-          <p>The daemon implements the complete lifecycle protocol:</p>
-          <ul>
-            <li><code>OP 0 (HANDSHAKE):</code> Sent immediately upon socket connection with <code>{ v: 1, client_id }</code>.</li>
-            <li><code>OP 1 (FRAME):</code> Dispatches commands such as <code>SET_ACTIVITY</code> and parses Discord events (<code>READY</code>).</li>
-            <li><code>OP 2 (CLOSE):</code> Gracefully terminates sessions when Discord exits.</li>
-            <li><code>OP 3 / 4 (PING / PONG):</code> Emits responsive heartbeat replies.</li>
-            <li><code>Stream Chunk Accumulation:</code> Accumulates incoming network chunks into an internal buffer, reads complete packets via <code>readUInt32LE</code>, and handles partial frames cleanly.</li>
-            <li><code>Exponential Backoff Reconnect:</code> If Discord closes or restarts, reconnect attempts back off progressively from 1,000ms up to 30,000ms to eliminate CPU spin.</li>
+            <li><strong>One owner:</strong> integrations send small structured updates to a loopback HTTP endpoint. Only the daemon talks to Discord.</li>
+            <li><strong>Discord IPC from scratch:</strong> built on <code>node:net</code> and <code>node:buffer</code>. Each frame has an 8-byte header (opcode and length, little-endian) and a JSON body. The client handles handshake, frames, close, and ping/pong, buffers partial frames, and reconnects with backoff from 1&nbsp;s to 30&nbsp;s.</li>
+            <li><strong>No runtime npm dependencies.</strong> The installer downloads a release payload, verifies its SHA-256 checksum, and starts the daemon at login.</li>
           </ul>
         </section>
-
-        <section class="space-y-4">
-          <h2 id="4-multi-source-priority-the-anti-flip-flop-rule">4. Multi-Source Priority &amp; The Anti-Flip-Flop Rule</h2>
-          <p>When multiple developer environments run concurrently, which one should Discord display? Devvy solves this through a two-stage deterministic arbitration engine:</p>
-          <div>
-            <div>
-              <h3>Cross-Kind Precedence</h3>
-              <p>Coding tools have different semantic weight. An autonomous agent actively planning or modifying a codebase takes precedence over a background editor window:</p>
-              <div class="callout-box">
-                <span class="callout-tag">Precedence Chain</span>
-                <div class="callout-title">OpenCode &gt; Command Code &gt; VS Code</div>
-                <p class="metric-sub">If an OpenCode agent is thinking, its status is displayed. When the agent goes idle, presence falls back gracefully to the active VS Code workspace.</p>
-              </div>
-            </div>
-            <div>
-              <h3>Intra-Kind Arbitration</h3>
-              <p>When multiple windows of the same tool are open, <code>compareWithinKind</code> resolves the winner:</p>
-              <ol>
-                <li>Active source always beats inactive source.</li>
-                <li>Focused window always beats unfocused window.</li>
-                <li>Most recent focus event (<code>lastFocusedAt</code>) breaks ties.</li>
-              </ol>
-            </div>
-          </div>
-          <div>
-            <h3>The Critical Anti-Flip-Flop Rule</h3>
-            <p>In distributed presence systems, tools send periodic heartbeats (e.g. every 5 seconds) to indicate they are still alive. In a naive system, each incoming heartbeat updates a “last updated” timestamp. If two windows are active, their presence would flip-flop back and forth every few seconds as heartbeats arrived out of phase.</p>
-            <p>Devvy eliminates flip-flop through an explicit invariant in <code>sourceKey()</code>: heartbeat arrival (<code>lastSeen</code>) resets the TTL expiration timer, but is <strong>strictly excluded</strong> from arbitration keys. Recency is determined exclusively by genuine activity transitions (<code>busyAt</code> or <code>lastActiveAt</code>). Heartbeats never trigger Discord IPC updates.</p>
-          </div>
+        <section aria-labelledby="hard">
+          <h2 id="hard">The hard part: arbitration without flip-flop</h2>
+          <p>The daemon picks one source. Tool kind comes first (OpenCode, then Command Code, then VS Code). Inside one kind, an active source beats an inactive one, a focused window beats an unfocused one, and the most recent focus breaks a tie.</p>
+          <p>The subtle bug was heartbeats. Each source sends one every few seconds. If heartbeat time counted as “recent activity”, two open windows would take turns winning. So a heartbeat only keeps a source alive (a 15-second TTL, swept every 2 seconds). It is excluded from the arbitration key and never triggers a Discord update. Outgoing updates are also limited to one every 2 seconds.</p>
         </section>
-
-        <section class="space-y-4">
-          <h2 id="5-daemon-lifecycle-source-ttl-service-management">5. Daemon Lifecycle, Source TTL &amp; Service Management</h2>
-          <p>Devvy runs as an unattended background service designed to handle crashes, reboots, and sleep cycles cleanly:</p>
+        <section aria-labelledby="decision">
+          <h2 id="decision">Key decision: a hard privacy boundary</h2>
+          <table>
+            <thead>
+              <tr><th>Devvy shows</th><th>Devvy never shows</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Project folder name (basename only)</td><td>Full paths, home directory names</td></tr>
+              <tr><td>High-level state: Thinking, Editing, Planning, Waiting</td><td>Prompts, AI responses, commands, task text</td></tr>
+              <tr><td>Model name, only when reliably known</td><td>Source code, file contents, credentials</td></tr>
+            </tbody>
+          </table>
+          <p>The filter sits in the daemon, so a new integration cannot leak more than the daemon allows.</p>
+        </section>
+        <section aria-labelledby="evidence">
+          <h2 id="evidence">Evidence</h2>
           <ul>
-            <li><strong>15-Second TTL Expiration:</strong> The daemon sweeps registered sources every 2,000ms. If an editor crashes or is force-quit without sending an exit payload, its state expires after 15 seconds (<code>TTL_MS</code>) and the daemon clears or reverts the presence automatically.</li>
-            <li><strong>Graceful Port Collision Handling:</strong> If another Devvy instance is already running on port 17377, the new process catches <code>EADDRINUSE</code> and exits cleanly with status 0, preventing process churn or duplicate daemons.</li>
-            <li><strong>Throttled Flush Timer (2-Second Minimum Interval):</strong> To avoid flooding Discord’s socket with high-frequency editor events, Devvy gates all outgoing IPC frames behind a <code>MIN_IPC_INTERVAL_MS = 2000</code> timer, coalescing rapid bursts of typing or tool switching into smooth, throttled updates.</li>
-            <li><strong>Zero-Configuration Service Supervision:</strong> On macOS, Devvy installs as a user LaunchAgent (<code>com.sonawaneutkarsh.devvy.plist</code>) running against an isolated Node runtime. On Windows, it installs via PowerShell with startup registry registration.</li>
+            <li><strong>26 test scripts, all run in CI:</strong> 22 daemon tests (unit tests, and integration tests that start the real daemon against a mock Discord IPC server), 1 Windows helper test, 1 VS Code CLI discovery test, and 2 release-payload checks.</li>
+            <li>CI also builds and checks the VS Code extension and the release payloads.</li>
+            <li><strong>Release gate:</strong> GitHub Actions publishes a release only after CI passes on the tagged commit.</li>
+            <li>A second daemon on the same port exits cleanly instead of fighting the first one.</li>
           </ul>
         </section>
-
-        <section class="space-y-4">
-          <h2 id="6-privacy-boundaries-model-display-sanitization">6. Privacy Boundaries &amp; Model Display Sanitization</h2>
-          <p>Developers work on proprietary codebases, confidential research, and commercial APIs. Devvy enforces rigid privacy gates before constructing any Discord presence:</p>
-          <div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Presence Domain</th>
-                  <th>Deliberately Permitted Context</th>
-                  <th>Strictly Redacted / Forbidden Scope</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Project Identity</td>
-                  <td>Workspace folder basename only (e.g. “Talks”)</td>
-                  <td>Absolute paths, user home directory names, full Git URIs.</td>
-                </tr>
-                <tr>
-                  <td>Activity Mode</td>
-                  <td>Standardized modes: Thinking, Editing, Planning, Reviewing, Searching</td>
-                  <td>Raw prompts, tool inputs, command-line arguments, terminal text.</td>
-                </tr>
-                <tr>
-                  <td>Model Representation</td>
-                  <td>Normalized family strings (e.g. “GPT 5.6”, “Claude 3.7”)</td>
-                  <td>API endpoints, deployment UUIDs, fine-tuning flags, token counts.</td>
-                </tr>
-                <tr>
-                  <td>Source Code</td>
-                  <td>Primary language tag (e.g. “TypeScript”)</td>
-                  <td>File names, code snippets, git commit messages, branch names.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p>The normalization layer (<code>model-display.mjs</code>) maps raw internal identifiers to clean, public-safe labels while completely filtering out sensitive infrastructure details.</p>
+        <section aria-labelledby="limits">
+          <h2 id="limits">Limitations</h2>
+          <ul>
+            <li>Released for macOS only (v4.0.x). Windows support is on <code>main</code> but ships with the next release, v4.1.0.</li>
+            <li>It supports three tools. The model name appears only when the integration can identify it reliably.</li>
+            <li>The Discord desktop app must be running.</li>
+          </ul>
         </section>
-
-        <section class="space-y-4">
-          <h2 id="7-verification-automated-test-suite">7. Verification &amp; Automated Test Suite</h2>
-          <p>Devvy has <strong>26 test scripts, all run in CI</strong>: 22 daemon unit and integration tests (the integration tests start the real daemon against a mock Discord IPC server), a Windows helper test, a VS Code CLI discovery test, and 2 release-payload checks. Examples:</p>
-          <div class="tag-cloud">
-            <span class="tag-pill">test-arbitration.mjs</span>
-            <span class="tag-pill">test-presence.mjs</span>
-            <span class="tag-pill">test-model-display.mjs</span>
-            <span class="tag-pill">test-reconnect.sh</span>
-            <span class="tag-pill">test-unfocused.sh</span>
-            <span class="tag-pill">test-multi-opencode.sh</span>
-            <span class="tag-pill">test-leak.mjs</span>
-            <span class="tag-pill">test-race.mjs</span>
-            <span class="tag-pill">test-vscode.mjs</span>
-            <span class="tag-pill">test-commandcode.sh</span>
-            <span class="tag-pill">test-launchagent.sh</span>
-            <span class="tag-pill">test-fallback-expiry.sh</span>
-          </div>
-        </section>
-
-        <section class="space-y-4">
-          <h2 id="8-source-code-open-source">8. Source Code &amp; Open Source</h2>
-          <p>Devvy is open source under the MIT License. The repository contains the daemon, protocol engine, macOS and Windows installer scripts, and integration plugins for OpenCode, Command Code, and VS Code.</p>
-          <div>
-            <a href="https://github.com/sonawaneutkarsh/devvy" rel="noopener noreferrer" target="_blank" class="pill-btn">Explore the Devvy repository on GitHub</a>
-          </div>
-        </section>
+        <div class="repo-cta">
+          <p>The README has install steps, the privacy rules, and the release process.</p>
+          <a href="https://github.com/sonawaneutkarsh/devvy" target="_blank" rel="noopener" class="pill-btn">Read the Devvy README</a>
+        </div>
       </div>
     </article>
   </main>
 
   <footer>
-    <p>Utkarsh Sonawane — Pennsylvania State University</p>
+    <nav class="footer-links" aria-label="Contact">
+      <a href="../../resume.pdf">Résumé (PDF)</a>
+      <a href="https://github.com/sonawaneutkarsh" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/sonawaneutkarsh/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="mailto:utkarshsonawane@psu.edu">utkarshsonawane@psu.edu</a>
+    </nav>
+    <p>Utkarsh Sonawane · Penn State Harrisburg</p>
   </footer>
 
   <script src="../../script.js"></script>

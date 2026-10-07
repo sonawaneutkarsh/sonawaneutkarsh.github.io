@@ -3,17 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Utkarsh Sonawane</title>
-  <meta name="description" content="Utkarsh Sonawane — Undergraduate in Computer Science at Penn State University.">
+  <title>Utkarsh Sonawane — Software Engineering Portfolio</title>
+  <meta name="description" content="Utkarsh Sonawane, Computer Science student at Penn State (Class of 2028). Backend systems, native iOS and watchOS apps, and ML experiments, each tested in CI. Seeking Summer 2027 SWE and AI/ML internships.">
   <meta name="author" content="Utkarsh Sonawane">
+  <link rel="canonical" href="https://sonawaneutkarsh.github.io/">
 
-  <!-- Open Graph / Meta -->
-  <meta property="og:title" content="Utkarsh Sonawane">
-  <meta property="og:description" content="Undergraduate student in Computer Science at Penn State University.">
+  <meta property="og:title" content="Utkarsh Sonawane — Software Engineering Portfolio">
+  <meta property="og:description" content="Utkarsh Sonawane, Computer Science student at Penn State (Class of 2028). Backend systems, native iOS and watchOS apps, and ML experiments, each tested in CI. Seeking Summer 2027 SWE and AI/ML internships.">
   <meta property="og:url" content="https://sonawaneutkarsh.github.io/">
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Utkarsh Sonawane">
+  <meta property="og:image" content="https://sonawaneutkarsh.github.io/images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Utkarsh Sonawane — portfolio">
+  <meta name="twitter:card" content="summary_large_image">
 
-  <!-- Favicon -->
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" href="favicon-32x32.png" type="image/png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -21,240 +26,207 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <a class="skip-link" href="#projects">Skip to projects</a>
 
   <main>
-    <!-- Section 1: Hero -->
     <section id="hero">
       <div class="container">
         <div class="about-grid">
-          <!-- Left: Profile Photo & Social Icons -->
           <div class="profile-col">
-            <img class="avatar" src="avatar.jpg" alt="Utkarsh Sonawane" width="195" height="195">
+            <img class="avatar" src="avatar.jpg" alt="Portrait of Utkarsh Sonawane" width="195" height="195">
             <ul class="social-links">
-              <!-- Email with click to copy -->
               <li class="social-link">
-                <button type="button" aria-label="Email" data-email="utkarshsonawane@psu.edu">
-                  <img src="icons/email.png" alt="Email" class="social-icon-img" width="21" height="21">
-                  <span class="tooltip">Click to copy</span>
+                <button type="button" aria-label="Copy email address utkarshsonawane@psu.edu" data-email="utkarshsonawane@psu.edu">
+                  <img src="icons/email.png" alt="" class="social-icon-img" width="21" height="21">
+                  <span class="tooltip" aria-live="polite">Click to copy</span>
                 </button>
               </li>
-
-              <!-- Google Scholar -->
-              <li class="social-link">
-                <a href="https://scholar.google.com/citations?user=OijUxYcAAAAJ&hl=en" target="_blank" rel="noopener" aria-label="Google Scholar">
-                  <img src="icons/googlescholar.png" alt="Google Scholar" class="social-icon-img" width="21" height="21">
-                </a>
-              </li>
-
-              <!-- GitHub -->
               <li class="social-link">
                 <a href="https://github.com/sonawaneutkarsh" target="_blank" rel="noopener" aria-label="GitHub">
-                  <img src="icons/github.png" alt="GitHub" class="social-icon-img" width="21" height="21">
+                  <img src="icons/github.png" alt="" class="social-icon-img" width="21" height="21">
                 </a>
               </li>
-
-              <!-- LinkedIn -->
               <li class="social-link">
                 <a href="https://www.linkedin.com/in/sonawaneutkarsh/" target="_blank" rel="noopener" aria-label="LinkedIn">
-                  <img src="icons/linkedin.png" alt="LinkedIn" class="social-icon-img" width="21" height="21">
+                  <img src="icons/linkedin.png" alt="" class="social-icon-img" width="21" height="21">
                 </a>
               </li>
-
-              <!-- alphaXiv -->
               <li class="social-link">
-                <a href="https://www.alphaxiv.org/@tekcrec" target="_blank" rel="noopener" aria-label="alphaXiv">
-                  <img src="icons/alphaxiv.png" alt="alphaXiv" class="social-icon-img" width="21" height="21">
-                </a>
-              </li>
-
-              <!-- Hugging Face -->
-              <li class="social-link">
-                <a href="https://huggingface.co/utkarshsonawane" target="_blank" rel="noopener" aria-label="Hugging Face">
-                  <img src="icons/huggingface.png" alt="Hugging Face" class="social-icon-img" width="21" height="21">
-                </a>
-              </li>
-
-              <!-- CV Link -->
-              <li class="social-link">
-                <a href="resume.pdf" target="_blank" rel="noopener" aria-label="Curriculum Vitae">
+                <a href="resume.pdf" aria-label="Résumé (PDF)">
                   <span class="cv-link">CV</span>
                 </a>
               </li>
             </ul>
           </div>
 
-          <!-- Right: Bio -->
           <div class="bio">
             <h1 class="bio-name">Utkarsh Sonawane</h1>
             <p class="bio-text">
-              Hello! I am an undergraduate student in Computer Science at <strong>Penn State University</strong> (graduating Class of 2028). Currently seeking <strong>Summer 2027 SWE/AI internships</strong>.
+              I study Computer Science at <strong>Penn State</strong> (Class of 2028). I build backend systems, native iOS and watchOS apps, and small ML experiments, and I test them in CI.
             </p>
+            <p class="bio-text">
+              I am looking for <strong>Summer 2027 software engineering and AI/ML internships</strong>.
+            </p>
+            <div class="hero-actions">
+              <a href="resume.pdf" class="btn-primary">Résumé (PDF)</a>
+              <a href="#projects" class="btn-secondary">See projects</a>
+              <a href="https://github.com/sonawaneutkarsh" target="_blank" rel="noopener" class="btn-secondary">GitHub</a>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Section 2: Projects (Centerpiece) -->
     <section id="projects">
       <div class="container">
         <h2>Projects</h2>
+        <p class="section-lede">Strongest work first. Each repository has CI and a README with the full detail.</p>
 
-        <!-- Topic Filter Pills -->
-        <div class="pub-filters">
-          <span class="filter-label">TOPIC:</span>
-          <button type="button" class="filter-btn active" data-topic="all">All</button>
-          <button type="button" class="filter-btn" data-topic="ai-agents">AI Agents</button>
-          <button type="button" class="filter-btn" data-topic="mobile">Mobile</button>
-          <button type="button" class="filter-btn" data-topic="ml-research">ML Research</button>
+        <div class="project-list">
+          <article class="project-card featured">
+            <div class="featured-body">
+              <p class="card-kicker">Flagship · 2026 · Solo</p>
+              <h3 class="project-title"><a href="projects/nytr/">Nytr</a></h3>
+              <p class="project-desc">A nutrition and training app built around the food my campus dining hall serves each day. A Python backend computes meal and training guidance with exact arithmetic and versioned, append-only records. A SwiftUI app reads HealthKit and shows the result.</p>
+              <p class="project-metric"><strong>1,135 backend tests (1,124 passing in CI with Postgres)</strong> · 251 iOS XCTest cases</p>
+              <p class="project-tech">Python, FastAPI, PostgreSQL (Supabase, row-level security) · Swift, SwiftUI, HealthKit</p>
+              <div class="project-links">
+                <a href="projects/nytr/" class="pill-btn">Case study + demo video</a>
+                <a href="https://github.com/sonawaneutkarsh/Nytr" target="_blank" rel="noopener" class="pill-btn">Code</a>
+              </div>
+            </div>
+            <a class="featured-media" href="projects/nytr/" tabindex="-1" aria-hidden="true">
+              <img src="images/projects/nytr/today.jpg" alt="" width="480" height="1040" loading="lazy" decoding="async">
+            </a>
+          </article>
+
+          <article class="project-card featured">
+            <div class="featured-body">
+              <p class="card-kicker">2026 · Solo</p>
+              <h3 class="project-title"><a href="projects/talks/">Talks</a></h3>
+              <p class="project-desc">Record a meeting on Apple Watch. The audio moves to the iPhone in the background, is transcribed and summarized on device, and is saved to Notion. A persistent job queue and acknowledgement-gated deletion keep recordings safe through crashes and disconnects.</p>
+              <p class="project-metric"><strong>57 XCTest cases passing in CI</strong> · iOS and watchOS builds on macOS runners</p>
+              <p class="project-tech">Swift 6, SwiftUI, watchOS, iOS · WatchConnectivity · SpeechAnalyzer · Foundation Models · Notion API</p>
+              <div class="project-links">
+                <a href="projects/talks/" class="pill-btn">Case study</a>
+                <a href="https://github.com/sonawaneutkarsh/Talks" target="_blank" rel="noopener" class="pill-btn">Code</a>
+              </div>
+            </div>
+            <a class="featured-media featured-media-pair" href="projects/talks/" tabindex="-1" aria-hidden="true">
+              <img src="images/projects/talks/watch-recording-active.png" alt="" width="416" height="496" loading="lazy" decoding="async">
+              <img src="images/projects/talks/iphone-talk-detail.jpg" alt="" width="480" height="1043" loading="lazy" decoding="async">
+            </a>
+          </article>
+
+          <div class="project-grid">
+            <article class="project-card">
+              <p class="card-kicker">ML research · 2026 · Solo</p>
+              <h3 class="project-title"><a href="projects/clage/">Clage</a></h3>
+              <p class="project-desc">NEAT neuroevolution written from scratch in Python, plus a 2D artificial-life world. Seeded, one-factor experiments and behavioral metrics.</p>
+              <p class="project-metric"><strong>300 tests, passing in CI</strong> · OR 5/5, AND 5/5, XOR 4/5; sine not solved</p>
+              <p class="project-tech">Python (matplotlib only) · pytest, mypy, ruff</p>
+              <div class="project-links">
+                <a href="projects/clage/" class="pill-btn">Case study</a>
+                <a href="https://github.com/sonawaneutkarsh/Clage" target="_blank" rel="noopener" class="pill-btn">Code</a>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <p class="card-kicker">Systems · 2026 · Solo</p>
+              <h3 class="project-title"><a href="projects/devvy/">Devvy</a></h3>
+              <p class="project-desc">A local daemon that owns one Discord connection and picks which coding tool to show. It speaks Discord's binary IPC protocol directly and never shows prompts, code, or paths.</p>
+              <p class="project-metric"><strong>26 test scripts, all run in CI</strong> · releases only after CI passes · macOS released</p>
+              <p class="project-tech">JavaScript (Node.js), TypeScript integrations · Discord IPC · GitHub Actions</p>
+              <div class="project-links">
+                <a href="projects/devvy/" class="pill-btn">Case study</a>
+                <a href="https://github.com/sonawaneutkarsh/devvy" target="_blank" rel="noopener" class="pill-btn">Code</a>
+              </div>
+            </article>
+          </div>
         </div>
 
-        <!-- Project Cards -->
-        <div class="project-list" id="project-list">
-          <!-- 1. Nytr -->
-          <article class="project-card" data-topics='["mobile"]'>
-            <h3 class="project-title">
-              <a href="projects/nytr/">Nytr</a>
-            </h3>
-            <p class="project-desc">Evidence-driven personal nutrition and training decision platform integrating campus dining, HealthKit, and Hevy.</p>
-            <p class="project-metric"><strong>1,135 backend tests (1,124 passing in CI with Postgres)</strong> · 251 iOS XCTest cases</p>
-            <p class="project-tech"><em>Python, FastAPI, Supabase PostgreSQL · SwiftUI, HealthKit · Docker · Pytest · 2026</em></p>
-            <div class="project-links">
-              <a href="https://github.com/sonawaneutkarsh/Nytr" target="_blank" rel="noopener" class="pill-btn">Code</a>
-              <a href="projects/nytr/" class="pill-btn">Deep Dive</a>
+        <h3 class="subsection-title">More projects</h3>
+        <ul class="compact-list">
+          <li class="compact-item">
+            <div class="compact-head">
+              <a class="compact-title" href="https://github.com/sonawaneutkarsh/MedClarity" target="_blank" rel="noopener">MedClarity</a>
+              <span class="compact-meta">2026 · Solo · React, TypeScript, Express, Gemini API</span>
             </div>
-          </article>
-
-          <!-- 2. Talks -->
-          <article class="project-card" data-topics='["mobile", "ai-agents"]'>
-            <h3 class="project-title">
-              <a href="projects/talks/">Talks</a>
-            </h3>
-            <p class="project-desc">watchOS/iOS meeting-capture app with durable background transfer, on-device transcription, and automatic Notion sync.</p>
-            <p class="project-metric"><strong>57 XCTest cases passing in CI</strong> · Durable out-of-process WCSession ACK</p>
-            <p class="project-tech"><em>Swift 6, SwiftUI, watchOS, iOS · SpeechAnalyzer · Foundation Models · Notion API · 2026</em></p>
-            <div class="project-links">
-              <a href="https://github.com/sonawaneutkarsh/Talks" target="_blank" rel="noopener" class="pill-btn">Code</a>
-              <a href="projects/talks/" class="pill-btn">Deep Dive</a>
-            </div>
-          </article>
-
-          <!-- 3. Clage -->
-          <article class="project-card" data-topics='["ml-research"]'>
-            <h3 class="project-title">
-              <a href="projects/clage/">Clage</a>
-            </h3>
-            <p class="project-desc">From-scratch NEAT neuroevolution implementation and 2D artificial-life simulation in pure Python.</p>
-            <p class="project-metric"><strong>300 tests, passing in CI</strong> · XOR solved in 4 of 5 seeds</p>
-            <p class="project-tech"><em>Pure Python · Directed Graphs · Genetic Algorithms · Pytest · 2026</em></p>
-            <div class="project-links">
-              <a href="https://github.com/sonawaneutkarsh/Clage" target="_blank" rel="noopener" class="pill-btn">Code</a>
-              <a href="projects/clage/" class="pill-btn">Deep Dive</a>
-            </div>
-          </article>
-
-          <!-- 4. Devvy -->
-          <article class="project-card" data-topics='["ai-agents"]'>
-            <h3 class="project-title">
-              <a href="projects/devvy/">Devvy</a>
-            </h3>
-            <p class="project-desc">Zero-dependency local daemon coordinating Discord Rich Presence across terminal AI coding agents and developer environments.</p>
-            <p class="project-metric"><strong>26 test scripts, all run in CI</strong> · Direct IPC binary opcode framing</p>
-            <p class="project-tech"><em>JavaScript (Node.js) with TypeScript integrations · Unix Domain Sockets · Discord IPC Protocol · 2026</em></p>
-            <div class="project-links">
-              <a href="https://github.com/sonawaneutkarsh/devvy" target="_blank" rel="noopener" class="pill-btn">Code</a>
-              <a href="projects/devvy/" class="pill-btn">Deep Dive</a>
-            </div>
-          </article>
-
-          <!-- 5. ScholarAI -->
-          <article class="project-card" data-topics='["ai-agents"]'>
-            <h3 class="project-title">
-              <a href="projects/scholarai/">ScholarAI</a>
-            </h3>
-            <p class="project-desc">Government-scheme discovery platform built by a 5-person team at the USAII Global AI Hackathon 2026. My part: the data pipeline (normalization, embeddings, pgvector ingestion).</p>
-            <p class="project-metric"><strong>Finalist team (6,081+ participants)</strong> · 1,008 schemes normalized and embedded into pgvector</p>
-            <p class="project-tech"><em>Python, SentenceTransformers (gte-small), Supabase PostgreSQL, pgvector · Team project · Jun 2026</em></p>
-            <div class="project-links">
-              <a href="https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI" target="_blank" rel="noopener" class="pill-btn">Team repo</a>
-              <a href="projects/scholarai/" class="pill-btn">Deep Dive</a>
-            </div>
-          </article>
-
-          <!-- 6. MedClarity -->
-          <article class="project-card" data-topics='["ai-agents"]'>
-            <h3 class="project-title">
-              <a href="https://github.com/sonawaneutkarsh/MedClarity" target="_blank" rel="noopener">MedClarity</a>
-            </h3>
-            <p class="project-desc">Ask one question across several medical PDFs and get one answer with page-level citations that are checked against the loaded documents. One Gemini request per question; PDFs are parsed in the browser.</p>
-            <p class="project-metric"><strong>66 Vitest unit tests passing in CI</strong> · Bring-your-own Gemini key</p>
-            <p class="project-tech"><em>React, TypeScript, Express · Gemini API (gemini-3.8-flash, with fallbacks) · PDF.js · 2026</em></p>
+            <p>Ask one question across several medical PDFs. One Gemini request returns an answer with page-level citations, and each citation is checked against the loaded documents. <strong>66 Vitest unit tests passing in CI.</strong></p>
             <div class="project-links">
               <a href="https://github.com/sonawaneutkarsh/MedClarity" target="_blank" rel="noopener" class="pill-btn">Code</a>
-              <a href="https://medclarity-one.vercel.app" target="_blank" rel="noopener" class="pill-btn">Demo</a>
+              <a href="https://medclarity-one.vercel.app" target="_blank" rel="noopener" class="pill-btn">Live demo</a>
             </div>
-          </article>
-
-          <!-- 7. PyOpt-SLM-Exp -->
-          <article class="project-card" data-topics='["ml-research"]'>
-            <h3 class="project-title">
-              <a href="https://github.com/sonawaneutkarsh/pyopt-slm-exp" target="_blank" rel="noopener">PyOpt-SLM-Exp</a>
-            </h3>
-            <p class="project-desc">LoRA fine-tuning of Qwen3-4B to make Python functions faster; outputs are scored by running them against the original. Caveat: 13 of the 40 published test prompts leaked from training, so it is not a clean held-out evaluation (split fixed, not yet retrained).</p>
-            <p class="project-metric"><strong>Faster rewrites 29/40 → 36/40, median speedup 3.57× → 5.65×</strong> · Out-of-distribution probe: 8/10 vs base 9/10</p>
-            <p class="project-tech"><em>Python · Qwen3-4B · Unsloth · LoRA · Jupyter (Kaggle) · Sep 2026</em></p>
+          </li>
+          <li class="compact-item">
+            <div class="compact-head">
+              <a class="compact-title" href="https://github.com/sonawaneutkarsh/pyopt-slm-exp" target="_blank" rel="noopener">PyOpt</a>
+              <span class="compact-meta">Sep 2026 · Solo · Qwen3-4B, LoRA, Unsloth</span>
+            </div>
+            <p>LoRA-tuned a 4B model to rewrite Python functions to run faster, scored by running the code. Published v1.1 run: correct 40/40 → 40/40, faster 29/40 → 36/40, median speedup 3.57× → 5.65×; out-of-distribution probe base 9/10, LoRA 8/10. <strong>Caveat:</strong> 13 of the 40 test prompts leaked from training, so this is not a clean held-out result. The split is fixed in v1.2; the model is not retrained yet.</p>
             <div class="project-links">
               <a href="https://github.com/sonawaneutkarsh/pyopt-slm-exp" target="_blank" rel="noopener" class="pill-btn">Code</a>
             </div>
-          </article>
-        </div>
+          </li>
+          <li class="compact-item">
+            <div class="compact-head">
+              <a class="compact-title" href="projects/scholarai/">ScholarAI</a>
+              <span class="compact-meta">Jun 2026 · 5-person team · Python, pgvector</span>
+            </div>
+            <p>Scheme-discovery platform from the USAII Global AI Hackathon 2026. Our team was a finalist among 6,081+ participants. My part was the data engineering: normalization, embeddings, and pgvector ingestion for 1,008 schemes.</p>
+            <div class="project-links">
+              <a href="projects/scholarai/" class="pill-btn">Case study</a>
+              <a href="https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI" target="_blank" rel="noopener" class="pill-btn">Team repo</a>
+              <a href="https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI/tree/main/data-engineering" target="_blank" rel="noopener" class="pill-btn">My code (data-engineering/)</a>
+            </div>
+          </li>
+        </ul>
       </div>
     </section>
 
-    <!-- Section 3: Experience -->
     <section id="experience">
       <div class="container">
         <h2>Experience</h2>
         <div class="experience-list">
           <div class="exp-item">
             <div class="exp-header">
-              <div class="exp-role-org">
+              <h3 class="exp-role-org">
                 <strong>Technical Chair</strong>, <span class="exp-org">IEEE Student Branch</span>, Penn State Harrisburg
-              </div>
+              </h3>
               <div class="exp-date">Sept 2026 – Present</div>
             </div>
-            <p class="exp-summary">Coordinate software, AI, and robotics workshops and technical team projects for 20+ engineering students. Promoted after serving as Technical Team Member (Sept 2025 – Sept 2026).</p>
+            <p class="exp-summary">Coordinate software, AI, and robotics workshops and technical team projects for 20+ engineering students. Elected after a year on the technical team (Sept 2025 – Sept 2026).</p>
           </div>
 
           <div class="exp-item">
             <div class="exp-header">
-              <div class="exp-role-org">
+              <h3 class="exp-role-org">
                 <strong>Data Engineer</strong> (5-person team), <span class="exp-org">USAII Global AI Hackathon 2026</span>
-              </div>
+              </h3>
               <div class="exp-date">Jun 2026</div>
             </div>
-            <p class="exp-summary">Built the normalization, embedding (gte-small), and batched-insert scripts that loaded 1,008 scraped government schemes into Supabase PostgreSQL/pgvector. Our team was a finalist among 6,081+ participants.</p>
+            <p class="exp-summary">Wrote the normalization, embedding (gte-small), and batched-insert scripts that loaded 1,008 scraped government schemes into Supabase PostgreSQL/pgvector. Our team was a finalist among 6,081+ participants.</p>
           </div>
 
           <div class="exp-item">
             <div class="exp-header">
-              <div class="exp-role-org">
-                <strong>Founder &amp; Editor-in-Chief</strong>, <span class="exp-org">Glimpse</span> (Student Publication)
-              </div>
+              <h3 class="exp-role-org">
+                <strong>Founder &amp; Editor-in-Chief</strong>, <span class="exp-org">Glimpse</span> (student publication)
+              </h3>
               <div class="exp-date">Jun 2024 – Feb 2025</div>
             </div>
-            <p class="exp-summary">Founded publication and directed editorial operations; grew campus subscriber base to 250+ readers.</p>
+            <p class="exp-summary">Founded the publication and ran editorial operations; grew the campus subscriber base to 250+ readers.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Section 4: Blog / Notes -->
     <section id="blog">
       <div class="container">
         <h2>Blog</h2>
         <ul class="post-list">
           <li class="post-row">
-            <span class="post-date">2026-10-03</span>
+            <time class="post-date" datetime="2026-10-03">2026-10-03</time>
             <a class="post-title" href="blog/thoughts-on-slms-for-businesses/">thoughts on slm’s for businesses</a>
           </li>
         </ul>
@@ -262,9 +234,14 @@
     </section>
   </main>
 
-  <!-- Section 5: Footer -->
   <footer>
-    <p>Utkarsh Sonawane — Pennsylvania State University</p>
+    <nav class="footer-links" aria-label="Contact">
+      <a href="resume.pdf">Résumé (PDF)</a>
+      <a href="https://github.com/sonawaneutkarsh" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/sonawaneutkarsh/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="mailto:utkarshsonawane@psu.edu">utkarshsonawane@psu.edu</a>
+    </nav>
+    <p>Utkarsh Sonawane · Penn State Harrisburg</p>
   </footer>
 
   <script src="script.js"></script>
