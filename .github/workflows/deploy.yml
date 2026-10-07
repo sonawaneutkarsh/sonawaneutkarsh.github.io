@@ -24,7 +24,7 @@ jobs:
           persist-credentials: false
 
       - name: Validate HTML
-        run: npx --yes html-validate@10 index.html projects/*/index.html blog/*/index.html
+        run: npx --yes html-validate@10 index.html 404.html projects/*/index.html blog/*/index.html
 
       - name: Check internal links and assets
         run: python3 scripts/check_links.py
@@ -50,7 +50,7 @@ jobs:
       - name: Stage site files
         run: |
           mkdir -p _site
-          cp -r index.html styles.css script.js avatar.jpg resume.pdf .nojekyll \
+          cp -r index.html 404.html robots.txt sitemap.xml styles.css script.js avatar.jpg resume.pdf .nojekyll \
             favicon.ico favicon-32x32.png apple-touch-icon.png \
             icons images videos projects blog _site/
 

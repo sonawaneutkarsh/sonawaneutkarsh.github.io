@@ -1,54 +1,4 @@
 // ==========================================================================
-// Projects Filter Pills (Client-side JS, No Reload)
-// ==========================================================================
-function initProjectFilters() {
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const projectCards = document.querySelectorAll('.project-card');
-
-  if (!filterBtns.length || !projectCards.length) return;
-
-  function filterProjects(topic) {
-    filterBtns.forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.topic === topic);
-    });
-
-    projectCards.forEach(card => {
-      const topics = JSON.parse(card.dataset.topics || '[]');
-      const matches = (topic === 'all') || topics.includes(topic);
-
-      if (matches) {
-        card.removeAttribute('hidden');
-        card.classList.remove('entering');
-        // Force reflow for animation restart
-        void card.offsetWidth;
-        card.classList.add('entering');
-      } else {
-        card.setAttribute('hidden', '');
-        card.classList.remove('entering');
-      }
-    });
-  }
-
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const topic = btn.dataset.topic;
-      filterProjects(topic);
-    });
-  });
-
-  // Support clicking links in bio with data-filter attribute
-  document.querySelectorAll('a[data-filter]').forEach(link => {
-    link.addEventListener('click', () => {
-      const topic = link.dataset.filter;
-      const targetBtn = document.querySelector(`.filter-btn[data-topic="${topic}"]`);
-      if (targetBtn) {
-        targetBtn.click();
-      }
-    });
-  });
-}
-
-// ==========================================================================
 // Copy Email Tooltip
 // ==========================================================================
 function initCopyEmail() {
@@ -143,7 +93,6 @@ function initTOC() {
 // Lifecycle Init
 // ==========================================================================
 document.addEventListener('DOMContentLoaded', () => {
-  initProjectFilters();
   initCopyEmail();
   initTOC();
 });

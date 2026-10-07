@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sonawaneutkarsh.github.io/sitemap.xml
