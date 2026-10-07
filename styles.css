@@ -1111,6 +1111,7 @@ video:focus-visible,
 
 .featured-media-pair {
   align-items: center;
+  align-self: center;
   max-height: none;
 }
 
