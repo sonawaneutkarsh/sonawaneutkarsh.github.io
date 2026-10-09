@@ -9,10 +9,10 @@ Plain HTML, CSS, and a little JavaScript. No framework and no build step.
 | Path | What it is |
 |---|---|
 | `index.html` | Bio, projects (featured first, then smaller projects), experience, blog index |
-| `projects/<name>/` | Case studies: Nytr (with a demo video), Talks, Clage, Devvy, ScholarAI |
+| `projects/<name>/` | Case studies: Nytr and Clage (with demo videos), Talks, Devvy, ScholarAI |
 | `blog/` | Posts (`hello-world/` only redirects to the first post) |
 | `resume.pdf` | Résumé (built separately from LaTeX; the source is not in this repo) |
-| `images/`, `videos/`, `icons/` | Screenshots, the Nytr demo, social icons |
+| `images/`, `videos/`, `icons/` | Screenshots, Nytr and Clage Studio demos, social icons |
 | `styles.css`, `script.js` | Styles (light theme), contents scrollspy, copy-email button |
 | `404.html`, `sitemap.xml`, `robots.txt` | Not-found page and crawler files |
 
