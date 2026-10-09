@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Clage: NEAT neuroevolution and artificial life from scratch — Utkarsh Sonawane</title>
-  <meta name="description" content="Case study: Clage is a from-scratch NEAT neuroevolution engine in Python with a 2D artificial-life world, seeded one-factor experiments, and honest benchmark results. 300 tests, passing in CI.">
+  <title>Clage Studio: inspectable neuroevolution from scratch — Utkarsh Sonawane</title>
+  <meta name="description" content="Clage Studio 1.0: a from-scratch NEAT engine and browser workbench for 2D neural agents, network inspection, evolutionary lineage, reproducible experiments, and deterministic replay. 429 Python tests plus JavaScript and browser coverage.">
   <meta name="author" content="Utkarsh Sonawane">
   <link rel="canonical" href="https://sonawaneutkarsh.github.io/projects/clage/">
 
-  <meta property="og:title" content="Clage: NEAT neuroevolution and artificial life from scratch — Utkarsh Sonawane">
-  <meta property="og:description" content="Case study: Clage is a from-scratch NEAT neuroevolution engine in Python with a 2D artificial-life world, seeded one-factor experiments, and honest benchmark results. 300 tests, passing in CI.">
+  <meta property="og:title" content="Clage Studio: inspectable neuroevolution from scratch — Utkarsh Sonawane">
+  <meta property="og:description" content="Clage Studio 1.0: a from-scratch NEAT engine and browser workbench for 2D neural agents, network inspection, evolutionary lineage, reproducible experiments, and deterministic replay. 429 Python tests plus JavaScript and browser coverage.">
   <meta property="og:url" content="https://sonawaneutkarsh.github.io/projects/clage/">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="Utkarsh Sonawane">
@@ -47,32 +47,47 @@
 
       <header class="post-header">
         <h1>Clage</h1>
-        <p class="post-subtitle">A NEAT neuroevolution engine written from first principles, connected to a 2D grid world where evolved networks move, eat, and reproduce. I built it to understand the algorithm, then used it for controlled, reproducible experiments.</p>
-        <p class="case-meta">2026 · Solo project · Python 3.10+ (matplotlib is the only runtime dependency) · pytest, mypy, Ruff</p>
+        <p class="post-subtitle">A from-scratch NEAT engine evolving neural agents in a 2D ecosystem where organisms move, eat, and reproduce. I built Clage Studio 1.0, a browser workbench with live visualization, neural-network inspection, evolutionary lineage, reproducible experiments, and deterministic replay.</p>
+        <p class="case-meta">2026 · Solo project · Python 3.10+, FastAPI, JavaScript, Canvas · pytest, Playwright, mypy, Ruff</p>
         <div class="case-study-meta">
             <a href="https://github.com/sonawaneutkarsh/Clage" class="pill-btn" target="_blank" rel="noopener">Code</a>
+            <a href="https://github.com/sonawaneutkarsh/Clage/blob/main/docs/studio/GUIDE.md" class="pill-btn" target="_blank" rel="noopener">Studio guide</a>
         </div>
       </header>
 
       <div class="prose">
         <div class="metrics-grid glance">
           <div class="metric-card">
-            <div class="metric-val">300 tests</div>
-            <p class="metric-sub">Passing in CI on Python 3.10 and 3.12.</p>
+            <div class="metric-val">429 Python tests</div>
+            <p class="metric-sub">Plus 4 JavaScript tests and 21 Playwright workflows; Ruff and mypy pass in CI.</p>
           </div>
           <div class="metric-card">
-            <div class="metric-val">XOR 4/5</div>
-            <p class="metric-sub">OR and AND solved in 5/5 seeds. Sine not solved.</p>
+            <div class="metric-val">XOR 5/5</div>
+            <p class="metric-sub">OR and AND also 5/5; sine 0/5. Minimal initialization, unchanged benchmark budget.</p>
           </div>
           <div class="metric-card">
-            <div class="metric-val">Deterministic</div>
-            <p class="metric-sub">Same seed, same result. Every condition runs 5 seeds.</p>
+            <div class="metric-val">Studio 1.0</div>
+            <p class="metric-sub">Completed local browser workbench, with inspection, experiments, and replay.</p>
           </div>
         </div>
 
         <section aria-labelledby="results">
-          <h2 id="results">Results</h2>
-          <p>Engine validation, 5 seeds per problem, 300 generations per trial. Runs are deterministic.</p>
+          <h2 id="results">Current release validation</h2>
+          <p>The reconciled 0.4.1 engine was validated with the unchanged budget: <strong>100 founders, seeds 0–4, 300 generations, and minimal initialization</strong> (<code>minimal-v1</code>).</p>
+          <table>
+            <thead>
+              <tr><th>Problem</th><th>Solved</th><th>Generations to solve, seed order</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>OR</td><td>5/5</td><td>9, 6, 5, 6, 8</td></tr>
+              <tr><td>AND</td><td>5/5</td><td>6, 8, 7, 8, 17</td></tr>
+              <tr><td>XOR</td><td>5/5</td><td>212, 125, 68, 143, 102</td></tr>
+              <tr><td>sine</td><td>0/5</td><td>not solved in 300 (mean best training fitness 0.9195)</td></tr>
+            </tbody>
+          </table>
+          <p>These results validate the engine on the specified tasks and seeds. Studio's ecosystem defaults to <strong>dense-random initialization</strong> (<code>dense-random-v1</code>), so these benchmarks do not measure its default ecosystem. The <a href="https://github.com/sonawaneutkarsh/Clage/blob/main/CLAGE_STUDIO_MERGE_REVIEW.md#unchanged-budget-engine-validation" target="_blank" rel="noopener">merge verification</a> records the setup and outcomes.</p>
+          <h3>Historical pre-Studio results</h3>
+          <p>The following table and figures retain the pre-Studio measurements from <code>2105fee</code>. The engine table used 5 seeds per problem and 300 generations per trial. Environmental experiments were not rerun during Studio development; their original configurations and measurement definitions remain separate from the current release.</p>
           <table>
             <thead>
               <tr><th>Problem</th><th>Solved (of 5)</th><th>Generations to solve (min / median / max)</th></tr>
@@ -94,7 +109,7 @@
               <figcaption>A recorded generation replayed in the viewer. Color is genome.</figcaption>
             </figure>
           </div>
-          <p>More food gives fitter populations, more foraging, and more reproduction, and the three conditions separate consistently across seeds. This is <strong>not</strong> a learning curve: each generation reseeds the world, and best fitness is flat within noise over the shipped 25 generations.</p>
+          <p>These historical aggregates describe environmental differences; they do not establish a consistent separation across seeds or learned foraging. This is <strong>not</strong> a learning curve: each generation reseeds the world, and the shipped 25 generations do not establish generalizable learning.</p>
         </section>
         <section aria-labelledby="problem">
           <h2 id="problem">Why build NEAT from scratch</h2>
@@ -106,8 +121,17 @@
             <li><strong>Engine:</strong> genomes, an innovation ledger that aligns matching genes during crossover, mutation, and speciation with the compatibility distance <code>δ = c1·E/N + c2·D/N + c3·ΔW</code>.</li>
             <li><strong>Decoding:</strong> a genome becomes a feed-forward network through Kahn's topological sort with deterministic tie-breaking. Cycles are rejected at decode time.</li>
             <li><strong>World:</strong> a walled 2D grid. Each organism sees 9 numbers and picks one of 4 actions (move, turn left, turn right, eat). Reproduction is a lifecycle rule based on energy, not a network output.</li>
-            <li><strong>Experiments:</strong> config files that change exactly one parameter per condition, with a control and 5 seeds each; behavioral metrics such as action entropy and grid coverage; a terminal and matplotlib viewer that reads recorded JSON only.</li>
+            <li><strong>Studio ecosystem:</strong> live Canvas visualization with zoom, pan, organism follow, layers, event pulses, statistics, charts, and distributions. Simulation ticks and rendering FPS are measured separately.</li>
+            <li><strong>Neural atlas:</strong> actual pre-action observations and activations, weights, biases, enabled genes, node and edge inspection, and side-by-side genome comparison.</li>
+            <li><strong>Evolution:</strong> evaluated generation summaries, champions, evolutionary parents and mutation deltas, plus a separate lineage for organisms born within the world.</li>
+            <li><strong>Laboratory:</strong> frozen validated settings, seeded held-out policy evaluation, and persistent local experiment artifacts. The independent engine tools also support one-factor environmental experiments with a control and 5 seeds each.</li>
+            <li><strong>Replay and export:</strong> bounded JSON/gzip archives with seeking, generation navigation, and a synchronized second replay; metrics CSV, chart/world PNG, and champion JSON exports. Configuration and seed support deterministic reruns.</li>
           </ul>
+          <figure>
+            <img class="project-img" src="../../images/projects/clage/studio-ecosystem.png" alt="Clage Studio 1.0 ecosystem view with organism inspector, actual neural inference, playback controls, population chart, and energy distribution" width="1440" height="1710" loading="lazy" decoding="async">
+            <figcaption>Studio 1.0 running locally: the ecosystem, organism and network inspection, playback controls, and live population metrics.</figcaption>
+          </figure>
+          <p>Studio runs locally without a cloud account, API key, or frontend build. Its optional Python extra installs the API and streaming dependencies; the engine and terminal/matplotlib viewers work independently.</p>
         </section>
         <section aria-labelledby="hard">
           <h2 id="hard">The hard part: measuring behavior correctly</h2>
@@ -120,26 +144,27 @@
         </section>
         <section aria-labelledby="decision">
           <h2 id="decision">Key decision: explicit randomness</h2>
-          <p>The engine's random generator comes from the seed. The world's generator is derived from the trial seed and the generation number. The same seed gives identical results, and different trials are independent. Without this, a 5-seed comparison between conditions would not mean anything.</p>
+          <p>The engine's random generator comes from the seed. The world's generator is derived from the trial seed and the generation number. With the same configuration and source, the same seed gives identical results, and different trials are independent. Studio preserves validated run settings and distinguishes evolutionary ancestry from within-world births, so a replay or comparison has an explicit scientific context.</p>
         </section>
         <section aria-labelledby="evidence">
           <h2 id="evidence">Evidence</h2>
           <ul>
-            <li><strong>300 tests</strong> pass in CI on Python 3.10 and 3.12, together with Ruff and mypy, on every push and pull request.</li>
-            <li>Every number on this page comes from a command in the README and can be reproduced on the current <code>main</code>.</li>
+            <li><strong>429 Python tests</strong> pass in CI on Python 3.10 and 3.12, together with Ruff and mypy. A separate Chromium job passes <strong>4 JavaScript tests and 21 Playwright workflows</strong>.</li>
+            <li>The <a href="https://github.com/sonawaneutkarsh/Clage/blob/main/CLAGE_STUDIO_FINAL_REVIEW.md" target="_blank" rel="noopener">release review</a> and <a href="https://github.com/sonawaneutkarsh/Clage/blob/main/CLAGE_STUDIO_MERGE_REVIEW.md" target="_blank" rel="noopener">merge verification</a> document installation, deterministic reruns, browser workflows, and the current engine benchmarks.</li>
+            <li>Historical figures remain viewable, but reproducing their measurements requires the original scientific source and configurations. The corrected engine does not rewrite their results.</li>
           </ul>
         </section>
         <section aria-labelledby="limits">
           <h2 id="limits">Limitations</h2>
           <ul>
-            <li>Sine regression is not solved within 300 generations, and XOR fails in 1 of 5 seeds.</li>
-            <li>Evolved networks stay small, and almost no organism survives all 300 ticks of a generation.</li>
-            <li>The food experiment shows that conditions separate, not that organisms learn over time. A longer, unshipped 100-generation run showed only a modest rise.</li>
-            <li>The world has no sensor for other organisms, so no metric claims cooperation, competition, or avoidance.</li>
+            <li>Sine regression remains unsolved within 300 generations across all 5 documented seeds. The engine benchmarks do not establish generalizable learning, learned foraging, cooperation, or intelligence.</li>
+            <li>Studio supports one active run and bounded recording: at most 600 frames or 16 MiB of encoded JSON. Deterministic reruns are not resumable checkpoints.</li>
+            <li>In the historical environmental experiments, evolved networks stayed small, and almost no organism survived all 300 ticks of a generation. Those experiments were not rerun for Studio's dense-random initialization.</li>
+            <li>Organisms observe local body density but have no directional sensor for other organisms; no metric claims cooperation, competition, or avoidance.</li>
           </ul>
         </section>
         <div class="repo-cta">
-          <p>The README has every command, the experiment configs, and notes on the measurement fixes.</p>
+          <p>The README has Studio setup, the current validation budget, historical experiments, and links to the release reviews and measurement notes.</p>
           <a href="https://github.com/sonawaneutkarsh/Clage" target="_blank" rel="noopener" class="pill-btn">Read the Clage README</a>
         </div>
       </div>
