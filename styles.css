@@ -986,6 +986,11 @@ main.container {
 .case-study-meta a {
   min-width: 44px;
 }
+/* The shorter "Blog" label had extra invisible width, creating a visibly
+   wider gap before Résumé. Keep a 44px high target without forcing its width. */
+.masthead nav a {
+  min-width: 0;
+}
 .project-row h3 a,
 .compact-title,
 .section-heading > a {
@@ -1007,3 +1012,47 @@ main.container {
 .feed-link { margin-top: 20px; }
 .writing-index .index-intro + .feed-link { margin-top: -16px; margin-bottom: 32px; }
 .notebook-page .notebook-empty { color: var(--muted); font: 16px/1.65 var(--sans); }
+
+
+/* Original Recraft constellation marginalia. Use only when the content gutters
+   are wide enough; exclude wide case-study TOCs and the Jev margin-note page. */
+@media (min-width: 1280px) and (min-height: 550px) {
+  body:not(.case-study-page):not(.margin-notes-page)::before,
+  body:not(.case-study-page):not(.margin-notes-page)::after {
+    content: "";
+    position: fixed;
+    top: 50%;
+    width: clamp(86px, 7.4vw, 112px);
+    height: min(76vh, 800px);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+    opacity: 0.62;
+    transform: translateY(-50%);
+    animation: marginalia-breathe 16s ease-in-out infinite alternate;
+  }
+  body:not(.case-study-page):not(.margin-notes-page)::before {
+    left: max(18px, calc(25vw - 277.5px));
+    background-image: url("/images/illustrations/border-left.svg");
+  }
+  body:not(.case-study-page):not(.margin-notes-page)::after {
+    right: max(18px, calc(25vw - 277.5px));
+    background-image: url("/images/illustrations/border-right.svg");
+    animation-duration: 19s;
+    animation-delay: -6s;
+  }
+}
+@keyframes marginalia-breathe {
+  from { opacity: 0.48; }
+  to { opacity: 0.72; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    animation: none !important;
+    opacity: 0.62;
+  }
+}
