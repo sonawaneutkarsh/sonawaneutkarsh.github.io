@@ -986,6 +986,11 @@ main.container {
 .case-study-meta a {
   min-width: 44px;
 }
+/* The shorter "Blog" label had extra invisible width, creating a visibly
+   wider gap before Résumé. Keep a 44px high target without forcing its width. */
+.masthead nav a {
+  min-width: 0;
+}
 .project-row h3 a,
 .compact-title,
 .section-heading > a {
