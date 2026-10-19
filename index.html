@@ -1,267 +1,564 @@
 <!DOCTYPE html>
+
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Utkarsh Sonawane — Software Engineering Portfolio</title>
-  <meta name="description" content="Utkarsh Sonawane, Computer Science student at Penn State (Class of 2028). Backend systems, native iOS and watchOS apps, and ML experiments, each tested in CI. Seeking Summer 2027 SWE and AI/ML internships.">
-  <meta name="author" content="Utkarsh Sonawane">
-  <link rel="canonical" href="https://sonawaneutkarsh.github.io/">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Utkarsh Sonawane — Software Engineering Portfolio</title>
+    <meta
+      content="Utkarsh Sonawane, Computer Science student at Penn State (Class of 2028). Backend systems, native iOS and watchOS apps, and ML experiments, each tested in CI. Seeking Summer 2027 SWE and AI/ML internships."
+      name="description">
+    <meta content="Utkarsh Sonawane" name="author">
+    <link href="https://sonawaneutkarsh.github.io/" rel="canonical">
+    <meta
+      content="Utkarsh Sonawane — Software Engineering Portfolio"
+      property="og:title">
+    <meta
+      content="Utkarsh Sonawane, Computer Science student at Penn State (Class of 2028). Backend systems, native iOS and watchOS apps, and ML experiments, each tested in CI. Seeking Summer 2027 SWE and AI/ML internships."
+      property="og:description">
+    <meta content="https://sonawaneutkarsh.github.io/" property="og:url">
+    <meta content="website" property="og:type">
+    <meta content="Utkarsh Sonawane" property="og:site_name">
+    <meta
+      content="https://sonawaneutkarsh.github.io/images/og-image.png"
+      property="og:image">
+    <meta content="1200" property="og:image:width">
+    <meta content="630" property="og:image:height">
+    <meta content="Utkarsh Sonawane — portfolio" property="og:image:alt">
+    <meta content="summary_large_image" name="twitter:card">
 
-  <meta property="og:title" content="Utkarsh Sonawane — Software Engineering Portfolio">
-  <meta property="og:description" content="Utkarsh Sonawane, Computer Science student at Penn State (Class of 2028). Backend systems, native iOS and watchOS apps, and ML experiments, each tested in CI. Seeking Summer 2027 SWE and AI/ML internships.">
-  <meta property="og:url" content="https://sonawaneutkarsh.github.io/">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Utkarsh Sonawane">
-  <meta property="og:image" content="https://sonawaneutkarsh.github.io/images/og-image.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Utkarsh Sonawane — portfolio">
-  <meta name="twitter:card" content="summary_large_image">
-
-  <link rel="icon" href="favicon.ico" sizes="any">
-  <link rel="icon" href="favicon-32x32.png" type="image/png">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <a class="skip-link" href="#projects">Skip to projects</a>
-
-  <main>
-    <section id="hero">
-      <div class="container">
-        <div class="about-grid">
-          <div class="profile-col">
-            <img class="avatar" src="avatar.jpg" alt="Portrait of Utkarsh Sonawane" width="195" height="195">
-            <ul class="social-links">
-              <li class="social-link">
-                <button type="button" aria-label="Copy email address utkarshsonawane@psu.edu" data-email="utkarshsonawane@psu.edu">
-                  <img src="icons/email.png" alt="" class="social-icon-img" width="21" height="21">
-                  <span class="tooltip" aria-live="polite">Click to copy</span>
-                </button>
+    <link href="styles.css" rel="stylesheet">
+    <link href="/favicon.svg" rel="icon" type="image/svg+xml">
+    <link href="/favicon.ico" rel="icon" sizes="any">
+    <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
+    <link href="/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
+    <link href="/apple-touch-icon.png" rel="apple-touch-icon">
+  </head>
+  <body class="home-page">
+    <a class="skip-link" href="#content">Skip to content</a>
+    <header class="masthead container">
+      <a aria-label="Utkarsh Sonawane — home" class="wordmark" href="/"
+        ><img
+          alt=""
+          height="230"
+          src="/images/brand/utkarsh-wordmark.png"
+          width="684"></a>
+      <nav aria-label="Primary">
+        <a href="/#projects">Projects</a><a href="/#research">Research</a
+        ><a href="/blog/">Blog</a><a href="/resume.pdf">Résumé ↗</a>
+      </nav>
+    </header>
+    <main class="container" id="content">
+      <section class="intro" id="hero">
+        <img
+          alt=""
+          class="illustration"
+          height="240"
+          src="/images/illustrations/notebook.svg"
+          width="320">
+        <div class="bio">
+          <h1>Utkarsh Sonawane</h1>
+          <p>
+            I study computer science at Penn State Harrisburg. I build software
+            and explore language models, from small experiments to systems
+            people can use.
+          </p>
+          <p>
+            Currently, I’m investigating adverse drug reaction reports on Reddit
+            with Dr. Md Sultan Al Nahian. I’m interested in applied AI, reliable
+            systems, and what it takes to turn an idea into something useful.
+          </p>
+          <p class="availability">
+            Looking for Summer 2027 software engineering and AI/ML internships.
+          </p>
+          <p class="metadata">Computer science · Penn State · Class of 2028</p>
+          <nav aria-label="Get in touch" class="contact-row">
+            <a href="mailto:utkarshsonawane@psu.edu">Email</a
+            ><a href="https://github.com/sonawaneutkarsh">GitHub</a
+            ><a href="https://www.linkedin.com/in/sonawaneutkarsh/">LinkedIn</a
+            ><a href="/resume.pdf">Résumé (PDF)</a
+            ><button data-email="utkarshsonawane@psu.edu" type="button">
+              Copy email<span
+                aria-live="polite"
+                class="tooltip"
+                role="status"
+              ></span>
+            </button>
+          </nav>
+          <details class="bio-details">
+            <summary>What I build</summary>
+            <p>
+              I build backend systems, native iOS and watchOS apps, and small ML
+              experiments, and I test them in CI.
+            </p>
+          </details>
+        </div>
+      </section>
+      <section id="updates">
+        <h2>Updates</h2>
+        <ul class="updates-list">
+          <li>
+            <time datetime="2026-10">October 2026</time>
+            <ul>
+              <li>
+                Wrote
+                <a
+                  href="/blog/why-i-stopped-working-on-nytr-problems-and-lessons/"
+                  >why i stopped working on nytr — problems and lessons.</a
+                >
               </li>
-              <li class="social-link">
-                <a href="https://github.com/sonawaneutkarsh" target="_blank" rel="noopener" aria-label="GitHub">
-                  <img src="icons/github.png" alt="" class="social-icon-img" width="21" height="21">
-                </a>
+              <li>
+                Wrote
+                <a href="/blog/code-is-cheap-execution-is-everything/"
+                  >code is cheap, execution is everything.</a
+                >
               </li>
-              <li class="social-link">
-                <a href="https://www.linkedin.com/in/sonawaneutkarsh/" target="_blank" rel="noopener" aria-label="LinkedIn">
-                  <img src="icons/linkedin.png" alt="" class="social-icon-img" width="21" height="21">
-                </a>
-              </li>
-              <li class="social-link">
-                <a href="resume.pdf" aria-label="Résumé (PDF)">
-                  <span class="cv-link">CV</span>
-                </a>
+              <li>
+                Started undergraduate research on
+                <a href="/#research"
+                  >extracting adverse drug reaction reports from Reddit</a
+                >.
               </li>
             </ul>
-          </div>
-
-          <div class="bio">
-            <h1 class="bio-name">Utkarsh Sonawane</h1>
-            <p class="bio-text">
-              I study Computer Science at <strong>Penn State</strong> (Class of 2028). I build backend systems, native iOS and watchOS apps, and small ML experiments, and I test them in CI.
+          </li>
+          <li>
+            <time datetime="2026-09">September 2026</time>
+            <p>
+              Elected
+              <a href="/#experience"
+                >Technical Chair of IEEE at Penn State Harrisburg</a
+              >.
             </p>
-            <p class="bio-text">
-              I am looking for <strong>Summer 2027 software engineering and AI/ML internships</strong>.
+          </li>
+          <li>
+            <time datetime="2026-06">June 2026</time>
+            <p>
+              Our <a href="/projects/scholarai/">ScholarAI team</a> was a
+              finalist in the USAII Global AI Hackathon. I worked on the data
+              pipeline.
             </p>
-            <div class="hero-actions">
-              <a href="resume.pdf" class="btn-primary">Résumé (PDF)</a>
-              <a href="#projects" class="btn-secondary">See projects</a>
-              <a href="https://github.com/sonawaneutkarsh" target="_blank" rel="noopener" class="btn-secondary">GitHub</a>
+          </li>
+        </ul>
+      </section>
+      <section id="projects">
+        <h2>Selected projects</h2>
+        <p class="section-lede">
+          Things I’ve built, and what I learned from them.
+        </p>
+        <article class="project-row">
+          <img
+            alt=""
+            class="illustration"
+            height="240"
+            loading="lazy"
+            src="/images/illustrations/nytr.svg"
+            width="320">
+          <div>
+            <h3><a href="/projects/nytr/">Nytr</a></h3>
+            <p>
+              A nutrition and training app built around Penn State dining data.
+              Deterministic recommendations, a Python backend, and a native iOS
+              client.
+            </p>
+            <p class="project-status">
+              <a
+                href="/blog/why-i-stopped-working-on-nytr-problems-and-lessons/"
+                >Development paused — lessons from building it</a
+              >
+            </p>
+            <p class="project-tech">
+              Python, FastAPI, PostgreSQL (Supabase, row-level security) ·
+              Swift, SwiftUI, HealthKit
+            </p>
+            <div class="project-links">
+              <a class="pill-btn" href="/projects/nytr/">Case study</a>
+              <a
+                class="pill-btn"
+                href="https://github.com/sonawaneutkarsh/Nytr"
+                rel="noopener"
+                >Code</a
+              >
+              <a href="/projects/nytr/#demo">Demo</a>
             </div>
+            <details>
+              <summary>Technical details</summary>
+              <p class="project-desc">
+                A nutrition and training app built around the food my campus
+                dining hall serves each day. A Python backend computes meal and
+                training guidance with exact arithmetic and versioned,
+                append-only records. A SwiftUI app reads HealthKit and shows the
+                result.
+              </p>
+              <p class="project-metric">
+                <strong
+                  >1,135 backend tests (1,124 passing in CI with
+                  Postgres)</strong
+                >
+                · 251 iOS XCTest cases
+              </p>
+            </details>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="projects">
-      <div class="container">
-        <h2>Projects</h2>
-        <p class="section-lede">Strongest work first. Each repository has CI and a README with the full detail.</p>
-
-        <div class="project-list">
-          <article class="project-card featured">
-            <div class="featured-body">
-              <p class="card-kicker">Flagship · 2026</p>
-              <h3 class="project-title"><a href="projects/nytr/">Nytr</a></h3>
-              <p class="project-desc">A nutrition and training app built around the food my campus dining hall serves each day. A Python backend computes meal and training guidance with exact arithmetic and versioned, append-only records. A SwiftUI app reads HealthKit and shows the result.</p>
-              <p class="project-metric"><strong>1,135 backend tests (1,124 passing in CI with Postgres)</strong> · 251 iOS XCTest cases</p>
-              <p class="project-tech">Python, FastAPI, PostgreSQL (Supabase, row-level security) · Swift, SwiftUI, HealthKit</p>
-              <div class="project-links">
-                <a href="projects/nytr/" class="pill-btn">Case study + demo video</a>
-                <a href="https://github.com/sonawaneutkarsh/Nytr" target="_blank" rel="noopener" class="pill-btn">Code</a>
-              </div>
+        </article>
+        <article class="project-row">
+          <img
+            alt=""
+            class="illustration"
+            height="240"
+            loading="lazy"
+            src="/images/illustrations/clage.svg"
+            width="320">
+          <div>
+            <h3><a href="/projects/clage/">Clage</a></h3>
+            <p>
+              A from-scratch neuroevolution engine and local browser workbench
+              for inspecting agents, experiments, and deterministic replay.
+            </p>
+            <p class="project-tech">
+              Python, FastAPI, JavaScript, Canvas · pytest, Playwright, mypy,
+              Ruff
+            </p>
+            <div class="project-links">
+              <a class="pill-btn" href="/projects/clage/">Case study</a>
+              <a
+                class="pill-btn"
+                href="https://github.com/sonawaneutkarsh/Clage"
+                rel="noopener"
+                >Code</a
+              >
+              <a href="/projects/clage/#demo">Demo</a>
             </div>
-            <a class="featured-media" href="projects/nytr/" tabindex="-1" aria-hidden="true">
-              <img src="images/projects/nytr/today.jpg" alt="" width="480" height="1040" loading="lazy" decoding="async">
-            </a>
-          </article>
-
-          <article class="project-card featured">
-            <div class="featured-body">
-              <p class="card-kicker">2026</p>
-              <h3 class="project-title"><a href="projects/talks/">Talks</a></h3>
-              <p class="project-desc">Record a meeting on Apple Watch. The audio moves to the iPhone in the background, is transcribed and summarized on device, and is saved to Notion. A persistent job queue and acknowledgement-gated deletion keep recordings safe through crashes and disconnects.</p>
-              <p class="project-metric"><strong>57 XCTest cases passing in CI</strong> · iOS and watchOS builds on macOS runners</p>
-              <p class="project-tech">Swift 6, SwiftUI, watchOS, iOS · WatchConnectivity · SpeechAnalyzer · Foundation Models · Notion API</p>
-              <div class="project-links">
-                <a href="projects/talks/" class="pill-btn">Case study</a>
-                <a href="https://github.com/sonawaneutkarsh/Talks" target="_blank" rel="noopener" class="pill-btn">Code</a>
-              </div>
-            </div>
-            <a class="featured-media featured-media-pair" href="projects/talks/" tabindex="-1" aria-hidden="true">
-              <img src="images/projects/talks/watch-recording-active.png" alt="" width="416" height="496" loading="lazy" decoding="async">
-              <img src="images/projects/talks/iphone-talk-detail.jpg" alt="" width="480" height="1043" loading="lazy" decoding="async">
-            </a>
-          </article>
-
-          <div class="project-grid">
-            <article class="project-card">
-              <p class="card-kicker">ML research · 2026</p>
-              <h3 class="project-title"><a href="projects/clage/">Clage</a></h3>
-              <p class="project-desc">From-scratch NEAT engine evolving neural agents in a 2D ecosystem. Clage Studio 1.0 adds live browser visualization, neural-network inspection, evolutionary lineage, reproducible experiments, and deterministic replay.</p>
-              <p class="project-metric"><strong>429 Python tests + 4 JavaScript tests + 21 browser workflows in CI</strong> · OR/AND/XOR 5/5; sine 0/5 with minimal initialization</p>
-              <p class="project-tech">Python, FastAPI, JavaScript, Canvas · pytest, Playwright, mypy, Ruff</p>
-              <div class="project-links">
-                <a href="projects/clage/#demo" class="pill-btn">Case study + demo video</a>
-                <a href="https://github.com/sonawaneutkarsh/Clage" target="_blank" rel="noopener" class="pill-btn">Code</a>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <p class="card-kicker">Systems · 2026</p>
-              <h3 class="project-title"><a href="projects/devvy/">Devvy</a></h3>
-              <p class="project-desc">A local daemon that owns one Discord connection and picks which coding tool to show. It speaks Discord's binary IPC protocol directly and never shows prompts, code, or paths.</p>
-              <p class="project-metric"><strong>26 test scripts, all run in CI</strong> · releases only after CI passes · macOS released</p>
-              <p class="project-tech">JavaScript (Node.js), TypeScript integrations · Discord IPC · GitHub Actions</p>
-              <div class="project-links">
-                <a href="projects/devvy/" class="pill-btn">Case study</a>
-                <a href="https://github.com/sonawaneutkarsh/devvy" target="_blank" rel="noopener" class="pill-btn">Code</a>
-              </div>
-            </article>
+            <details>
+              <summary>Technical details</summary>
+              <p class="project-desc">
+                From-scratch NEAT engine evolving neural agents in a 2D
+                ecosystem. Clage Studio 1.0 adds live browser visualization,
+                neural-network inspection, evolutionary lineage, reproducible
+                experiments, and deterministic replay.
+              </p>
+              <p class="project-metric">
+                <strong
+                  >429 Python tests + 4 JavaScript tests + 21 browser workflows
+                  in CI</strong
+                >
+                · OR/AND/XOR 5/5; sine 0/5 with minimal initialization
+              </p>
+            </details>
           </div>
-        </div>
-
-        <h3 class="subsection-title">More projects</h3>
+        </article>
+        <article class="project-row">
+          <img
+            alt=""
+            class="illustration"
+            height="240"
+            loading="lazy"
+            src="/images/illustrations/talks.svg"
+            width="320">
+          <div>
+            <h3><a href="/projects/talks/">Talks</a></h3>
+            <p>
+              Record on Apple Watch; transcribe and summarize on iPhone; save to
+              Notion. Built around recoverable transfers and persistent jobs.
+            </p>
+            <p class="project-tech">
+              Swift 6, SwiftUI, watchOS, iOS · WatchConnectivity ·
+              SpeechAnalyzer · Foundation Models · Notion API
+            </p>
+            <div class="project-links">
+              <a class="pill-btn" href="/projects/talks/">Case study</a>
+              <a
+                class="pill-btn"
+                href="https://github.com/sonawaneutkarsh/Talks"
+                rel="noopener"
+                >Code</a
+              >
+            </div>
+            <details>
+              <summary>Technical details</summary>
+              <p class="project-desc">
+                Record a meeting on Apple Watch. The audio moves to the iPhone
+                in the background, is transcribed and summarized on device, and
+                is saved to Notion. A persistent job queue and
+                acknowledgement-gated deletion keep recordings safe through
+                crashes and disconnects.
+              </p>
+              <p class="project-metric">
+                <strong>57 XCTest cases passing in CI</strong> · iOS and watchOS
+                builds on macOS runners
+              </p>
+            </details>
+          </div>
+        </article>
+        <article class="project-row">
+          <img
+            alt=""
+            class="illustration"
+            height="240"
+            loading="lazy"
+            src="/images/illustrations/devvy.svg"
+            width="320">
+          <div>
+            <h3><a href="/projects/devvy/">Devvy</a></h3>
+            <p>
+              One local daemon coordinates Discord presence across coding tools
+              while keeping prompts, code, and full paths private.
+            </p>
+            <p class="project-tech">
+              JavaScript (Node.js), TypeScript integrations · Discord IPC ·
+              GitHub Actions
+            </p>
+            <div class="project-links">
+              <a class="pill-btn" href="/projects/devvy/">Case study</a>
+              <a
+                class="pill-btn"
+                href="https://github.com/sonawaneutkarsh/devvy"
+                rel="noopener"
+                >Code</a
+              >
+            </div>
+            <details>
+              <summary>Technical details</summary>
+              <p class="project-desc">
+                A local daemon that owns one Discord connection and picks which
+                coding tool to show. It speaks Discord's binary IPC protocol
+                directly and never shows prompts, code, or paths.
+              </p>
+              <p class="project-metric">
+                <strong>26 test scripts, all run in CI</strong> · releases only
+                after CI passes · macOS released
+              </p>
+            </details>
+          </div>
+        </article>
+        <h3 class="subsection-title">More experiments</h3>
         <ul class="compact-list">
           <li class="compact-item">
             <div class="compact-head">
-              <a class="compact-title" href="https://github.com/sonawaneutkarsh/MedClarity" target="_blank" rel="noopener">MedClarity</a>
-              <span class="compact-meta">2026 · React, TypeScript, Express, Gemini API</span>
+              <a
+                class="compact-title"
+                href="https://github.com/sonawaneutkarsh/MedClarity"
+                rel="noopener"
+                >MedClarity</a
+              >
+              <span class="compact-meta"
+                >2026 · React, TypeScript, Express, Gemini API</span
+              >
             </div>
-            <p>Ask one question across several medical PDFs. One Gemini request returns an answer with page-level citations, and each citation is checked against the loaded documents. <strong>66 Vitest unit tests passing in CI.</strong></p>
+            <p>
+              Ask one question across several medical PDFs. One Gemini request
+              returns an answer with page-level citations, and each citation is
+              checked against the loaded documents.
+              <strong>66 Vitest unit tests passing in CI.</strong>
+            </p>
             <div class="project-links">
-              <a href="https://github.com/sonawaneutkarsh/MedClarity" target="_blank" rel="noopener" class="pill-btn">Code</a>
-              <a href="https://medclarity-one.vercel.app" target="_blank" rel="noopener" class="pill-btn">Live demo</a>
+              <a
+                class="pill-btn"
+                href="https://github.com/sonawaneutkarsh/MedClarity"
+                rel="noopener"
+                >Code</a
+              >
+              <a
+                class="pill-btn"
+                href="https://medclarity-one.vercel.app"
+                rel="noopener"
+                >Live demo</a
+              >
             </div>
           </li>
           <li class="compact-item">
             <div class="compact-head">
-              <a class="compact-title" href="https://github.com/sonawaneutkarsh/pyopt-slm-exp" target="_blank" rel="noopener">PyOpt</a>
-              <span class="compact-meta">Sep 2026 · Qwen3-4B, LoRA, Unsloth</span>
+              <a
+                class="compact-title"
+                href="https://github.com/sonawaneutkarsh/pyopt-slm-exp"
+                rel="noopener"
+                >PyOpt</a
+              >
+              <span class="compact-meta"
+                >Sep 2026 · Qwen3-4B, LoRA, Unsloth</span
+              >
             </div>
-            <p>LoRA-tuned a 4B model to rewrite Python functions to run faster, scored by running the code. Published v1.1 run: correct 40/40 → 40/40, faster 29/40 → 36/40, median speedup 3.57× → 5.65×; out-of-distribution probe base 9/10, LoRA 8/10. <strong>Caveat:</strong> 13 of the 40 test prompts leaked from training, so this is not a clean held-out result. The split is fixed in v1.2; the model is not retrained yet.</p>
+            <p>
+              LoRA-tuned a 4B model to rewrite Python functions to run faster,
+              scored by running the code. Published v1.1 run: correct 40/40 →
+              40/40, faster 29/40 → 36/40, median speedup 3.57× → 5.65×;
+              out-of-distribution probe base 9/10, LoRA 8/10.
+              <strong>Caveat:</strong> 13 of the 40 test prompts leaked from
+              training, so this is not a clean held-out result. The split is
+              fixed in v1.2; the model is not retrained yet.
+            </p>
             <div class="project-links">
-              <a href="https://github.com/sonawaneutkarsh/pyopt-slm-exp" target="_blank" rel="noopener" class="pill-btn">Code</a>
+              <a
+                class="pill-btn"
+                href="https://github.com/sonawaneutkarsh/pyopt-slm-exp"
+                rel="noopener"
+                >Code</a
+              >
             </div>
           </li>
           <li class="compact-item">
             <div class="compact-head">
               <a class="compact-title" href="projects/scholarai/">ScholarAI</a>
-              <span class="compact-meta">Jun 2026 · 5-person team · Python, pgvector</span>
+              <span class="compact-meta"
+                >Jun 2026 · 5-person team · Python, pgvector</span
+              >
             </div>
-            <p>Scheme-discovery platform from the USAII Global AI Hackathon 2026. Our team was a finalist among 6,081+ participants. My part was the data engineering: normalization, embeddings, and pgvector ingestion for 1,008 schemes.</p>
+            <p>
+              Scheme-discovery platform from the USAII Global AI Hackathon 2026.
+              Our team was a finalist among 6,081+ participants. My part was the
+              data engineering: normalization, embeddings, and pgvector
+              ingestion for 1,008 schemes.
+            </p>
             <div class="project-links">
-              <a href="projects/scholarai/" class="pill-btn">Case study</a>
-              <a href="https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI" target="_blank" rel="noopener" class="pill-btn">Team repo</a>
-              <a href="https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI/tree/main/data-engineering" target="_blank" rel="noopener" class="pill-btn">My code (data-engineering/)</a>
+              <a class="pill-btn" href="projects/scholarai/">Case study</a>
+              <a
+                class="pill-btn"
+                href="https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI"
+                rel="noopener"
+                >Team repo</a
+              >
+              <a
+                class="pill-btn"
+                href="https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI/tree/main/data-engineering"
+                rel="noopener"
+                >My code (data-engineering/)</a
+              >
             </div>
           </li>
         </ul>
-      </div>
-    </section>
-
-    <section id="experience">
-      <div class="container">
-        <h2>Experience</h2>
+      </section>
+      <section id="research">
+        <h2>Research</h2>
+        <div class="research-entry">
+          <img
+            alt=""
+            class="illustration"
+            height="240"
+            loading="lazy"
+            src="/images/illustrations/evidence.svg"
+            width="320">
+          <div>
+            <h3>Extracting adverse drug reaction reports from Reddit</h3>
+            <p class="metadata">
+              Undergraduate research · Penn State Harrisburg · 2026–present
+            </p>
+            <p class="research-status">In progress</p>
+            <p>
+              With Dr. Md Sultan Al Nahian, I’m studying how language models can
+              identify reported drug–reaction relationships in Reddit
+              discussions. The work compares direct prompting,
+              retrieval-augmented generation, and extraction with verification
+              against human annotations.
+            </p>
+            <p>
+              Evaluation focuses on precision, recall, F1, and error analysis.
+            </p>
+            <details>
+              <summary>Research plan</summary>
+              <p>
+                As an Undergraduate Research Assistant at Penn State Harrisburg
+                (REU), I am investigating LLM-based detection of adverse drug
+                reaction reports and extraction of suspected drug–reaction
+                relationships. The research plan compares direct prompting,
+                retrieval-augmented generation (RAG), and agent-based extraction
+                and verification. Planned analysis includes normalizing drug and
+                reaction terminology and comparing extracted relationships with
+                PubMed literature.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+      <section id="experience">
+        <h2>Elsewhere</h2>
+        <p class="research-crosslink">
+          <a href="/#research">Undergraduate Research Assistant → Research</a>
+        </p>
         <div class="experience-list">
           <div class="exp-item">
             <div class="exp-header">
               <h3 class="exp-role-org">
-                <strong>Undergraduate Research Assistant</strong>, <span class="exp-org">Penn State Harrisburg</span> (REU)
-              </h3>
-              <div class="exp-date">2026 – Present</div>
-            </div>
-            <p class="exp-summary">Investigating LLM-based detection of adverse drug reaction reports and extraction of suspected drug–reaction relationships from Reddit, advised by Dr. Md Sultan Al Nahian. The research plan compares direct prompting, retrieval-augmented generation (RAG), and agent-based extraction and verification against human annotations using precision, recall, F1, and error analysis. Planned analysis includes normalizing drug and reaction terminology and comparing extracted relationships with PubMed literature.</p>
-          </div>
-
-          <div class="exp-item">
-            <div class="exp-header">
-              <h3 class="exp-role-org">
-                <strong>Technical Chair</strong>, <span class="exp-org">IEEE Student Branch</span>, Penn State Harrisburg
+                <strong>Technical Chair</strong>,
+                <span class="exp-org">IEEE Student Branch</span>, Penn State
+                Harrisburg
               </h3>
               <div class="exp-date">Sept 2026 – Present</div>
             </div>
-            <p class="exp-summary">Elected in Sept 2026 after a year on the technical team (Sept 2025 – Sept 2026). Coordinate the branch's software, AI, and robotics workshops and projects; hosted hands-on workshops on Markdown and building with Google Gemini.</p>
+            <p class="exp-summary">
+              Elected in Sept 2026 after a year on the technical team (Sept 2025
+              – Sept 2026). Coordinate the branch's software, AI, and robotics
+              workshops and projects; hosted hands-on workshops on Markdown and
+              building with Google Gemini.
+            </p>
           </div>
-
           <div class="exp-item">
             <div class="exp-header">
               <h3 class="exp-role-org">
-                <strong>Data Engineer</strong> (5-person team), <span class="exp-org">USAII Global AI Hackathon 2026</span>
+                <strong>Data Engineer</strong> (5-person team),
+                <span class="exp-org">USAII Global AI Hackathon 2026</span>
               </h3>
               <div class="exp-date">Jun 2026</div>
             </div>
-            <p class="exp-summary">Wrote the normalization, embedding (gte-small), and batched-insert scripts that loaded 1,008 scraped government schemes into Supabase PostgreSQL/pgvector. Our team was a finalist among 6,081+ participants.</p>
+            <p class="exp-summary">
+              Wrote the normalization, embedding (gte-small), and batched-insert
+              scripts that loaded 1,008 scraped government schemes into Supabase
+              PostgreSQL/pgvector. Our team was a finalist among 6,081+
+              participants.
+            </p>
           </div>
-
           <div class="exp-item">
             <div class="exp-header">
               <h3 class="exp-role-org">
-                <strong>Founder &amp; Editor-in-Chief</strong>, <span class="exp-org">Glimpse</span> (student publication)
+                <strong>Founder &amp; Editor-in-Chief</strong>,
+                <span class="exp-org">Glimpse</span> (student publication)
               </h3>
               <div class="exp-date">Jun 2024 – Feb 2025</div>
             </div>
-            <p class="exp-summary">Founded the publication and ran editorial operations; grew the campus subscriber base to 250+ readers.</p>
+            <p class="exp-summary">
+              Founded the publication and ran editorial operations; grew the
+              campus subscriber base to 250+ readers.
+            </p>
           </div>
         </div>
-      </div>
-    </section>
-
-    <section id="blog">
-      <div class="container">
-        <h2>Blog</h2>
+      </section>
+      <section id="blog">
+        <div class="section-heading">
+          <h2>Writing</h2>
+          <a href="/blog/">All posts →</a>
+        </div>
         <ul class="post-list">
           <li class="post-row">
-            <time class="post-date" datetime="2026-10-15">2026-10-15</time>
-            <a class="post-title" href="blog/why-i-stopped-working-on-nytr-problems-and-lessons/">why i stopped working on nytr — problems and lessons.</a>
+            <time class="post-date" datetime="2026-10-15">Oct 15, 2026</time>
+            <a
+              class="post-title"
+              href="/blog/why-i-stopped-working-on-nytr-problems-and-lessons/"
+              >why i stopped working on nytr — problems and lessons.</a
+            >
           </li>
           <li class="post-row">
-            <time class="post-date" datetime="2026-10-13">2026-10-13</time>
-            <a class="post-title" href="blog/code-is-cheap-execution-is-everything/">code is cheap, execution is everything.</a>
+            <time class="post-date" datetime="2026-10-13">Oct 13, 2026</time>
+            <a
+              class="post-title"
+              href="/blog/code-is-cheap-execution-is-everything/"
+              >code is cheap, execution is everything.</a
+            >
           </li>
           <li class="post-row">
-            <time class="post-date" datetime="2026-10-03">2026-10-03</time>
-            <a class="post-title" href="blog/thoughts-on-slms-for-businesses/">thoughts on slm’s for businesses</a>
+            <time class="post-date" datetime="2026-10-03">Oct 3, 2026</time>
+            <a class="post-title" href="/blog/thoughts-on-slms-for-businesses/"
+              >thoughts on slm’s for businesses</a
+            >
           </li>
         </ul>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <nav class="footer-links" aria-label="Contact">
-      <a href="resume.pdf">Résumé (PDF)</a>
-      <a href="https://github.com/sonawaneutkarsh" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://www.linkedin.com/in/sonawaneutkarsh/" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="mailto:utkarshsonawane@psu.edu">utkarshsonawane@psu.edu</a>
-    </nav>
-    <p>Utkarsh Sonawane · Penn State Harrisburg</p>
-  </footer>
-
-  <script src="script.js"></script>
-</body>
+      </section>
+    </main>
+    <footer class="site-footer container">
+      <p>Utkarsh Sonawane · Penn State Harrisburg</p>
+      <nav aria-label="Contact">
+        <a href="mailto:utkarshsonawane@psu.edu">Email</a
+        ><a href="https://github.com/sonawaneutkarsh">GitHub</a
+        ><a href="https://www.linkedin.com/in/sonawaneutkarsh/">LinkedIn</a
+        ><a href="/resume.pdf">Résumé</a>
+      </nav>
+    </footer>
+    <script src="/script.js"></script>
+  </body>
 </html>

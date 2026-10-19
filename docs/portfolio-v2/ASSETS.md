@@ -44,3 +44,10 @@ Use a **simple lowercase `u` monogram with a separate dot**, drawn as original v
 ## Asset QA and availability
 
 Original wordmark is supplied and present. All new illustration and favicon paths above are **planned files**, not currently implemented. Before wiring a path into HTML, create it and run internal link checks. Asset license/provenance: retain user-provided Ideogram source and record owner selection; this package does not independently verify third-party account licensing. Original SVGs should be created in the repo and not copied from the reference site. No asset purchase or subscription required by this plan.
+
+## Implemented asset provenance — October 19, 2026
+
+- `images/brand/utkarsh-wordmark.png`: 684×230 PNG derivative of the supplied second Ideogram image, Lanczos downsampled with full canvas retained; 76,227 bytes. Compared visually against the master at 228px and 190px. No replacement lettering, recoloring, clipping, alpha extraction or generation. The master SHA-256 remains unchanged.
+- All six `images/illustrations/*.svg`: original code-authored paths following the compositions above, each under 1 KiB. No external assets, fonts, scripts, logos or measured-data claims.
+- `favicon.svg`: the exact specified original lowercase-u path and separate dot. PNGs rendered from this SVG with Sharp; ICO contains 16/32/48px frames; Apple icon is opaque cream at 180×180. Reviewed on light and dark backgrounds at production sizes.
+- Existing product screenshots, videos, portrait, social source icons, Open Graph image and résumé are unchanged.
