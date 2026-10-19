@@ -9,7 +9,7 @@ Implemented October 19, 2026 on `codex/portfolio-v2`, based on `design/portfolio
 - Static `/blog/` index, original lowercase article titles/dates/prose, new metadata for Oct 13, unchanged hello-world redirect, and preserved `/#blog`.
 - All five complete case studies, with sticky desktop contents, native mobile contents, synchronized active-link feedback, contained scrolling tables and code, original evidence/media/captions/credits/limitations.
 - Original SVG notebook illustrations, optimized approved wordmark and SVG/PNG/ICO favicon. See ASSETS.md for provenance. No new generation or recreation of the signature.
-- Native endnote styling and a documented repeated-reference pattern; no guessed citations in existing posts.
+- Native endnote styling and a documented repeated-reference pattern. Owner-supplied, verified sources have now been added: the Lucy Guo podcast at 13:50 in the October 13 article, and the X post and Project Nanda links in the October 3 article. The Jev example is an editorial margin sidenote with its supporting Latent Space link.
 - CI now validates the blog index and preservation with full checkout history for the baseline comparison; Pages staging includes new root icons and still excludes docs. Deployment requires both a non-PR event and `refs/heads/main`.
 
 ## Verification performed
@@ -17,7 +17,7 @@ Implemented October 19, 2026 on `codex/portfolio-v2`, based on `design/portfolio
 | Check | Result |
 | --- | --- |
 | Original internal-link baseline | 152 references, 11 HTML pages; passed before edits |
-| Final internal links/assets | 313 references, 12 HTML pages; passed |
+| Current internal links/assets | 321 references, 12 HTML pages; passed |
 | `html-validate@10` on all 12 routes | Passed using unchanged validator rules |
 | `scripts/check_preservation.py` | 8 full prose bodies, titles, original publication dates, evidence/source/media destinations, 48 original IDs; passed |
 | Immutable SHA-256 checks | 23 source assets including résumé, portrait, screenshots, videos, social icons and OG image, plus the original Ideogram master; passed |
@@ -69,6 +69,18 @@ Use native anchors with a unique callout ID for each occurrence, one source numb
 
 This is documentation, not a deployed citation. Omit the endnote section whenever there are no verified sources. Reference numbers follow order of first appearance. New external source links use the same tab by default.
 
-## Editorial questions kept separate
+## Verified citations and final polish
 
-Exact URLs for the Lucy Guo podcast, unnamed X post, and Project Nanda mention were not supplied. Existing words are preserved without invented references. The research is in progress; no paper, venue, dataset release, model ranking, clinical validation or unsupported publication link has been added. Project numbers remain baseline claims, including the Nytr historical case study and paused development status. Any factual refresh or source insertion needs a separate editorial decision.
+The owner subsequently supplied the Lucy Guo podcast, X post and Project Nanda URLs; verified citations are now present in the published-article templates on this branch. The Jev sidenote cites the Latent Space report on open-source alternatives; it does not claim Jev itself was open sourced. Original prose, publication dates and all source destinations remain unchanged.
+
+The October 13 article uses an asterisk for the explanatory sidenote and a separate numeric reference sequence beginning at [1] for Lucy Guo, matching the References list. Existing anchor IDs (`ref-1-a`/`fn-1` for the sidenote and `ref-2-a`/`fn-2` for Lucy Guo) are retained for link compatibility; their internal names do not determine displayed numbering.
+
+The article now keeps the normal centered 640px blog column, with the note in the right margin at widths of 1280px and above. Below 1280px the note flows immediately after its paragraph; the approved mobile layout is unchanged. Generated `out/`, `_site/`, `.next/` and dependency directories are pruned by the link checker and ignored by Git.
+
+## Final focused cleanup verification
+
+Rendered the October 13 article in Chromium at 1440px and 390px and inspected the full-page and focused sidenote screenshots. The desktop reading column matches the normal blog column at x=400px, with a 32px gap to the note; mobile retains its original 350px column and inline note. Additional checks at 1280px, 1279px and 1024px confirm a clean margin-to-inline transition with no horizontal overflow. Blog navigation, both annotation targets and both backlinks pass at the requested widths. HTML validation, 321 internal references across 12 pages, and preservation checks pass. A temporary regression fixture confirms generated HTML is ignored while untracked source HTML is still checked. All existing article URLs and asset destinations remain unchanged. No deployment was performed.
+
+## Editorial boundaries
+
+The research is in progress; no paper, venue, dataset release, model ranking, clinical validation or unsupported publication link has been added. Project numbers remain baseline claims, including the Nytr historical case study and paused development status. Any further factual refresh or new source insertion needs a separate editorial decision.

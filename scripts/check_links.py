@@ -7,9 +7,11 @@ broken reference.
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit, unquote
+import os
 import sys
 
 ROOT = Path(__file__).resolve().parent.parent
+SKIP_DIRS = {".git", "node_modules", "out", "_site", ".next"}
 SKIP_SCHEMES = {"http", "https", "mailto", "tel", "data", "javascript"}
 
 
@@ -50,7 +52,12 @@ def resolve(page, url):
 
 
 def main():
-    pages = sorted(p for p in ROOT.rglob("*.html") if ".git" not in p.parts and "node_modules" not in p.parts)
+    pages = []
+    for directory, subdirs, filenames in os.walk(ROOT):
+        # Prune generated trees before traversing them, including untracked builds.
+        subdirs[:] = [name for name in subdirs if name not in SKIP_DIRS]
+        pages.extend(Path(directory) / name for name in filenames if name.endswith(".html"))
+    pages.sort()
     cache, errors, checked = {}, [], 0
     for page in pages:
         for tag, key, url in parse(page).refs:

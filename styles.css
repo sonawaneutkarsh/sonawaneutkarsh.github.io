@@ -693,12 +693,8 @@ main.container {
   min-height: 40vh;
 }
 
-/* Editorial margin notes: placed beside the paragraph on wide screens and
-   immediately after it in the reading order on smaller screens. */
-.blog-post-page.margin-notes-page main.container {
-  width: min(1040px, calc(100% - 64px));
-  max-width: 1040px;
-}
+/* Keep the standard centered blog column. Margin notes need at least 1280px
+   to fit beside it with a 32px gap and safe viewport gutters. */
 .margin-notes-page .blog-post-article {
   max-width: 640px;
 }
@@ -729,7 +725,7 @@ main.container {
 .margin-notes-page .margin-note:target {
   background: var(--sage-soft);
 }
-@media (max-width: 999px) {
+@media (max-width: 1279px) {
   .blog-post-page.margin-notes-page main.container {
     max-width: 640px;
   }
