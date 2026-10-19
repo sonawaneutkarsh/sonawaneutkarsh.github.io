@@ -6,3 +6,11 @@
 /resume/
 /progress/
 /.commandcode/
+
+# generated builds and dependencies (excluded from site link checks)
+out/
+_site/
+.next/
+node_modules/
+next-env.d.ts
+__pycache__/

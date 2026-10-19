@@ -1,110 +1,173 @@
 <!DOCTYPE html>
+
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>thoughts on slm’s for businesses — Utkarsh Sonawane</title>
-  <meta name="description" content="Thoughts on whether specialized small language models (SLMs) make more economic and architectural sense than general LLMs for narrow business workflows.">
-  <meta name="author" content="Utkarsh Sonawane">
-  <link rel="canonical" href="https://sonawaneutkarsh.github.io/blog/thoughts-on-slms-for-businesses/">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>thoughts on slm’s for businesses — Utkarsh Sonawane</title>
+    <meta
+      content="Thoughts on whether specialized small language models (SLMs) make more economic and architectural sense than general LLMs for narrow business workflows."
+      name="description">
+    <meta content="Utkarsh Sonawane" name="author">
+    <link
+      href="https://sonawaneutkarsh.github.io/blog/thoughts-on-slms-for-businesses/"
+      rel="canonical">
+    <!-- Open Graph -->
+    <meta
+      content="thoughts on slm’s for businesses — Utkarsh Sonawane"
+      property="og:title">
+    <meta
+      content="Thoughts on whether specialized small language models (SLMs) make more economic and architectural sense than general LLMs for narrow business workflows."
+      property="og:description">
+    <meta
+      content="https://sonawaneutkarsh.github.io/blog/thoughts-on-slms-for-businesses/"
+      property="og:url">
+    <meta content="article" property="og:type">
+    <meta content="Utkarsh Sonawane" property="og:site_name">
+    <meta
+      content="https://sonawaneutkarsh.github.io/images/og-image.png"
+      property="og:image">
+    <meta content="summary_large_image" name="twitter:card">
+    <!-- Favicon -->
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="thoughts on slm’s for businesses — Utkarsh Sonawane">
-  <meta property="og:description" content="Thoughts on whether specialized small language models (SLMs) make more economic and architectural sense than general LLMs for narrow business workflows.">
-  <meta property="og:url" content="https://sonawaneutkarsh.github.io/blog/thoughts-on-slms-for-businesses/">
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="Utkarsh Sonawane">
-  <meta property="og:image" content="https://sonawaneutkarsh.github.io/images/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-
-  <!-- Favicon -->
-  <link rel="icon" href="../../favicon.ico" sizes="any">
-  <link rel="icon" href="../../favicon-32x32.png" type="image/png">
-  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
-
-  <link rel="stylesheet" href="../../styles.css">
-</head>
-<body class="blog-post-page">
-  <a class="skip-link" href="#content">Skip to content</a>
-
-  <main class="container" id="content">
-    <article class="blog-post-article">
-      <!-- Back Link -->
-      <a href="../../#blog" class="back-link">← Blog</a>
-
-      <!-- Header: Title and Date -->
-      <header class="post-header">
-        <h1>thoughts on slm’s for businesses</h1>
-        <time class="date" datetime="2026-10-03">2026-10-03</time>
-      </header>
-
-      <!-- Content -->
-      <div class="prose">
-        <p>slms, has anyone even heard of them? you probably heard of llms, slms is exactly what you are thinking. small language models.</p>
-
-        <p>i just came across an X post a week before talking about monetizing this particular aspect of llms and it got me thinking.</p>
-
-        <p>the problem with llms is that they are tailored for a wide variety of work. they can write emails, solve math, explain physics, write code, and probably tell you how to build minecraft from scratch.</p>
-
-        <p>but most businesses probably don’t need all of that.</p>
-
-        <p>imagine a trading company gets 1000s of invoices every month, and they replace the manual labor with an automated task force. they use an llm to sort out this mess.</p>
-
-        <p>but does it really need a model which has also been trained on solving physics? math? or how to build minecraft from scratch?</p>
-
-        <p>probably not.</p>
-
-        <p>this got me thinking, we could use slm’s and specialize them particularly on that specific company data and workflow, and it will perform that specific task.</p>
-
-        <p>for example:</p>
-
-        <p><code>invoice comes in &rarr; understand it &rarr; extract important information &rarr; report it.</code></p>
-
-        <p>a similar idea can be seen in project nanda by MIT professor ramesh raskar. i like his work pretty well. the general idea of having different agents doing different tasks is interesting. more on this on future posts (maybe)</p>
-
-        <p>but then i started thinking, what is even the difference between a specialized slm, a sub agent using an llm, and just giving an llm tools?</p>
-
-        <p>no clue.</p>
-
-        <p>anyway, you might wonder, but hey utkarsh, isn’t an llm gonna be better trained on how to report, understand invoices, and all that?</p>
-
-        <p>well you are right.</p>
-
-        <p>and i don’t know the answer to that.</p>
-
-        <p>but i think one of the biggest reasons could be cost.</p>
-
-        <p>if a smaller model can perform the same narrow task, then maybe it is cheaper to run, needs less compute, and could even be deployed locally for companies that care about privacy.</p>
-
-        <p>we could just license that particular slm or system to the company and make a profit out of it.</p>
-
-        <p>but then again, maybe the company doesn’t even care if it is an slm.</p>
-
-        <p>they probably just care that something which took employees hours now takes a few seconds.</p>
-
-        <p>so maybe the business isn’t really selling slm’s.</p>
-
-        <p>maybe it is finding boring expensive workflows and using the smallest model that can automate them.</p>
-
-        <p>no clue if this is actually a good business idea.</p>
-
-        <p>but i want to look into it more.</p>
-
-        <p>peace.</p>
-      </div>
-    </article>
-  </main>
-
-  <footer>
-    <nav class="footer-links" aria-label="Contact">
-      <a href="../../resume.pdf">Résumé (PDF)</a>
-      <a href="https://github.com/sonawaneutkarsh" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://www.linkedin.com/in/sonawaneutkarsh/" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="mailto:utkarshsonawane@psu.edu">utkarshsonawane@psu.edu</a>
-    </nav>
-    <p>Utkarsh Sonawane · Penn State Harrisburg</p>
-  </footer>
-
-  <script src="../../script.js"></script>
-</body>
+    <link href="../../styles.css" rel="stylesheet">
+    <link href="/favicon.svg" rel="icon" type="image/svg+xml">
+    <link href="/favicon.ico" rel="icon" sizes="any">
+    <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
+    <link href="/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
+    <link href="/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="/feed.xml" rel="alternate" title="Utkarsh Sonawane — Writing RSS" type="application/rss+xml">
+  </head>
+  <body class="blog-post-page">
+    <a class="skip-link" href="#content">Skip to content</a>
+    <header class="masthead container">
+      <a aria-label="Utkarsh Sonawane — home" class="wordmark" href="/"
+        ><img
+          alt=""
+          height="230"
+          src="/images/brand/utkarsh-wordmark.png"
+          width="684"></a>
+      <nav aria-label="Primary">
+        <a href="/#projects">Projects</a><a href="/#research">Research</a
+        ><a href="/notebook/">Research notebook</a><a href="/blog/">Blog</a
+        ><a href="/resume.pdf">Résumé ↗</a>
+      </nav>
+    </header>
+    <main class="container" id="content">
+      <article class="blog-post-article">
+        <!-- Back Link -->
+        <a class="back-link" href="/blog/">← All writing</a>
+        <!-- Header: Title and Date -->
+        <header class="post-header">
+          <h1>thoughts on slm’s for businesses</h1>
+          <time class="date" datetime="2026-10-03">2026-10-03</time>
+        </header>
+        <!-- Content -->
+        <div class="prose">
+          <p>
+            slms, has anyone even heard of them? you probably heard of llms,
+            slms is exactly what you are thinking. small language models.
+          </p>
+          <p>
+            i just came across an X post a week before talking about monetizing
+            this particular aspect of llms and it got me thinking. <sup><a id="ref-1-a" href="#fn-1" role="doc-noteref" aria-label="Reference 1">[1]</a></sup>
+          </p>
+          <p>
+            the problem with llms is that they are tailored for a wide variety
+            of work. they can write emails, solve math, explain physics, write
+            code, and probably tell you how to build minecraft from scratch.
+          </p>
+          <p>but most businesses probably don’t need all of that.</p>
+          <p>
+            imagine a trading company gets 1000s of invoices every month, and
+            they replace the manual labor with an automated task force. they use
+            an llm to sort out this mess.
+          </p>
+          <p>
+            but does it really need a model which has also been trained on
+            solving physics? math? or how to build minecraft from scratch?
+          </p>
+          <p>probably not.</p>
+          <p>
+            this got me thinking, we could use slm’s and specialize them
+            particularly on that specific company data and workflow, and it will
+            perform that specific task.
+          </p>
+          <p>for example:</p>
+          <p>
+            <code
+              >invoice comes in → understand it → extract important information
+              → report it.</code
+            >
+          </p>
+          <p>
+            a similar idea can be seen in project nanda by MIT professor ramesh
+            raskar. i like his work pretty well. the general idea of having
+            different agents doing different tasks is interesting. more on this
+            on future posts (maybe) <sup><a id="ref-2-a" href="#fn-2" role="doc-noteref" aria-label="Reference 2">[2]</a></sup>
+          </p>
+          <p>
+            but then i started thinking, what is even the difference between a
+            specialized slm, a sub agent using an llm, and just giving an llm
+            tools?
+          </p>
+          <p>no clue.</p>
+          <p>
+            anyway, you might wonder, but hey utkarsh, isn’t an llm gonna be
+            better trained on how to report, understand invoices, and all that?
+          </p>
+          <p>well you are right.</p>
+          <p>and i don’t know the answer to that.</p>
+          <p>but i think one of the biggest reasons could be cost.</p>
+          <p>
+            if a smaller model can perform the same narrow task, then maybe it
+            is cheaper to run, needs less compute, and could even be deployed
+            locally for companies that care about privacy.
+          </p>
+          <p>
+            we could just license that particular slm or system to the company
+            and make a profit out of it.
+          </p>
+          <p>
+            but then again, maybe the company doesn’t even care if it is an slm.
+          </p>
+          <p>
+            they probably just care that something which took employees hours
+            now takes a few seconds.
+          </p>
+          <p>so maybe the business isn’t really selling slm’s.</p>
+          <p>
+            maybe it is finding boring expensive workflows and using the
+            smallest model that can automate them.
+          </p>
+          <p>no clue if this is actually a good business idea.</p>
+          <p>but i want to look into it more.</p>
+          <p>peace.</p>
+          <section role="doc-endnotes" aria-labelledby="references">
+            <h2 id="references">References</h2>
+            <ol>
+              <li id="fn-1">
+                CJ Zafir, <a href="https://x.com/cjzafir/status/2099523329296388178?s=48">X post discussing small language models</a>.
+                <a href="#ref-1-a" aria-label="Back to reference 1">↩</a>
+              </li>
+              <li id="fn-2">
+                Project NANDA, <a href="https://projectnanda.org/#/">official website: Architecting the Internet of Agents</a>.
+                <a href="#ref-2-a" aria-label="Back to reference 2">↩</a>
+              </li>
+            </ol>
+          </section>
+        </div>
+      </article>
+    </main>
+    <footer class="site-footer container">
+      <p>Utkarsh Sonawane · Penn State Harrisburg</p>
+      <nav aria-label="Contact">
+        <a href="mailto:utkarshsonawane@psu.edu">Email</a
+        ><a href="https://github.com/sonawaneutkarsh">GitHub</a
+        ><a href="https://www.linkedin.com/in/sonawaneutkarsh/">LinkedIn</a
+        ><a href="/resume.pdf">Résumé</a>
+      </nav>
+    </footer>
+    <script src="../../script.js"></script>
+  </body>
 </html>

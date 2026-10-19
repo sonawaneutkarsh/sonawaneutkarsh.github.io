@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Utkarsh Sonawane — Writing</title>
+    <link>https://sonawaneutkarsh.github.io/blog/</link>
+    <description>Notes on building software, learning AI, and figuring things out.</description>
+    <language>en-us</language>
+    <atom:link href="https://sonawaneutkarsh.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>why i stopped working on nytr — problems and lessons.</title>
+      <link>https://sonawaneutkarsh.github.io/blog/why-i-stopped-working-on-nytr-problems-and-lessons/</link>
+      <guid isPermaLink="true">https://sonawaneutkarsh.github.io/blog/why-i-stopped-working-on-nytr-problems-and-lessons/</guid>
+      <pubDate>Thu, 15 Oct 2026 00:00:00 GMT</pubDate>
+      <description>What building a campus nutrition app taught me about data, distribution, and validating an idea.</description>
+    </item>
+    <item>
+      <title>code is cheap, execution is everything.</title>
+      <link>https://sonawaneutkarsh.github.io/blog/code-is-cheap-execution-is-everything/</link>
+      <guid isPermaLink="true">https://sonawaneutkarsh.github.io/blog/code-is-cheap-execution-is-everything/</guid>
+      <pubDate>Tue, 13 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Why choosing a useful problem and getting people to use a product matter alongside writing the code.</description>
+    </item>
+    <item>
+      <title>thoughts on slm’s for businesses</title>
+      <link>https://sonawaneutkarsh.github.io/blog/thoughts-on-slms-for-businesses/</link>
+      <guid isPermaLink="true">https://sonawaneutkarsh.github.io/blog/thoughts-on-slms-for-businesses/</guid>
+      <pubDate>Sat, 03 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Thinking aloud about smaller models and narrow business workflows.</description>
+    </item>
+  </channel>
+</rss>

@@ -1,118 +1,205 @@
 <!DOCTYPE html>
+
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>why i stopped working on nytr — problems and lessons. — Utkarsh Sonawane</title>
-  <meta name="description" content="a project i worked on was nytr, where i built a full-stack ios app for students studying at penn state harrisburg.">
-  <meta name="author" content="Utkarsh Sonawane">
-  <link rel="canonical" href="https://sonawaneutkarsh.github.io/blog/why-i-stopped-working-on-nytr-problems-and-lessons/">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>
+      why i stopped working on nytr — problems and lessons. — Utkarsh Sonawane
+    </title>
+    <meta
+      content="a project i worked on was nytr, where i built a full-stack ios app for students studying at penn state harrisburg."
+      name="description">
+    <meta content="Utkarsh Sonawane" name="author">
+    <link
+      href="https://sonawaneutkarsh.github.io/blog/why-i-stopped-working-on-nytr-problems-and-lessons/"
+      rel="canonical">
+    <!-- Open Graph -->
+    <meta
+      content="why i stopped working on nytr — problems and lessons. — Utkarsh Sonawane"
+      property="og:title">
+    <meta
+      content="a project i worked on was nytr, where i built a full-stack ios app for students studying at penn state harrisburg."
+      property="og:description">
+    <meta
+      content="https://sonawaneutkarsh.github.io/blog/why-i-stopped-working-on-nytr-problems-and-lessons/"
+      property="og:url">
+    <meta content="article" property="og:type">
+    <meta content="Utkarsh Sonawane" property="og:site_name">
+    <meta
+      content="https://sonawaneutkarsh.github.io/images/og-image.png"
+      property="og:image">
+    <meta content="summary_large_image" name="twitter:card">
+    <!-- Favicon -->
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="why i stopped working on nytr — problems and lessons. — Utkarsh Sonawane">
-  <meta property="og:description" content="a project i worked on was nytr, where i built a full-stack ios app for students studying at penn state harrisburg.">
-  <meta property="og:url" content="https://sonawaneutkarsh.github.io/blog/why-i-stopped-working-on-nytr-problems-and-lessons/">
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="Utkarsh Sonawane">
-  <meta property="og:image" content="https://sonawaneutkarsh.github.io/images/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-
-  <!-- Favicon -->
-  <link rel="icon" href="../../favicon.ico" sizes="any">
-  <link rel="icon" href="../../favicon-32x32.png" type="image/png">
-  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
-
-  <link rel="stylesheet" href="../../styles.css">
-</head>
-<body class="blog-post-page">
-  <a class="skip-link" href="#content">Skip to content</a>
-
-  <main class="container" id="content">
-    <article class="blog-post-article">
-      <!-- Back Link -->
-      <a href="../../#blog" class="back-link">← Blog</a>
-
-      <!-- Header: Title and Date -->
-      <header class="post-header">
-        <h1>why i stopped working on nytr — problems and lessons.</h1>
-        <time class="date" datetime="2026-10-15">2026-10-15</time>
-      </header>
-
-      <!-- Content -->
-      <div class="prose">
-        <p>a project i worked on was <a href="/projects/nytr/">nytr</a>, where i built a full-stack ios app for students studying at penn state harrisburg.</p>
-
-        <p>the idea was pretty simple. we already have apps like macrofactor, myfitnesspal, and cronometer, but i wanted to build something specifically for penn state students.</p>
-
-        <p>basically, you would get a notification telling you what to eat every day from the campus dining menu to meet your calorie and protein goals. i eventually wanted to expand it to other penn state campuses too.</p>
-
-        <p>i also had plans for sleep tracking, integrating hevy so the app could give feedback on your workouts, and some smaller features like searching for foods, scanning barcodes, and logging meals.</p>
-
-        <p>sounds like a pretty successful idea, right?</p>
-
-        <p>no.</p>
-
-        <p>the first problem was <strong>actual usage</strong>. the app was built around a deterministic system, basically using mathematical calculations to figure out what someone should eat based on their goals. it worked in theory, but practically, it wasn't that simple.</p>
-
-        <p>sure, you could use it to hit your calorie and protein targets in the short term. but in the long term, nutrition isn't just about calories and protein. things like omega-3, cholesterol, vitamins, and other nutrients matter too. my app didn't properly account for all of that.</p>
-
-        <p>and there's also the fact that people don't necessarily want to eat whatever an algorithm tells them to eat every single day.</p>
-
-        <p>the second problem was <strong>data</strong>.</p>
-
-        <p>the app relied heavily on the official penn state dining menu, and the nutritional data wasn't always complete or consistent. some items didn't even have all their macros listed.</p>
-
-        <p>that's a pretty big problem when your entire app depends on that data to make recommendations. no matter how good the code is, if the data going into it isn't reliable, the recommendations won't be either.</p>
-
-        <p>third, <strong>installation</strong>.</p>
-
-        <p>publishing an app on the apple app store costs $99 per year, and i intended to build this project on a $0 budget.</p>
-
-        <p>so the practical way for someone to use it was to clone the github repo and manually install it through xcode.</p>
-
-        <p>now imagine telling a random student that they need a mac, xcode, and some technical knowledge just to try your food tracking app.</p>
-
-        <p>yeah, not happening.</p>
-
-        <p>fourth, <strong>versatility</strong>.</p>
-
-        <p>i built <a href="https://github.com/sonawaneutkarsh/Nytr">nytr</a> for ios, but i didn't make an android version. so that immediately excluded a large number of students who could've potentially used it.</p>
-
-        <p>i could've continued working on these issues. i even experimented with adding an llm layer to make the recommendations more flexible, but that introduced another problem: api costs.</p>
-
-        <p>since i wanted to keep everything free, i started looking into on-device apple intelligence instead.</p>
-
-        <p>but eventually, i stopped working on phase 2.</p>
-
-        <p>not because the project was completely useless or because i couldn't figure out how to implement the remaining features. i just started questioning whether adding more features was actually going to solve the main problems.</p>
-
-        <p>i learned a lot from building nytr. working on the backend, ios development, integrating different services, dealing with real-world data, and figuring out how all these components work together.</p>
-
-        <p>but probably the biggest lesson was that <strong>building something that works and building something people will actually use are two very different things.</strong></p>
-
-        <p>i spent a lot of time thinking about how to make the app technically better, but not nearly enough time figuring out whether students would actually want to use it every day.</p>
-
-        <p>looking back, i probably should've validated the idea with students much earlier instead of building so much first.</p>
-
-        <p>i could've kept adding features and trying to perfect everything, but at some point, i felt like i'd learned what i wanted to learn from the project.</p>
-
-        <p>so i decided to move on and put my time into learning other things.</p>
-
-        <p>maybe i'll revisit nytr someday. but for now, i'm pretty happy with what i learned from it.</p>
-      </div>
-    </article>
-  </main>
-
-  <footer>
-    <nav class="footer-links" aria-label="Contact">
-      <a href="../../resume.pdf">Résumé (PDF)</a>
-      <a href="https://github.com/sonawaneutkarsh" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://www.linkedin.com/in/sonawaneutkarsh/" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="mailto:utkarshsonawane@psu.edu">utkarshsonawane@psu.edu</a>
-    </nav>
-    <p>Utkarsh Sonawane · Penn State Harrisburg</p>
-  </footer>
-
-  <script src="../../script.js"></script>
-</body>
+    <link href="../../styles.css" rel="stylesheet">
+    <link href="/favicon.svg" rel="icon" type="image/svg+xml">
+    <link href="/favicon.ico" rel="icon" sizes="any">
+    <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
+    <link href="/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
+    <link href="/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="/feed.xml" rel="alternate" title="Utkarsh Sonawane — Writing RSS" type="application/rss+xml">
+  </head>
+  <body class="blog-post-page">
+    <a class="skip-link" href="#content">Skip to content</a>
+    <header class="masthead container">
+      <a aria-label="Utkarsh Sonawane — home" class="wordmark" href="/"
+        ><img
+          alt=""
+          height="230"
+          src="/images/brand/utkarsh-wordmark.png"
+          width="684"></a>
+      <nav aria-label="Primary">
+        <a href="/#projects">Projects</a><a href="/#research">Research</a
+        ><a href="/notebook/">Research notebook</a><a href="/blog/">Blog</a
+        ><a href="/resume.pdf">Résumé ↗</a>
+      </nav>
+    </header>
+    <main class="container" id="content">
+      <article class="blog-post-article">
+        <!-- Back Link -->
+        <a class="back-link" href="/blog/">← All writing</a>
+        <!-- Header: Title and Date -->
+        <header class="post-header">
+          <h1>why i stopped working on nytr — problems and lessons.</h1>
+          <time class="date" datetime="2026-10-15">2026-10-15</time>
+        </header>
+        <!-- Content -->
+        <div class="prose">
+          <p>
+            a project i worked on was <a href="/projects/nytr/">nytr</a>, where
+            i built a full-stack ios app for students studying at penn state
+            harrisburg.
+          </p>
+          <p>
+            the idea was pretty simple. we already have apps like macrofactor,
+            myfitnesspal, and cronometer, but i wanted to build something
+            specifically for penn state students.
+          </p>
+          <p>
+            basically, you would get a notification telling you what to eat
+            every day from the campus dining menu to meet your calorie and
+            protein goals. i eventually wanted to expand it to other penn state
+            campuses too.
+          </p>
+          <p>
+            i also had plans for sleep tracking, integrating hevy so the app
+            could give feedback on your workouts, and some smaller features like
+            searching for foods, scanning barcodes, and logging meals.
+          </p>
+          <p>sounds like a pretty successful idea, right?</p>
+          <p>no.</p>
+          <p>
+            the first problem was <strong>actual usage</strong>. the app was
+            built around a deterministic system, basically using mathematical
+            calculations to figure out what someone should eat based on their
+            goals. it worked in theory, but practically, it wasn't that simple.
+          </p>
+          <p>
+            sure, you could use it to hit your calorie and protein targets in
+            the short term. but in the long term, nutrition isn't just about
+            calories and protein. things like omega-3, cholesterol, vitamins,
+            and other nutrients matter too. my app didn't properly account for
+            all of that.
+          </p>
+          <p>
+            and there's also the fact that people don't necessarily want to eat
+            whatever an algorithm tells them to eat every single day.
+          </p>
+          <p>the second problem was <strong>data</strong>.</p>
+          <p>
+            the app relied heavily on the official penn state dining menu, and
+            the nutritional data wasn't always complete or consistent. some
+            items didn't even have all their macros listed.
+          </p>
+          <p>
+            that's a pretty big problem when your entire app depends on that
+            data to make recommendations. no matter how good the code is, if the
+            data going into it isn't reliable, the recommendations won't be
+            either.
+          </p>
+          <p>third, <strong>installation</strong>.</p>
+          <p>
+            publishing an app on the apple app store costs $99 per year, and i
+            intended to build this project on a $0 budget.
+          </p>
+          <p>
+            so the practical way for someone to use it was to clone the github
+            repo and manually install it through xcode.
+          </p>
+          <p>
+            now imagine telling a random student that they need a mac, xcode,
+            and some technical knowledge just to try your food tracking app.
+          </p>
+          <p>yeah, not happening.</p>
+          <p>fourth, <strong>versatility</strong>.</p>
+          <p>
+            i built
+            <a href="https://github.com/sonawaneutkarsh/Nytr">nytr</a> for ios,
+            but i didn't make an android version. so that immediately excluded a
+            large number of students who could've potentially used it.
+          </p>
+          <p>
+            i could've continued working on these issues. i even experimented
+            with adding an llm layer to make the recommendations more flexible,
+            but that introduced another problem: api costs.
+          </p>
+          <p>
+            since i wanted to keep everything free, i started looking into
+            on-device apple intelligence instead.
+          </p>
+          <p>but eventually, i stopped working on phase 2.</p>
+          <p>
+            not because the project was completely useless or because i couldn't
+            figure out how to implement the remaining features. i just started
+            questioning whether adding more features was actually going to solve
+            the main problems.
+          </p>
+          <p>
+            i learned a lot from building nytr. working on the backend, ios
+            development, integrating different services, dealing with real-world
+            data, and figuring out how all these components work together.
+          </p>
+          <p>
+            but probably the biggest lesson was that
+            <strong
+              >building something that works and building something people will
+              actually use are two very different things.</strong
+            >
+          </p>
+          <p>
+            i spent a lot of time thinking about how to make the app technically
+            better, but not nearly enough time figuring out whether students
+            would actually want to use it every day.
+          </p>
+          <p>
+            looking back, i probably should've validated the idea with students
+            much earlier instead of building so much first.
+          </p>
+          <p>
+            i could've kept adding features and trying to perfect everything,
+            but at some point, i felt like i'd learned what i wanted to learn
+            from the project.
+          </p>
+          <p>
+            so i decided to move on and put my time into learning other things.
+          </p>
+          <p>
+            maybe i'll revisit nytr someday. but for now, i'm pretty happy with
+            what i learned from it.
+          </p>
+        </div>
+      </article>
+    </main>
+    <footer class="site-footer container">
+      <p>Utkarsh Sonawane · Penn State Harrisburg</p>
+      <nav aria-label="Contact">
+        <a href="mailto:utkarshsonawane@psu.edu">Email</a
+        ><a href="https://github.com/sonawaneutkarsh">GitHub</a
+        ><a href="https://www.linkedin.com/in/sonawaneutkarsh/">LinkedIn</a
+        ><a href="/resume.pdf">Résumé</a>
+      </nav>
+    </footer>
+    <script src="../../script.js"></script>
+  </body>
 </html>

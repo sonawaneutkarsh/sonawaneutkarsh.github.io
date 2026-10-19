@@ -22,16 +22,23 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+          fetch-depth: 0
 
       - name: Validate HTML
-        run: npx --yes html-validate@10 index.html 404.html projects/*/index.html blog/*/index.html
+        run: npm install -g html-validate@10 && html-validate index.html 404.html projects/*/index.html blog/index.html blog/*/index.html notebook/index.html
 
       - name: Check internal links and assets
         run: python3 scripts/check_links.py
 
+      - name: Check RSS feed
+        run: python3 scripts/check_feed.py
+
+      - name: Check content preservation
+        run: python3 scripts/check_preservation.py
+
   deploy:
     needs: check
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -51,8 +58,8 @@ jobs:
         run: |
           mkdir -p _site
           cp -r index.html 404.html robots.txt sitemap.xml styles.css script.js avatar.jpg resume.pdf .nojekyll \
-            favicon.ico favicon-32x32.png apple-touch-icon.png \
-            icons images videos projects blog _site/
+            favicon.svg favicon.ico favicon-16x16.png favicon-32x32.png apple-touch-icon.png \
+            icons images videos projects blog notebook feed.xml _site/
 
       - name: Setup Pages
         uses: actions/configure-pages@v6
