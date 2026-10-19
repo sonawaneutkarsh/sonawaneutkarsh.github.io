@@ -24,6 +24,7 @@ class Content(HTMLParser):
         self.prose, self.title, self.h1 = [], [], []
         self.stack = []
         self.prose_depth = None
+        self.ignored_depths = []
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
@@ -39,15 +40,20 @@ class Content(HTMLParser):
         self.stack.append(tag)
         if 'prose' in a.get('class', '').split():
             self.prose_depth = len(self.stack)
+        # Citation callouts/endnotes annotate the original prose without rewriting it.
+        if a.get('role') in ('doc-noteref', 'doc-endnotes'):
+            self.ignored_depths.append(len(self.stack))
 
     def handle_endtag(self, tag):
+        if self.ignored_depths and self.ignored_depths[-1] == len(self.stack):
+            self.ignored_depths.pop()
         if self.prose_depth == len(self.stack):
             self.prose_depth = None
         if self.stack and self.stack[-1] == tag:
             self.stack.pop()
 
     def handle_data(self, text):
-        if self.prose_depth:
+        if self.prose_depth and not self.ignored_depths:
             self.prose.append(text)
         if 'title' in self.stack:
             self.title.append(text)
@@ -63,6 +69,13 @@ def parse(text):
 
 def normalized(parts):
     return re.sub(r'\s+', ' ', ' '.join(parts)).strip()
+
+
+# This exact user-requested editorial addition is allowed in the October 13 essay.
+# Every other original word remains protected by the baseline comparison.
+APPROVED_ADDITIONS = {
+    'blog/code-is-cheap-execution-is-everything/index.html': "jev is a pretty good example of this. within about two days of its launch, at least six open-source alternatives had already popped up. jev itself wasn't open source — people just started rebuilding the idea almost immediately.",
+}
 
 
 def main():
@@ -83,7 +96,15 @@ def main():
             if item['path'].startswith(('blog/', 'projects/')) and before.prose:
                 articles += 1
                 for label in ('prose', 'title', 'h1'):
-                    if normalized(getattr(before, label)) != normalized(getattr(after, label)):
+                    original = normalized(getattr(before, label))
+                    updated = normalized(getattr(after, label))
+                    if label == 'prose' and item['path'] in APPROVED_ADDITIONS:
+                        addition = APPROVED_ADDITIONS[item['path']]
+                        if updated.count(addition) != 1:
+                            failures.append(f"{p.relative_to(ROOT)} missing/changed approved editorial note")
+                        else:
+                            updated = normalized([updated.replace(addition, '', 1)])
+                    if original != updated:
                         failures.append(f'{p.relative_to(ROOT)} changed {label}')
                 if before.dates != after.dates:
                     failures.append(f'{p.relative_to(ROOT)} changed dates')
