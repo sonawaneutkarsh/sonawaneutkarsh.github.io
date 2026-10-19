@@ -1,0 +1,1452 @@
+{
+  "repository": "sonawaneutkarsh/sonawaneutkarsh.github.io",
+  "baseline_commit": "5f02a2344d3c5a80d3c406a76a3f36b359d28dab",
+  "files": [
+    {
+      "path": ".github/workflows/deploy.yml",
+      "bytes": 1608,
+      "sha256": "8f0e5c6d4d40a6944863385f49a7818fedb46e19f80028e6772e5578207a8f8f"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 109,
+      "sha256": "06afd05ca9412d3e45359504911715d8d14de55f9fc0101718c62488be3fa8de"
+    },
+    {
+      "path": ".htmlvalidate.json",
+      "bytes": 144,
+      "sha256": "b54a4c009a7df9a9dde8ca347f1c006d23afde03b55e21ff17ac5b01a4469c20"
+    },
+    {
+      "path": ".nojekyll",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "404.html",
+      "bytes": 1055,
+      "sha256": "b3800ea6014e5309764e50119f463f44057dfa8b0fd9f8eb73bd35272966b2ff",
+      "ids": [
+        "content"
+      ],
+      "references": [
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "/favicon.ico"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "/styles.css"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "/projects/nytr/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "/projects/talks/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "/resume.pdf"
+        }
+      ],
+      "dates": []
+    },
+    {
+      "path": "README.md",
+      "bytes": 1457,
+      "sha256": "cbc408c177dc6af0801c2dfc3523a08b907f299784f32859741cbea949cacfec"
+    },
+    {
+      "path": "apple-touch-icon.png",
+      "bytes": 45876,
+      "sha256": "1bbd2ac46207088dc85c4ffc0c174741a2f2af722ac751546f2089b12bed5ebb"
+    },
+    {
+      "path": "avatar.jpg",
+      "bytes": 23221,
+      "sha256": "4bfa234fe35ab08f2a7ced9337ea3e6b0e66a9b7a7a4d93f99ed5b6a3a6f6c0b"
+    },
+    {
+      "path": "blog/code-is-cheap-execution-is-everything/index.html",
+      "bytes": 3255,
+      "sha256": "bbfc3c2b4082ec5fb74d5cbab8ffcde8352eac82f16888a82db01cdb02a8cfbb",
+      "ids": [],
+      "references": [
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../styles.css"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "../../#blog"
+        }
+      ],
+      "dates": [
+        "2026-10-13"
+      ]
+    },
+    {
+      "path": "blog/hello-world/index.html",
+      "bytes": 491,
+      "sha256": "bbf8288bb378b2712e53dfd892b4135307f9d4dfbabfe3f44f2fe61cf44ac316",
+      "ids": [],
+      "references": [
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "https://sonawaneutkarsh.github.io/blog/thoughts-on-slms-for-businesses/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "../thoughts-on-slms-for-businesses/"
+        }
+      ],
+      "dates": []
+    },
+    {
+      "path": "blog/thoughts-on-slms-for-businesses/index.html",
+      "bytes": 5388,
+      "sha256": "64e0a2aaa812d1f81a999aa8375ac3ad12ed96da8a27463cd78363ff0987f39f",
+      "ids": [
+        "content"
+      ],
+      "references": [
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "https://sonawaneutkarsh.github.io/blog/thoughts-on-slms-for-businesses/"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../favicon.ico"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../favicon-32x32.png"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../apple-touch-icon.png"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../styles.css"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#content"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "../../#blog"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "../../resume.pdf"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://www.linkedin.com/in/sonawaneutkarsh/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "mailto:utkarshsonawane@psu.edu"
+        },
+        {
+          "tag": "script",
+          "attribute": "src",
+          "value": "../../script.js"
+        }
+      ],
+      "dates": [
+        "2026-10-03"
+      ]
+    },
+    {
+      "path": "blog/why-i-stopped-working-on-nytr-problems-and-lessons/index.html",
+      "bytes": 7122,
+      "sha256": "1f071e2c3b0b6725e3525744f7a225e59a837e804fc290b03a6cdc3fdb8a1965",
+      "ids": [
+        "content"
+      ],
+      "references": [
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "https://sonawaneutkarsh.github.io/blog/why-i-stopped-working-on-nytr-problems-and-lessons/"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../favicon.ico"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../favicon-32x32.png"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../apple-touch-icon.png"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../styles.css"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#content"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "../../#blog"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "/projects/nytr/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/Nytr"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "../../resume.pdf"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://www.linkedin.com/in/sonawaneutkarsh/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "mailto:utkarshsonawane@psu.edu"
+        },
+        {
+          "tag": "script",
+          "attribute": "src",
+          "value": "../../script.js"
+        }
+      ],
+      "dates": [
+        "2026-10-15"
+      ]
+    },
+    {
+      "path": "favicon-32x32.png",
+      "bytes": 146,
+      "sha256": "d136a30c70ac8672b192c0eb1c5dba7e52bdb6f10712449242060e760111674b"
+    },
+    {
+      "path": "favicon.ico",
+      "bytes": 295,
+      "sha256": "708cfe25fe777b4078a1e1f2f6c972f9e78d00b212df4413185507ff5413232f"
+    },
+    {
+      "path": "icons/email.png",
+      "bytes": 4607,
+      "sha256": "ad884a49df06193b71a20abcc267cc7732deadaab9282f9d72dbcdd78b3371b0"
+    },
+    {
+      "path": "icons/github.png",
+      "bytes": 4380,
+      "sha256": "51c2a19c4650805f3aea5df74e4e46938862d0d27f62586aba19592fa5b4d9a1"
+    },
+    {
+      "path": "icons/linkedin.png",
+      "bytes": 4726,
+      "sha256": "dd4d3d6a3bffe606add28f6d3077601c1dde208250f140c9aeba50252eacb34f"
+    },
+    {
+      "path": "images/og-image.png",
+      "bytes": 82032,
+      "sha256": "2aaaffd4d76d81018b4ca4e694c1594dca9287bb5cce4674f76597cefae52aa5"
+    },
+    {
+      "path": "images/projects/clage/best-fitness-food-abundance.png",
+      "bytes": 83067,
+      "sha256": "384265469a3659165814b2a1b23eebd45b2729a7830ad23ae9c6dad8d8f35f1e"
+    },
+    {
+      "path": "images/projects/clage/clage-studio-demo-poster.jpg",
+      "bytes": 125508,
+      "sha256": "fad9caa982fa64956b6ac92f92fe86b6fa5c9a30c4dd7ecfac48ef7ec9fdf321"
+    },
+    {
+      "path": "images/projects/clage/replay-food-high-gen9.png",
+      "bytes": 70873,
+      "sha256": "4cd62d4ace4d2f24578a78ffbc1e40ad8a5ca30063f6cebf3f827568bd94754e"
+    },
+    {
+      "path": "images/projects/clage/studio-ecosystem.png",
+      "bytes": 282488,
+      "sha256": "016af3fb0c8c88652e1273c1ed0c11c3778054a45fcfddd5a5e6bebb8a19d4f3"
+    },
+    {
+      "path": "images/projects/devvy/discord-presence.png",
+      "bytes": 72028,
+      "sha256": "6a56fee006ecdde4af17007bf14db9163b1b3e05802b34266ca729e8774de193"
+    },
+    {
+      "path": "images/projects/nytr/nytr-demo-poster.jpg",
+      "bytes": 46832,
+      "sha256": "615cace6ab7bdff1ec5772d35f00283cbaaf0ad14cfa28cb36eca5860ad8ded7"
+    },
+    {
+      "path": "images/projects/nytr/review.jpg",
+      "bytes": 35797,
+      "sha256": "86f3497a13e7baddbb306f09e4ae1dfcd357dc24d7e9478ab3ed7014dae89bbd"
+    },
+    {
+      "path": "images/projects/nytr/today.jpg",
+      "bytes": 35007,
+      "sha256": "7a2d5f9743b82a841f8114aeb56633897b772267f425186d9250165927b7b9cb"
+    },
+    {
+      "path": "images/projects/nytr/training-coaching.jpg",
+      "bytes": 44003,
+      "sha256": "6eef8809c7824c71f9648dba4819989a0e3e0fbd2202ee1d8d19e524b3283f50"
+    },
+    {
+      "path": "images/projects/scholarai/scholarai-comparison.jpg",
+      "bytes": 61245,
+      "sha256": "384ce55ddec32541ab64e8f5af3e2b6ae41e5c6d8728ebbd3ef4faaefc668f9c"
+    },
+    {
+      "path": "images/projects/scholarai/scholarai-dashboard.jpg",
+      "bytes": 66167,
+      "sha256": "f3200075ab871c623f1f2c99e7cbefbea8078ad5189f388b65dd36bc6942392d"
+    },
+    {
+      "path": "images/projects/talks/iphone-settings.jpg",
+      "bytes": 60269,
+      "sha256": "d4340f525fe08cd0a2587970fd313907b29f2c114872f2e6df92fc8cf8933be6"
+    },
+    {
+      "path": "images/projects/talks/iphone-talk-detail.jpg",
+      "bytes": 76491,
+      "sha256": "76da866c500a4f4432dce62c44d004d0b671318638fa20417778a3734df36cbd"
+    },
+    {
+      "path": "images/projects/talks/watch-record-idle.png",
+      "bytes": 20258,
+      "sha256": "a5a6cc1ca9a8873acc4cc6dd9eafea20eb6ea2dd8d7c61c619e71a849014aa30"
+    },
+    {
+      "path": "images/projects/talks/watch-recording-active.png",
+      "bytes": 22973,
+      "sha256": "0034f3fa2a6524d97f462db4ffeeb9b8cc0bbf769980837b7af698af025a30af"
+    },
+    {
+      "path": "index.html",
+      "bytes": 16459,
+      "sha256": "46407cec9cb9350fec70ac71f054a8e2dfd4d3cbffb12e5758881245b54cd884",
+      "ids": [
+        "hero",
+        "projects",
+        "experience",
+        "blog"
+      ],
+      "references": [
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "https://sonawaneutkarsh.github.io/"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "favicon.ico"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "favicon-32x32.png"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "apple-touch-icon.png"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "styles.css"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#projects"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "avatar.jpg"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "icons/email.png"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "icons/github.png"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://www.linkedin.com/in/sonawaneutkarsh/"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "icons/linkedin.png"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "resume.pdf"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "resume.pdf"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#projects"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "projects/nytr/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "projects/nytr/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/Nytr"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "projects/nytr/"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "images/projects/nytr/today.jpg"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "projects/talks/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "projects/talks/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/Talks"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "projects/talks/"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "images/projects/talks/watch-recording-active.png"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "images/projects/talks/iphone-talk-detail.jpg"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "projects/clage/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "projects/clage/#demo"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/Clage"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "projects/devvy/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "projects/devvy/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/devvy"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/MedClarity"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/MedClarity"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://medclarity-one.vercel.app"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/pyopt-slm-exp"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/pyopt-slm-exp"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "projects/scholarai/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "projects/scholarai/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI/tree/main/data-engineering"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "blog/why-i-stopped-working-on-nytr-problems-and-lessons/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "blog/code-is-cheap-execution-is-everything/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "blog/thoughts-on-slms-for-businesses/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "resume.pdf"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://www.linkedin.com/in/sonawaneutkarsh/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "mailto:utkarshsonawane@psu.edu"
+        },
+        {
+          "tag": "script",
+          "attribute": "src",
+          "value": "script.js"
+        }
+      ],
+      "dates": [
+        "2026-10-15",
+        "2026-10-13",
+        "2026-10-03"
+      ]
+    },
+    {
+      "path": "projects/clage/index.html",
+      "bytes": 16092,
+      "sha256": "b9acaef00d70fd036d8e85733ecd1e83df37ff70b1ff192c4647a3eb0aa552d0",
+      "ids": [
+        "content",
+        "demo",
+        "demo-caption",
+        "results",
+        "problem",
+        "built",
+        "hard",
+        "decision",
+        "evidence",
+        "limits"
+      ],
+      "references": [
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "https://sonawaneutkarsh.github.io/projects/clage/"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../favicon.ico"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../favicon-32x32.png"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../apple-touch-icon.png"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../styles.css"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#content"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#demo"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#results"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#problem"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#built"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#hard"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#decision"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#evidence"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#limits"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "../../#projects"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/Clage"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/Clage/blob/main/docs/studio/GUIDE.md"
+        },
+        {
+          "tag": "video",
+          "attribute": "poster",
+          "value": "../../images/projects/clage/clage-studio-demo-poster.jpg"
+        },
+        {
+          "tag": "source",
+          "attribute": "src",
+          "value": "../../videos/clage-studio-demo.mp4"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/Clage/blob/main/CLAGE_STUDIO_MERGE_REVIEW.md#unchanged-budget-engine-validation"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "../../images/projects/clage/best-fitness-food-abundance.png"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "../../images/projects/clage/replay-food-high-gen9.png"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "../../images/projects/clage/studio-ecosystem.png"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/Clage/blob/main/CLAGE_STUDIO_FINAL_REVIEW.md"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/Clage/blob/main/CLAGE_STUDIO_MERGE_REVIEW.md"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/Clage"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "../../resume.pdf"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://www.linkedin.com/in/sonawaneutkarsh/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "mailto:utkarshsonawane@psu.edu"
+        },
+        {
+          "tag": "script",
+          "attribute": "src",
+          "value": "../../script.js"
+        }
+      ],
+      "dates": []
+    },
+    {
+      "path": "projects/devvy/index.html",
+      "bytes": 9690,
+      "sha256": "d7423c9c4fc3cef03fd0d4e71feb1ef4bb4084971bb17fd276b57df830330811",
+      "ids": [
+        "content",
+        "presence",
+        "problem",
+        "built",
+        "hard",
+        "decision",
+        "evidence",
+        "limits"
+      ],
+      "references": [
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "https://sonawaneutkarsh.github.io/projects/devvy/"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../favicon.ico"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../favicon-32x32.png"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../apple-touch-icon.png"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../styles.css"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#content"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#presence"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#problem"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#built"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#hard"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#decision"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#evidence"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#limits"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "../../#projects"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/devvy"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/devvy/releases"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "../../images/projects/devvy/discord-presence.png"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/devvy"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "../../resume.pdf"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://www.linkedin.com/in/sonawaneutkarsh/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "mailto:utkarshsonawane@psu.edu"
+        },
+        {
+          "tag": "script",
+          "attribute": "src",
+          "value": "../../script.js"
+        }
+      ],
+      "dates": []
+    },
+    {
+      "path": "projects/nytr/index.html",
+      "bytes": 12039,
+      "sha256": "3f678ee2ff6f218c7d725dec87d3079bac829d716749c4953658c2cab321db6d",
+      "ids": [
+        "content",
+        "demo",
+        "problem",
+        "built",
+        "hard",
+        "decision",
+        "evidence",
+        "limits"
+      ],
+      "references": [
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "https://sonawaneutkarsh.github.io/projects/nytr/"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../favicon.ico"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../favicon-32x32.png"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../apple-touch-icon.png"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../styles.css"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#content"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#demo"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#problem"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#built"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#hard"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#decision"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#evidence"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#limits"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "../../#projects"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/Nytr"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/Nytr/blob/main/docs/ARCHITECTURE.md"
+        },
+        {
+          "tag": "video",
+          "attribute": "poster",
+          "value": "../../images/projects/nytr/nytr-demo-poster.jpg"
+        },
+        {
+          "tag": "source",
+          "attribute": "src",
+          "value": "../../videos/nytr-demo.mp4"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "../../videos/nytr-demo.mp4"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "../../images/projects/nytr/today.jpg"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "../../images/projects/nytr/training-coaching.jpg"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "../../images/projects/nytr/review.jpg"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/Nytr"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "../../resume.pdf"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://www.linkedin.com/in/sonawaneutkarsh/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "mailto:utkarshsonawane@psu.edu"
+        },
+        {
+          "tag": "script",
+          "attribute": "src",
+          "value": "../../script.js"
+        }
+      ],
+      "dates": []
+    },
+    {
+      "path": "projects/scholarai/index.html",
+      "bytes": 9258,
+      "sha256": "77d9d1e88a42a1fe516e4e93e24e04b661a3606bd64cf5374bdb10a430658579",
+      "ids": [
+        "content",
+        "screens",
+        "problem",
+        "mine",
+        "decision",
+        "team",
+        "limits"
+      ],
+      "references": [
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "https://sonawaneutkarsh.github.io/projects/scholarai/"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../favicon.ico"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../favicon-32x32.png"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../apple-touch-icon.png"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../styles.css"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#content"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#screens"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#problem"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#mine"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#decision"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#team"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#limits"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "../../#projects"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI/tree/main/data-engineering"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "../../images/projects/scholarai/scholarai-dashboard.jpg"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "../../images/projects/scholarai/scholarai-comparison.jpg"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI/tree/main/data-engineering"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "../../resume.pdf"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://www.linkedin.com/in/sonawaneutkarsh/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "mailto:utkarshsonawane@psu.edu"
+        },
+        {
+          "tag": "script",
+          "attribute": "src",
+          "value": "../../script.js"
+        }
+      ],
+      "dates": []
+    },
+    {
+      "path": "projects/talks/index.html",
+      "bytes": 12315,
+      "sha256": "4d021182de8ef1065e668054537f0a091f5b2b82b30a6eb40b6328f7b01fa54c",
+      "ids": [
+        "content",
+        "screens",
+        "problem",
+        "built",
+        "hard",
+        "decision",
+        "evidence",
+        "limits"
+      ],
+      "references": [
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "https://sonawaneutkarsh.github.io/projects/talks/"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../favicon.ico"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../favicon-32x32.png"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../apple-touch-icon.png"
+        },
+        {
+          "tag": "link",
+          "attribute": "href",
+          "value": "../../styles.css"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#content"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#screens"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#problem"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#built"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#hard"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#decision"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#evidence"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "#limits"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "../../#projects"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/Talks"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "../../images/projects/talks/watch-record-idle.png"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "../../images/projects/talks/watch-recording-active.png"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "../../images/projects/talks/iphone-talk-detail.jpg"
+        },
+        {
+          "tag": "img",
+          "attribute": "src",
+          "value": "../../images/projects/talks/iphone-settings.jpg"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh/Talks"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "../../resume.pdf"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://github.com/sonawaneutkarsh"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "https://www.linkedin.com/in/sonawaneutkarsh/"
+        },
+        {
+          "tag": "a",
+          "attribute": "href",
+          "value": "mailto:utkarshsonawane@psu.edu"
+        },
+        {
+          "tag": "script",
+          "attribute": "src",
+          "value": "../../script.js"
+        }
+      ],
+      "dates": []
+    },
+    {
+      "path": "resume.pdf",
+      "bytes": 136505,
+      "sha256": "b0af1f97bddd2426b550b4ba45dba584929816044badae6c00c336060b807c02"
+    },
+    {
+      "path": "robots.txt",
+      "bytes": 79,
+      "sha256": "cd1747c5d0a896dbd62c72254bcf0184a493738a40a7fbe142e5c5ac80ce3599"
+    },
+    {
+      "path": "script.js",
+      "bytes": 3237,
+      "sha256": "91a65a36a09f767e6fc0750c87ea560d35a821d0869af90fd746e6cbe136f9a7"
+    },
+    {
+      "path": "scripts/check_links.py",
+      "bytes": 2531,
+      "sha256": "b84f56e72bbc716213600c8c53ad883432ae5a34ea3984c1ccb0fb5509bea7e8"
+    },
+    {
+      "path": "sitemap.xml",
+      "bytes": 1214,
+      "sha256": "632cb124313d7e4d92bfcd609ed838e223dcb75b74d12aa71b2681e4bcca14ca"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 24306,
+      "sha256": "9b8031653d486e67cf157391c9f8fad30c7e423cf4d2ffc5133ea8025a58e294"
+    },
+    {
+      "path": "videos/README.md",
+      "bytes": 772,
+      "sha256": "6835c1c0e18d76ab6b034c8e04e5367fa67c1299725f5171731cfc704abaa8ef"
+    },
+    {
+      "path": "videos/clage-studio-demo.mp4",
+      "bytes": 2286730,
+      "sha256": "17d03502190d9892e505fee25e3e2c893c12fe09a80ac2d4888f2af385921cac"
+    },
+    {
+      "path": "videos/nytr-demo.mp4",
+      "bytes": 3769827,
+      "sha256": "fe39ffdf6d5c4001029a016500af042597e66bac6bc5cf64606d4d20ad2532f2"
+    }
+  ],
+  "wordmark": {
+    "source_upload": "image(20261019-040914).png",
+    "selected_variant": "second Ideogram image, user-designated official wordmark",
+    "saved_path": "docs/portfolio-v2/assets/utkarsh-wordmark-original.png",
+    "sha256": "7ea864acb69d21fc1cea2bd44c3d3568ce8000f0da1540e61e9e2c314c8895b2",
+    "dimensions": [
+      1134,
+      382
+    ]
+  }
+}
