@@ -983,3 +983,10 @@ main.container {
 }
 
 .updates-list time { white-space: nowrap; }
+
+/* Quiet RSS affordance and notebook empty state; no current-build dashboard. */
+.feed-link,
+.notebook-crosslink { font: 14px/1.6 var(--sans); }
+.feed-link { margin-top: 20px; }
+.writing-index .index-intro + .feed-link { margin-top: -16px; margin-bottom: 32px; }
+.notebook-page .notebook-empty { color: var(--muted); font: 16px/1.65 var(--sans); }

@@ -25,10 +25,13 @@ jobs:
           fetch-depth: 0
 
       - name: Validate HTML
-        run: npx --yes html-validate@10 index.html 404.html projects/*/index.html blog/index.html blog/*/index.html
+        run: npx --yes html-validate@10 index.html 404.html projects/*/index.html blog/index.html blog/*/index.html notebook/index.html
 
       - name: Check internal links and assets
         run: python3 scripts/check_links.py
+
+      - name: Check RSS feed
+        run: python3 scripts/check_feed.py
 
       - name: Check content preservation
         run: python3 scripts/check_preservation.py
@@ -56,7 +59,7 @@ jobs:
           mkdir -p _site
           cp -r index.html 404.html robots.txt sitemap.xml styles.css script.js avatar.jpg resume.pdf .nojekyll \
             favicon.svg favicon.ico favicon-16x16.png favicon-32x32.png apple-touch-icon.png \
-            icons images videos projects blog _site/
+            icons images videos projects blog notebook feed.xml _site/
 
       - name: Setup Pages
         uses: actions/configure-pages@v6
