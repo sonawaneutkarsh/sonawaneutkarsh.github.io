@@ -1035,11 +1035,11 @@ main.container {
     animation: marginalia-breathe 16s ease-in-out infinite alternate;
   }
   body:not(.case-study-page):not(.margin-notes-page)::before {
-    left: max(18px, (100vw - 1110px) / 4);
+    left: max(18px, calc(25vw - 277.5px));
     background-image: url("/images/illustrations/border-left.svg");
   }
   body:not(.case-study-page):not(.margin-notes-page)::after {
-    right: max(18px, (100vw - 1110px) / 4);
+    right: max(18px, calc(25vw - 277.5px));
     background-image: url("/images/illustrations/border-right.svg");
     animation-duration: 19s;
     animation-delay: -6s;
