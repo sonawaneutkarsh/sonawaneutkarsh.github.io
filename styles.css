@@ -152,7 +152,7 @@ section,
   gap: 16px;
 }
 .masthead nav {
-  gap: 24px;
+  gap: 18px;
 }
 .masthead nav a,
 .site-footer nav a {
@@ -229,14 +229,6 @@ main.container {
 }
 .tooltip:empty {
   display: none;
-}
-.bio-details {
-  font-size: 14px;
-  margin-top: 8px;
-}
-.bio-details p {
-  font-family: var(--sans);
-  font-size: 14px;
 }
 .updates-list,
 .updates-list ul,
