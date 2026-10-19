@@ -84,3 +84,19 @@ Rendered the October 13 article in Chromium at 1440px and 390px and inspected th
 ## Editorial boundaries
 
 The research is in progress; no paper, venue, dataset release, model ranking, clinical validation or unsupported publication link has been added. Project numbers remain baseline claims, including the Nytr historical case study and paused development status. Any further factual refresh or new source insertion needs a separate editorial decision.
+
+## Editorial illustration integration — October 19, 2026
+
+Integrated the seven approved editorial illustrations into Portfolio V2:
+- Mapping:
+  - `notebook.png` → Homepage introduction (`images/illustrations/notebook.webp`)
+  - `nytr-v2.png` → Nytr project (`images/illustrations/nytr-v2.webp`, supersedes v1)
+  - `clage.png` → Clage project (`images/illustrations/clage.webp`)
+  - `talks-v2.png` → Talks project (`images/illustrations/talks-v2.webp`, supersedes v1)
+  - `devvy.png` → Devvy project (`images/illustrations/devvy.webp`)
+  - `evidence.png` → Homepage Research section (`images/illustrations/evidence.webp`)
+  - `research-notebook.png` → `/notebook/` page (`images/illustrations/research-notebook.webp`)
+- Production assets generated as optimized WebP with `#FCFAF0` background neutralization, outer alpha transparency, and safe padding preserving all fine strokes, color washes, internal paper details, and soft cast shadows.
+- All original PNG source masters are preserved byte-for-byte in `docs/portfolio-v2/assets/illustrations/` outside the deployed site.
+- Original SVG illustration files remain in `images/illustrations/` for rollback.
+- Visual integration verified at 1440px and 390px; HTML validation, 361 internal references across 13 pages, RSS feed validation, and content preservation tests pass. CI workflow updated to use `--package=html-validate@10` to avoid runner-side arborizer errors.

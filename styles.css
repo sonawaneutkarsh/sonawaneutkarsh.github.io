@@ -448,6 +448,20 @@ main.container {
 .writing-index {
   min-height: 48vh;
 }
+.notebook-head {
+  display: grid;
+  grid-template-columns: 1fr 140px;
+  gap: 32px;
+  align-items: start;
+  margin-bottom: 32px;
+}
+.notebook-head .index-intro {
+  margin-bottom: 0;
+}
+.notebook-illustration {
+  width: 140px;
+  margin-top: 8px;
+}
 .blog-post-page main.container {
   max-width: 640px;
 }
@@ -881,6 +895,17 @@ main.container {
     grid-column: 1;
     grid-row: 2;
     width: 80px;
+  }
+  .notebook-head {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .notebook-illustration {
+    order: 2;
+    width: 112px;
+    margin: 0;
   }
   .exp-header {
     display: block;

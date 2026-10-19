@@ -51,3 +51,16 @@ Original wordmark is supplied and present. All new illustration and favicon path
 - All six `images/illustrations/*.svg`: original code-authored paths following the compositions above, each under 1 KiB. No external assets, fonts, scripts, logos or measured-data claims.
 - `favicon.svg`: the exact specified original lowercase-u path and separate dot. PNGs rendered from this SVG with Sharp; ICO contains 16/32/48px frames; Apple icon is opaque cream at 180×180. Reviewed on light and dark backgrounds at production sizes.
 - Existing product screenshots, videos, portrait, social source icons, Open Graph image and résumé are unchanged.
+
+## Approved editorial illustration integration — October 19, 2026
+
+- Master PNG sources preserved outside the deployed website in `docs/portfolio-v2/assets/illustrations/`:
+  - `notebook.png` (hero introduction)
+  - `nytr-v2.png` (Nytr project; supersedes original version)
+  - `clage.png` (Clage project)
+  - `talks-v2.png` (Talks project; supersedes original version)
+  - `devvy.png` (Devvy project)
+  - `evidence.png` (homepage Research section)
+  - `research-notebook.png` (`/notebook/` page)
+- Production WebP assets in `images/illustrations/` (`*.webp`), cropped with safe padding, background neutralized to `#FCFAF0` (`[252, 250, 240]`) with outer alpha transparency. Fine strokes, color fills, paper details, and soft cast shadows are preserved.
+- Original SVG assets (`clage.svg`, `devvy.svg`, `evidence.svg`, `notebook.svg`, `nytr.svg`, `talks.svg`) remain in `images/illustrations/` for rollback.

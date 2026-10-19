@@ -12,3 +12,5 @@ out/
 _site/
 .next/
 node_modules/
+next-env.d.ts
+__pycache__/

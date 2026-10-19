@@ -25,7 +25,7 @@ jobs:
           fetch-depth: 0
 
       - name: Validate HTML
-        run: npx --yes html-validate@10 index.html 404.html projects/*/index.html blog/index.html blog/*/index.html notebook/index.html
+        run: npx --yes --package=html-validate@10 html-validate index.html 404.html projects/*/index.html blog/index.html blog/*/index.html notebook/index.html
 
       - name: Check internal links and assets
         run: python3 scripts/check_links.py
