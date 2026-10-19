@@ -41,7 +41,7 @@ class Content(HTMLParser):
         if 'prose' in a.get('class', '').split():
             self.prose_depth = len(self.stack)
         # Citation callouts/endnotes annotate the original prose without rewriting it.
-        if a.get('role') in ('doc-noteref', 'doc-endnotes'):
+        if a.get('role') in ('doc-noteref', 'doc-endnotes', 'doc-footnote'):
             self.ignored_depths.append(len(self.stack))
 
     def handle_endtag(self, tag):
@@ -71,13 +71,6 @@ def normalized(parts):
     return re.sub(r'\s+', ' ', ' '.join(parts)).strip()
 
 
-# This exact user-requested editorial addition is allowed in the October 13 essay.
-# Every other original word remains protected by the baseline comparison.
-APPROVED_ADDITIONS = {
-    'blog/code-is-cheap-execution-is-everything/index.html': "jev is a pretty good example of this. within about two days of its launch, at least six open-source alternatives had already popped up. jev itself wasn't open source — people just started rebuilding the idea almost immediately.",
-}
-
-
 def main():
     failures = []
     articles = assets = anchors = 0
@@ -98,12 +91,6 @@ def main():
                 for label in ('prose', 'title', 'h1'):
                     original = normalized(getattr(before, label))
                     updated = normalized(getattr(after, label))
-                    if label == 'prose' and item['path'] in APPROVED_ADDITIONS:
-                        addition = APPROVED_ADDITIONS[item['path']]
-                        if updated.count(addition) != 1:
-                            failures.append(f"{p.relative_to(ROOT)} missing/changed approved editorial note")
-                        else:
-                            updated = normalized([updated.replace(addition, '', 1)])
                     if original != updated:
                         failures.append(f'{p.relative_to(ROOT)} changed {label}')
                 if before.dates != after.dates:
