@@ -17,6 +17,7 @@ Plain HTML, CSS, and a little JavaScript. No framework and no build step.
 | `images/`, `videos/`, `icons/` | Screenshots, Nytr and Clage Studio demos, social icons |
 | `styles.css`, `script.js` | Cream/sage editorial styles, contents scrollspy, copy-email button |
 | `404.html`, `sitemap.xml`, `robots.txt` | Not-found page and crawler files |
+| `artifacts/website-history/` | Visual history gallery (`timeline.html`, 5 curated milestones, WebP/PNGs, `manifest.json`, `screenshot-audit.md`) |
 
 Project facts on the site (years, test counts, results) follow each project's own README.
 
@@ -56,3 +57,12 @@ The V2 direction draws on the readable density and dated updates of [Sophie Wang
 The RSS feed at `/feed.xml` lists only the public blog posts, newest first. When publishing another post, update the blog index, home Writing list, and `feed.xml`, then run `python3 scripts/check_feed.py`. RSS uses midnight UTC as the conventional timestamp for the original date-only publication records.
 
 The separate `/notebook/` page is for intentionally published technical notes. Do not expose private current work, drafts, active research progress, or a "Now" section without specific approval.
+
+## Visual history gallery
+
+A reconstructed visual timeline of the website's evolution from August 2026 through October 2026 is published in [`artifacts/website-history/`](artifacts/website-history/):
+- **Gallery**: [`artifacts/website-history/timeline.html`](artifacts/website-history/timeline.html) (standalone responsive HTML visual gallery)
+- **Audit**: [`artifacts/website-history/screenshot-audit.md`](artifacts/website-history/screenshot-audit.md) (full 79-commit audit report and milestone analysis)
+- **Manifest**: [`artifacts/website-history/manifest.json`](artifacts/website-history/manifest.json) (machine-readable metadata for all 5 curated versions)
+- **Screenshots**: [`artifacts/website-history/screenshots/`](artifacts/website-history/screenshots/) (1440px lossless PNGs) and [`artifacts/website-history/webp/`](artifacts/website-history/webp/) (optimized WebP derivatives)
+
