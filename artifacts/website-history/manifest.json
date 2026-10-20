@@ -1,0 +1,152 @@
+{
+  "repository": "sonawaneutkarsh/sonawaneutkarsh.github.io",
+  "workspace": "website-history",
+  "audit_date": "2026-10-19",
+  "total_git_commits": 79,
+  "captured_versions_count": 5,
+  "viewport": {
+    "width": 1440,
+    "device_scale_factor": 1
+  },
+  "portfolio_v2_status": {
+    "state": "finalized_and_merged_on_main",
+    "merge_commit": "c893e07ca07d7211bf7df064731c6328325b7414",
+    "predecessor_merge": "8767c76fcae394b80b2a76f6264585f9b48bdfb1",
+    "active_feature_branches": [
+      {
+        "branch": "origin/fix/nav-blog-resume-spacing-2026-10-19",
+        "head": "43e17482877574f6321352d4094d4a28d7db03d8",
+        "status": "unmerged_experimental_pr_branch",
+        "description": "Constellation side ornaments and nav spacing fix"
+      }
+    ]
+  },
+  "gallery_selection_notes": {
+    "policy": "Curated 5 major evolutionary leaps across the August\u2013October 2026 lifecycle.",
+    "omitted_from_published_assets": [
+      {
+        "original_id": "02",
+        "commit": "406c669",
+        "date": "2026-08-15",
+        "reason": "Intermediate August polish; retained milestone 01 to anchor the initial portfolio state."
+      },
+      {
+        "original_id": "03",
+        "commit": "31b5f39",
+        "date": "2026-09-07",
+        "reason": "Intermediate September redesign; superseded by milestone 02 (5d02121), which represents the comprehensive peak of the Next.js era."
+      },
+      {
+        "original_id": "06",
+        "commit": "48a55a3",
+        "date": "2026-10-07",
+        "reason": "Intermediate static hierarchy polish; superseded by milestone 04 (5f02a23), which fully integrates the REU position and three published essays."
+      }
+    ]
+  },
+  "historical_render_notes": [
+    {
+      "commit": "2dc6b6b",
+      "status": "skipped",
+      "reason": "Default Create Next App template (Vercel boilerplate), not an actual portfolio site."
+    },
+    {
+      "commit": "31b5f39",
+      "status": "resolved",
+      "issue": "Framer Motion whileInView reveal elements defaulted to opacity:0 in headless capture.",
+      "resolution": "Used Playwright element scroll-into-view triggers and computed style opacity verification to fully reveal all sections before capture."
+    }
+  ],
+  "versions": [
+    {
+      "id": 1,
+      "commit": "17b95d9e5033c5cb2910f5451ec3aa66453f6560",
+      "short_sha": "17b95d9",
+      "date": "2026-08-14",
+      "timestamp": "2026-08-14 14:59:11 +0400",
+      "author": "sonawaneutkarsh",
+      "message": "Build portfolio site",
+      "architecture": "Next.js 14 (App Router) + Tailwind CSS",
+      "title": "First Actual Portfolio Website",
+      "description": "The initial personal portfolio build. Features a dark mode theme, Recruiter vs Experience toggle in header, placeholder bio text, Geist typography, and 8 initial project listings.",
+      "png_file": "screenshots/01-2026-08-14-17b95d9-initial-portfolio.png",
+      "webp_file": "webp/01-2026-08-14-17b95d9-initial-portfolio.webp",
+      "width": 1440,
+      "height": 4855,
+      "png_size_bytes": 292341,
+      "webp_size_bytes": 116142
+    },
+    {
+      "id": 2,
+      "commit": "5d02121e7fc304194091c68e0e7a2b270a24aa75",
+      "short_sha": "5d02121",
+      "date": "2026-09-29",
+      "timestamp": "2026-09-29 19:12:57 -0400",
+      "author": "Utkarsh Sonawane",
+      "message": "docs: recruiter pass \u2014 Devvy Command Code clarity (Next.js Peak)",
+      "architecture": "Next.js 14 (App Router) + Tailwind CSS",
+      "title": "Next.js Era Peak with Talks & Recruiter Signal",
+      "description": "The peak of the Next.js portfolio era before migration to static HTML. Integrated Talks (Apple Watch meeting capture) as primary project #2, expanded technical case studies across all primary projects, and completed the recruiter pass with graduation dates and Summer 2027 internship availability callouts.",
+      "png_file": "screenshots/02-2026-09-29-5d02121-nextjs-peak-recruiter.png",
+      "webp_file": "webp/02-2026-09-29-5d02121-nextjs-peak-recruiter.webp",
+      "width": 1440,
+      "height": 6465,
+      "png_size_bytes": 832852,
+      "webp_size_bytes": 384432
+    },
+    {
+      "id": 3,
+      "commit": "c002ec56b9c9f45df9e4a36f6dca74f5195d2906",
+      "short_sha": "c002ec5",
+      "date": "2026-10-01",
+      "timestamp": "2026-10-01 23:45:12 -0400",
+      "author": "Utkarsh Sonawane",
+      "message": "Update IEEE experience: promoted from Technical Team Member to Technical Chair",
+      "architecture": "Semantic HTML5 + Pure CSS + Vanilla JavaScript",
+      "title": "Static Site Rebuild (Alisa Wuffles System)",
+      "description": "Radical architectural migration replacing Next.js entirely with zero-build static HTML5, pure CSS, and vanilla JS. Introduces circular profile photo, official monochrome social icons, topic filter pills (All, AI Agents, Mobile, ML Research), white project cards on neutral canvas, IEEE Technical Chair update, and initial Hello World blog.",
+      "png_file": "screenshots/03-2026-10-01-c002ec5-static-rebuild-alisa-wuffles.png",
+      "webp_file": "webp/03-2026-10-01-c002ec5-static-rebuild-alisa-wuffles.webp",
+      "width": 1440,
+      "height": 3071,
+      "png_size_bytes": 389814,
+      "webp_size_bytes": 142834
+    },
+    {
+      "id": 4,
+      "commit": "5f02a23e809312217c09cbeaa46c4f8286a1df8a",
+      "short_sha": "5f02a23",
+      "date": "2026-10-15",
+      "timestamp": "2026-10-15 00:43:16 -0400",
+      "author": "Utkarsh Sonawane",
+      "message": "Publish exact Nytr lessons article dated October 15, 2026",
+      "architecture": "Semantic HTML5 + Pure CSS + Vanilla JavaScript",
+      "title": "Pre-V2 Mature Static Portfolio (Three Essays & REU)",
+      "description": "The culmination of the first static site generation. Experience section features the new Undergraduate Research Assistant position (REU at Penn State Harrisburg) extracting adverse drug reactions with LLMs, Clage Studio 1.0 update, and an active Blog section listing 3 published essays.",
+      "png_file": "screenshots/04-2026-10-15-5f02a23-static-three-essays-reu.png",
+      "webp_file": "webp/04-2026-10-15-5f02a23-static-three-essays-reu.webp",
+      "width": 1440,
+      "height": 3565,
+      "png_size_bytes": 576404,
+      "webp_size_bytes": 238144
+    },
+    {
+      "id": 5,
+      "commit": "c893e07ca07d7211bf7df064731c6328325b7414",
+      "short_sha": "c893e07",
+      "date": "2026-10-19",
+      "timestamp": "2026-10-19 15:20:32 -0400",
+      "author": "Utkarsh Sonawane",
+      "message": "Merge portfolio navigation and copy polish (Portfolio V2 Editorial Redesign)",
+      "architecture": "Semantic HTML5 + Editorial CSS + Vanilla JavaScript",
+      "title": "Portfolio V2 Editorial Redesign (Current Approved Website)",
+      "description": "Current approved production release on main. Complete visual transformation inspired by literary and research publications: warm cream canvas, custom script wordmark \"utkarsh.\", seven hand-crafted editorial illustrations, dedicated Research notebook anchor, reverse-chronological Updates timeline, and refined typographic hierarchy.",
+      "png_file": "screenshots/05-2026-10-19-c893e07-portfolio-v2-editorial.png",
+      "webp_file": "webp/05-2026-10-19-c893e07-portfolio-v2-editorial.webp",
+      "width": 1440,
+      "height": 4438,
+      "png_size_bytes": 686285,
+      "webp_size_bytes": 261630
+    }
+  ]
+}

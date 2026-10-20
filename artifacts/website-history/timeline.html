@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visual History & Timeline — sonawaneutkarsh.github.io</title>
+  <meta name="description" content="Chronological visual evolution of sonawaneutkarsh.github.io from August 2026 to October 2026 across 79 Git commits and 5 major website designs.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FBF9F5;
+      --card-bg: #FFFFFF;
+      --card-border: #E8E3DA;
+      --text: #242220;
+      --text-muted: #6B6760;
+      --accent: #2C5E43;
+      --accent-soft: #E8F0EB;
+      --accent-hover: #1E422F;
+      --mono: "JetBrains Mono", ui-monospace, monospace;
+      --serif: "Newsreader", Georgia, serif;
+      --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.03);
+      --shadow-lg: 0 12px 36px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      padding: 0 1.25rem 5rem;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      padding: 4.5rem 0 3rem;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 3.5rem;
+      text-align: center;
+    }
+
+    .site-kicker {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      display: inline-block;
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 4vw, 3.25rem);
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    .lead {
+      font-size: 1.125rem;
+      color: var(--text-muted);
+      max-width: 760px;
+      margin: 0 auto 2rem;
+      line-height: 1.65;
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .stat-pill {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.84rem;
+      font-weight: 500;
+      color: var(--text);
+      box-shadow: var(--shadow-sm);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .stat-pill strong {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* Timeline Navigation */
+    .quick-nav {
+      position: sticky;
+      top: 1rem;
+      z-index: 40;
+      background: rgba(251, 249, 245, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 9999px;
+      padding: 0.4rem 0.75rem;
+      max-width: 900px;
+      margin: 0 auto 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      overflow-x: auto;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 0.35rem;
+      white-space: nowrap;
+    }
+
+    .nav-tab {
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    .nav-tab:hover {
+      color: var(--text);
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    .nav-tab.active {
+      color: #FFFFFF;
+      background: var(--accent);
+    }
+
+    /* Timeline Section */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Version Card */
+    .version-card {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 2.25rem;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 2rem;
+      scroll-margin-top: 5rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .version-card:hover {
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Card Header */
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 0.3rem 0.8rem;
+      border-radius: 9999px;
+    }
+
+    .sha-badge {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      background: #F3F1EC;
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      border: 1px solid #E5E0D6;
+    }
+
+    .sha-badge:hover {
+      color: var(--text);
+      border-color: #D0C9BD;
+    }
+
+    .arch-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #7A6F5D;
+      background: #F4EFE6;
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .card-title-row {
+      margin-bottom: 1rem;
+    }
+
+    .version-num {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--accent);
+      margin-right: 0.5rem;
+    }
+
+    .version-title {
+      font-family: var(--serif);
+      font-size: 1.75rem;
+      font-weight: 600;
+      line-height: 1.25;
+      color: var(--text);
+      display: inline;
+    }
+
+    .version-summary {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .diff-list {
+      background: #FBF9F5;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.75rem;
+      font-size: 0.9rem;
+    }
+
+    .diff-list-title {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .diff-list ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .diff-list li {
+      position: relative;
+      padding-left: 1.25rem;
+      margin-bottom: 0.4rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .diff-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0.35rem;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    /* Mockup Browser Window */
+    .mockup-window {
+      background: #EDE8DF;
+      border: 1px solid #DDD6C8;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    .mockup-header {
+      background: #E8E2D5;
+      padding: 0.65rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid #D8D0C2;
+    }
+
+    .mockup-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot.red { background: #FF5F56; }
+    .dot.yellow { background: #FFBD2E; }
+    .dot.green { background: #27C93F; }
+
+    .mockup-address {
+      flex: 1;
+      background: #FFFFFF;
+      border-radius: var(--radius-sm);
+      padding: 0.25rem 0.75rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .mockup-viewport-badge {
+      font-size: 0.7rem;
+      color: #8C8270;
+      background: #F3EFE7;
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+    }
+
+    .mockup-viewport-wrap {
+      max-height: 720px;
+      overflow-y: auto;
+      background: #FFFFFF;
+      position: relative;
+      scroll-behavior: smooth;
+    }
+
+    .mockup-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .mockup-footer {
+      background: #E8E2D5;
+      padding: 0.5rem 1rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #D8D0C2;
+    }
+
+    .mockup-footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .mockup-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Downward Transition Arrow */
+    .transition-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 1.5rem 0 2rem;
+      position: relative;
+    }
+
+    .arrow-line {
+      width: 2px;
+      height: 36px;
+      background: linear-gradient(to bottom, #D0C9BD, #AFA595);
+    }
+
+    .arrow-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: var(--accent);
+      box-shadow: var(--shadow-sm);
+      margin: -6px 0;
+      z-index: 2;
+    }
+
+    .transition-pill {
+      margin-top: 0.75rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      background: #F3EFE7;
+      padding: 0.2rem 0.6rem;
+      border-radius: 9999px;
+      border: 1px solid #E5DFD2;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--card-border);
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .version-card {
+        padding: 1.25rem;
+      }
+      .mockup-viewport-wrap {
+        max-height: 480px;
+      }
+      .card-meta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .quick-nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <span class="site-kicker">sonawaneutkarsh.github.io · Git Visual Audit</span>
+      <h1>Website Evolution & Visual History</h1>
+      <p class="lead">
+        A chronological gallery tracing the 5 major design milestones of Utkarsh Sonawane's personal website from its inception in August 2026 to the approved Portfolio V2 editorial redesign in October 2026.
+      </p>
+
+      <div class="stats-bar">
+        <div class="stat-pill">Commits Audited: <strong>79</strong></div>
+        <div class="stat-pill">Visual Milestones: <strong>5 Curated Versions</strong></div>
+        <div class="stat-pill">Timespan: <strong>Aug 14 – Oct 19, 2026</strong></div>
+        <div class="stat-pill">Capture Viewport: <strong>1440px Desktop Width</strong></div>
+        <div class="stat-pill">Status: <strong>Portfolio V2 Finalized on Main</strong></div>
+      </div>
+    </header>
+
+    <!-- Quick Jump Tabs -->
+    <nav class="quick-nav" aria-label="Milestone Navigation">
+      <span style="font-family: var(--mono); font-size: 0.75rem; font-weight: 600; color: var(--accent); padding-left: 0.5rem;">ERA:</span>
+      <div class="nav-tabs">
+        <a href="#v1" class="nav-tab">1. Aug 14 (V1 Scaffold)</a>
+        <a href="#v2" class="nav-tab">2. Sep 29 (Next.js Peak)</a>
+        <a href="#v3" class="nav-tab">3. Oct 01 (Static Rebuild)</a>
+        <a href="#v4" class="nav-tab">4. Oct 15 (Pre-V2 Mature)</a>
+        <a href="#v5" class="nav-tab active">5. Oct 19 (Portfolio V2)</a>
+      </div>
+    </nav>
+
+    <main class="timeline">
+
+      <!-- ============================================================
+           VERSION 1: AUGUST 14, 2026
+           ============================================================ -->
+      <article class="version-card" id="v1">
+        <div class="card-meta">
+          <div class="date-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            August 14, 2026
+          </div>
+          <span class="arch-tag">Next.js 14 · Tailwind CSS</span>
+          <span class="sha-badge">commit 17b95d9</span>
+        </div>
+
+        <div class="card-title-row">
+          <span class="version-num">01.</span>
+          <h2 class="version-title">Initial Portfolio Build</h2>
+        </div>
+
+        <p class="version-summary">
+          The very first personal portfolio website created in Next.js 14 App Router with Tailwind CSS and Geist typography. Features a dark mode UI, initial recruiter toggle, scaffolding bio, and 8 original project rows.
+        </p>
+
+        <div class="diff-list">
+          <div class="diff-list-title">Key Visual Distinctions</div>
+          <ul>
+            <li><strong>Header:</strong> Left "Portfolio" title, right mode-toggle switch (Recruiter vs Experience).</li>
+            <li><strong>Hero:</strong> Eyebrow <em>UTKARSH SONAWANE</em>, headline <em>Software engineer. In progress, on purpose.</em></li>
+            <li><strong>Scaffold Bio:</strong> Placeholder paragraph: <code>Your bio goes here — replace this paragraph with your own writing.</code></li>
+            <li><strong>Original 8 Projects:</strong> Clage, ScholarAI, MedClarity, ZorabiHealth, ESP32 Plant Monitor, 20 Questions, Hatchling, VOYAGER-9.</li>
+            <li><strong>Early Content:</strong> Listed <em>Books</em> section ("The Power of Now", "Atomic Habits", "Thinking, Fast and Slow").</li>
+          </ul>
+        </div>
+
+        <div class="mockup-window">
+          <div class="mockup-header">
+            <div class="mockup-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+            <div class="mockup-address">
+              <span>https://sonawaneutkarsh.github.io/</span>
+              <span class="mockup-viewport-badge">1440 × 4855 px</span>
+            </div>
+          </div>
+          <div class="mockup-viewport-wrap">
+            <picture>
+              <source srcset="webp/01-2026-08-14-17b95d9-initial-portfolio.webp" type="image/webp">
+              <img src="screenshots/01-2026-08-14-17b95d9-initial-portfolio.png" alt="Screenshot of sonawaneutkarsh.github.io on August 14, 2026" class="mockup-img" loading="eager">
+            </picture>
+          </div>
+          <div class="mockup-footer">
+            <span>Rendered at 1440px desktop width · Lossless WebP derivative</span>
+            <a href="screenshots/01-2026-08-14-17b95d9-initial-portfolio.png" target="_blank">View Raw PNG (285 KB) ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Downward Arrow 1 -> 2 -->
+      <div class="transition-step" aria-hidden="true">
+        <div class="arrow-line"></div>
+        <div class="arrow-icon">↓</div>
+        <span class="transition-pill">+46 days: Talks integration, recruiter signals & peak Next.js implementation</span>
+      </div>
+
+      <!-- ============================================================
+           VERSION 2: SEPTEMBER 29, 2026
+           ============================================================ -->
+      <article class="version-card" id="v2">
+        <div class="card-meta">
+          <div class="date-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            September 29, 2026
+          </div>
+          <span class="arch-tag">Next.js 14 · Peak Next.js</span>
+          <span class="sha-badge">commit 5d02121</span>
+        </div>
+
+        <div class="card-title-row">
+          <span class="version-num">02.</span>
+          <h2 class="version-title">Next.js Era Peak (Talks & Recruiter Pass)</h2>
+        </div>
+
+        <p class="version-summary">
+          The absolute peak of the Next.js portfolio implementation before the migration to static HTML. Integrates Talks (Apple Watch meeting capture) as primary project #2, adds case studies across all primary projects, and features a recruiter pass with graduation dates and internship signals.
+        </p>
+
+        <div class="diff-list">
+          <div class="diff-list-title">Key Visual Distinctions</div>
+          <ul>
+            <li><strong>Recruiter Signal Callout:</strong> Prominent blue uppercase pill: <code>CURRENTLY SEEKING SUMMER 2027 SWE/AI INTERNSHIPS.</code></li>
+            <li><strong>Talks Integration:</strong> Added as Project 02 with Apple Watch connectivity and on-device SpeechAnalyzer metrics.</li>
+            <li><strong>5 Full Technical Case Studies:</strong> Nytr, Talks, Clage, Devvy, and ScholarAI all linked to comprehensive engineering deep-dives.</li>
+            <li><strong>Graduation Context:</strong> Hero and education entries updated with <em>Expected December 2028</em> graduation date.</li>
+            <li><strong>Clage Benchmarks:</strong> Test suite updated to 300 passing tests with deterministic replay.</li>
+          </ul>
+        </div>
+
+        <div class="mockup-window">
+          <div class="mockup-header">
+            <div class="mockup-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+            <div class="mockup-address">
+              <span>https://sonawaneutkarsh.github.io/</span>
+              <span class="mockup-viewport-badge">1440 × 6465 px</span>
+            </div>
+          </div>
+          <div class="mockup-viewport-wrap">
+            <picture>
+              <source srcset="webp/02-2026-09-29-5d02121-nextjs-peak-recruiter.webp" type="image/webp">
+              <img src="screenshots/02-2026-09-29-5d02121-nextjs-peak-recruiter.png" alt="Screenshot of sonawaneutkarsh.github.io on September 29, 2026" class="mockup-img" loading="lazy">
+            </picture>
+          </div>
+          <div class="mockup-footer">
+            <span>Rendered at 1440px desktop width · Lossless WebP derivative</span>
+            <a href="screenshots/02-2026-09-29-5d02121-nextjs-peak-recruiter.png" target="_blank">View Raw PNG (813 KB) ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Downward Arrow 2 -> 3 -->
+      <div class="transition-step" aria-hidden="true">
+        <div class="arrow-line"></div>
+        <div class="arrow-icon">↓</div>
+        <span class="transition-pill">+2 days: total architectural migration to pure HTML/CSS/JS ("Alisa Wuffles" system)</span>
+      </div>
+
+      <!-- ============================================================
+           VERSION 3: OCTOBER 01, 2026
+           ============================================================ -->
+      <article class="version-card" id="v3">
+        <div class="card-meta">
+          <div class="date-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            October 01, 2026
+          </div>
+          <span class="arch-tag">Semantic HTML5 · Pure CSS</span>
+          <span class="sha-badge">commit c002ec5</span>
+        </div>
+
+        <div class="card-title-row">
+          <span class="version-num">03.</span>
+          <h2 class="version-title">Clean Static Site Rebuild ("Alisa Wuffles" System)</h2>
+        </div>
+
+        <p class="version-summary">
+          A fundamental architectural migration replacing Next.js and npm builds with lightweight, zero-framework semantic HTML5, pure CSS, and vanilla JavaScript. Features a centered circular headshot, official social icons, topic filter pills, and clean cards.
+        </p>
+
+        <div class="diff-list">
+          <div class="diff-list-title">Key Visual Distinctions</div>
+          <ul>
+            <li><strong>Minimalist Header & Avatar:</strong> Centered 195px circular headshot of Utkarsh above a clean bio and official monochrome PNG icons.</li>
+            <li><strong>Topic Filter Pills:</strong> Interactive filtering buttons: <code>All</code>, <code>AI Agents</code>, <code>Mobile</code>, <code>ML Research</code>.</li>
+            <li><strong>Card Grid Redesign:</strong> Clean white cards with light borders against neutral background (<code>#F9FAFB</code>).</li>
+            <li><strong>Promotion Update:</strong> IEEE experience updated to <em>Technical Chair</em> (Sept 2026 – Present).</li>
+            <li><strong>New Blog Section:</strong> Initial technical journal post: <em>2026-10-01 Hello, world</em>.</li>
+          </ul>
+        </div>
+
+        <div class="mockup-window">
+          <div class="mockup-header">
+            <div class="mockup-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+            <div class="mockup-address">
+              <span>https://sonawaneutkarsh.github.io/</span>
+              <span class="mockup-viewport-badge">1440 × 3071 px</span>
+            </div>
+          </div>
+          <div class="mockup-viewport-wrap">
+            <picture>
+              <source srcset="webp/03-2026-10-01-c002ec5-static-rebuild-alisa-wuffles.webp" type="image/webp">
+              <img src="screenshots/03-2026-10-01-c002ec5-static-rebuild-alisa-wuffles.png" alt="Screenshot of sonawaneutkarsh.github.io on October 01, 2026" class="mockup-img" loading="lazy">
+            </picture>
+          </div>
+          <div class="mockup-footer">
+            <span>Rendered at 1440px desktop width · Lossless WebP derivative</span>
+            <a href="screenshots/03-2026-10-01-c002ec5-static-rebuild-alisa-wuffles.png" target="_blank">View Raw PNG (381 KB) ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Downward Arrow 3 -> 4 -->
+      <div class="transition-step" aria-hidden="true">
+        <div class="arrow-line"></div>
+        <div class="arrow-icon">↓</div>
+        <span class="transition-pill">+14 days: REU research assistant added, Clage Studio 1.0 & three published essays</span>
+      </div>
+
+      <!-- ============================================================
+           VERSION 4: OCTOBER 15, 2026
+           ============================================================ -->
+      <article class="version-card" id="v4">
+        <div class="card-meta">
+          <div class="date-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            October 15, 2026
+          </div>
+          <span class="arch-tag">Semantic HTML5 · Pure CSS</span>
+          <span class="sha-badge">commit 5f02a23</span>
+        </div>
+
+        <div class="card-title-row">
+          <span class="version-num">04.</span>
+          <h2 class="version-title">Mature Pre-V2 Static Portfolio (Three Essays & REU)</h2>
+        </div>
+
+        <p class="version-summary">
+          The culmination of the first static site generation. Highlights the new Undergraduate Research Assistant position (REU at Penn State Harrisburg) extracting adverse drug reactions with LLMs, Clage Studio 1.0, and three published technical essays.
+        </p>
+
+        <div class="diff-list">
+          <div class="diff-list-title">Key Visual Distinctions</div>
+          <ul>
+            <li><strong>REU Research Position:</strong> Prominently featured at the top of Experience: <em>Undergraduate Research Assistant, Penn State Harrisburg (REU)</em> advised by Dr. Md Sultan Al Nahian.</li>
+            <li><strong>Clage Studio 1.0 Release:</strong> Updated with 429 Python tests + 4 JavaScript tests + 21 browser workflows in CI.</li>
+            <li><strong>Three Published Essays:</strong> Blog lists <em>why i stopped working on nytr</em> (Oct 15), <em>code is cheap, execution is everything</em> (Oct 13), and <em>thoughts on slm's</em> (Oct 3).</li>
+            <li><strong>Editorial Polish:</strong> Removed "Solo" tags from kickers to maintain a cleaner scholarly tone.</li>
+          </ul>
+        </div>
+
+        <div class="mockup-window">
+          <div class="mockup-header">
+            <div class="mockup-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+            <div class="mockup-address">
+              <span>https://sonawaneutkarsh.github.io/</span>
+              <span class="mockup-viewport-badge">1440 × 3565 px</span>
+            </div>
+          </div>
+          <div class="mockup-viewport-wrap">
+            <picture>
+              <source srcset="webp/04-2026-10-15-5f02a23-static-three-essays-reu.webp" type="image/webp">
+              <img src="screenshots/04-2026-10-15-5f02a23-static-three-essays-reu.png" alt="Screenshot of sonawaneutkarsh.github.io on October 15, 2026" class="mockup-img" loading="lazy">
+            </picture>
+          </div>
+          <div class="mockup-footer">
+            <span>Rendered at 1440px desktop width · Lossless WebP derivative</span>
+            <a href="screenshots/04-2026-10-15-5f02a23-static-three-essays-reu.png" target="_blank">View Raw PNG (563 KB) ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Downward Arrow 4 -> 5 -->
+      <div class="transition-step" aria-hidden="true">
+        <div class="arrow-line"></div>
+        <div class="arrow-icon">↓</div>
+        <span class="transition-pill">+4 days: Portfolio V2 redesign with cream canvas & original illustrations</span>
+      </div>
+
+      <!-- ============================================================
+           VERSION 5: OCTOBER 19, 2026
+           ============================================================ -->
+      <article class="version-card" id="v5" style="border: 2px solid var(--accent);">
+        <div class="card-meta">
+          <div class="date-badge" style="background: var(--accent); color: #FFFFFF;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            October 19, 2026 · Current Approved Website
+          </div>
+          <span class="arch-tag" style="background: var(--accent-soft); color: var(--accent);">Portfolio V2 · Editorial</span>
+          <span class="sha-badge">commit c893e07</span>
+        </div>
+
+        <div class="card-title-row">
+          <span class="version-num">05.</span>
+          <h2 class="version-title">Portfolio V2 Editorial Redesign (Current Approved Website)</h2>
+        </div>
+
+        <p class="version-summary">
+          The current approved production website merged on <code>main</code>. A complete visual metamorphosis inspired by literary publications and academic notebooks: warm cream canvas, script "utkarsh." wordmark, seven original hand-drawn editorial illustrations, standalone research notebook anchor, and responsive editorial margin notes.
+        </p>
+
+        <div class="diff-list">
+          <div class="diff-list-title">Key Visual Distinctions</div>
+          <ul>
+            <li><strong>Literary Aesthetic:</strong> Warm cream parchment canvas (<code>#FAF7F2</code>) with restrained serif typography (Newsreader serif + Inter).</li>
+            <li><strong>Custom Script Wordmark:</strong> Handcrafted <em>"utkarsh."</em> wordmark in the header with streamlined navigation (<em>Projects · Research notebook · Blog · Résumé ↗</em>).</li>
+            <li><strong>Seven Editorial Illustrations:</strong> Hand-crafted webp illustrations embedded for personal bio, Nytr plate, Clage network, Talks watch, Devvy post-it notes, and research notebook.</li>
+            <li><strong>Reverse-Chronological Updates:</strong> New timestamped section highlighting key academic and leadership milestones.</li>
+            <li><strong>Dedicated Research Anchor:</strong> Prominently highlights the Reddit adverse drug reaction study with link to the standalone research notebook.</li>
+            <li><strong>Sidenotes & Margin Notes:</strong> Added support for responsive editorial sidenotes across article reading experiences.</li>
+          </ul>
+        </div>
+
+        <div class="mockup-window">
+          <div class="mockup-header">
+            <div class="mockup-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+            <div class="mockup-address">
+              <span>https://sonawaneutkarsh.github.io/ (Production main)</span>
+              <span class="mockup-viewport-badge">1440 × 4438 px</span>
+            </div>
+          </div>
+          <div class="mockup-viewport-wrap">
+            <picture>
+              <source srcset="webp/05-2026-10-19-c893e07-portfolio-v2-editorial.webp" type="image/webp">
+              <img src="screenshots/05-2026-10-19-c893e07-portfolio-v2-editorial.png" alt="Screenshot of sonawaneutkarsh.github.io on October 19, 2026 (Portfolio V2)" class="mockup-img" loading="lazy">
+            </picture>
+          </div>
+          <div class="mockup-footer">
+            <span>Rendered at 1440px desktop width · Lossless WebP derivative</span>
+            <a href="screenshots/05-2026-10-19-c893e07-portfolio-v2-editorial.png" target="_blank">View Raw PNG (670 KB) ↗</a>
+          </div>
+        </div>
+      </article>
+
+    </main>
+
+    <footer>
+      <p>
+        Website visual history audit produced for <strong>sonawaneutkarsh.github.io</strong> · Curated 5 major evolutionary leaps across the August–October 2026 lifecycle.
+      </p>
+      <p style="margin-top: 0.5rem;">
+        See <a href="screenshot-audit.md">screenshot-audit.md</a> for full historical commit analysis and <a href="manifest.json">manifest.json</a> for machine-readable metadata.
+      </p>
+    </footer>
+  </div>
+
+</body>
+</html>
