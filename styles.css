@@ -1012,3 +1012,40 @@ main.container {
 .feed-link { margin-top: 20px; }
 .writing-index .index-intro + .feed-link { margin-top: -16px; margin-bottom: 32px; }
 .notebook-page .notebook-empty { color: var(--muted); font: 16px/1.65 var(--sans); }
+
+/* Website history: wide, readable captures without changing other essays. */
+.website-history-post main.container {
+  max-width: 880px;
+}
+.website-history-post .post-header,
+.website-history-post .website-history-intro {
+  max-width: 640px;
+}
+.website-history-timeline {
+  margin-top: 36px;
+}
+.website-history-frame {
+  margin: 0;
+}
+.website-history-frame > a {
+  display: block;
+}
+.website-history-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+}
+.website-history-frame figcaption {
+  margin-top: 12px;
+  font: 14px/1.6 var(--sans);
+  text-align: center;
+  color: var(--muted);
+}
+.website-history-arrow {
+  margin: 28px auto;
+  text-align: center;
+  font: 30px/1 var(--sans);
+  color: var(--sage);
+}
