@@ -1,0 +1,85 @@
+name: Publish scheduled Sunday blog posts
+
+on:
+  schedule:
+    # Sundays at 12:17 EST (17:17 UTC) for November 2026.
+    # GitHub schedules can be delayed; publisher checks America/New_York dates.
+    - cron: '17 17 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: sunday-blog-publishing
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout main with write access
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Release Sunday posts due in New York
+        run: python3 scripts/publish_scheduled.py
+
+      - name: Validate HTML
+        run: npm install -g html-validate@10 && html-validate index.html 404.html projects/*/index.html blog/index.html blog/*/index.html notebook/index.html
+
+      - name: Check internal links and assets
+        run: python3 scripts/check_links.py
+
+      - name: Check RSS feed
+        run: python3 scripts/check_feed.py
+
+      - name: Check content preservation
+        run: python3 scripts/check_preservation.py
+
+      - name: Commit and publish due posts
+        id: release
+        run: |
+          git add index.html blog/index.html blog/ feed.xml sitemap.xml .publishing/posts/
+          if git diff --cached --quiet; then
+            echo "published=false" >> "$GITHUB_OUTPUT"
+            echo "No unpublished posts due."
+          else
+            git -c user.name='github-actions[bot]' \
+                -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+                commit -m 'blog: publish scheduled Sunday essay'
+            git push origin HEAD:main
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Stage site files
+        if: steps.release.outputs.published == 'true'
+        run: |
+          mkdir -p _site
+          cp -r index.html 404.html robots.txt sitemap.xml styles.css script.js avatar.jpg resume.pdf .nojekyll \
+            favicon.svg favicon.ico favicon-16x16.png favicon-32x32.png apple-touch-icon.png \
+            icons images videos projects blog notebook feed.xml _site/
+
+      - name: Set up GitHub Pages
+        if: steps.release.outputs.published == 'true'
+        uses: actions/configure-pages@v5
+
+      - name: Upload GitHub Pages artifact
+        if: steps.release.outputs.published == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy published site to GitHub Pages
+        if: steps.release.outputs.published == 'true'
+        id: deployment
+        uses: actions/deploy-pages@v4
