@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>we're building agents to manage agents. where does it end? — Utkarsh Sonawane</title>
+    <meta content="from copy-pasting prompts between chats to building an AI supervisor for AI workers. who supervises the supervisor?" name="description">
+    <meta content="Utkarsh Sonawane" name="author">
+    <link href="https://sonawaneutkarsh.github.io/blog/were-building-agents-to-manage-agents-where-does-it-end/" rel="canonical">
+    <meta content="we're building agents to manage agents. where does it end? — Utkarsh Sonawane" property="og:title">
+    <meta content="from copy-pasting prompts between chats to building an AI supervisor for AI workers. who supervises the supervisor?" property="og:description">
+    <meta content="https://sonawaneutkarsh.github.io/blog/were-building-agents-to-manage-agents-where-does-it-end/" property="og:url">
+    <meta content="article" property="og:type">
+    <meta content="Utkarsh Sonawane" property="og:site_name">
+    <meta content="https://sonawaneutkarsh.github.io/images/og-image.png" property="og:image">
+    <meta content="summary_large_image" name="twitter:card">
+    <link href="/styles.css" rel="stylesheet">
+    <link href="/favicon.svg" rel="icon" type="image/svg+xml">
+    <link href="/favicon.ico" rel="icon" sizes="any">
+    <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
+    <link href="/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
+    <link href="/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="/feed.xml" rel="alternate" title="Utkarsh Sonawane — Writing RSS" type="application/rss+xml">
+  </head>
+  <body class="blog-post-page">
+    <a class="skip-link" href="#content">Skip to content</a>
+    <header class="masthead container">
+      <a aria-label="Utkarsh Sonawane — home" class="wordmark" href="/"
+        ><img
+          alt=""
+          height="230"
+          src="/images/brand/utkarsh-wordmark.png"
+          width="684"></a>
+      <nav aria-label="Primary">
+        <a href="/#projects">Projects</a
+        ><a href="/notebook/">Research notebook</a><a href="/blog/">Blog</a
+        ><a href="/resume.pdf">Résumé ↗</a>
+      </nav>
+    </header>
+    <main class="container" id="content">
+      <article class="blog-post-article">
+        <a class="back-link" href="/blog/">← All writing</a>
+        <header class="post-header">
+          <h1>we're building agents to manage agents. where does it end?</h1>
+          <time class="date" datetime="2026-11-01">2026-11-01</time>
+        </header>
+        <div class="prose">
+          
+<p>chatgpt came out in november 2022. at first, it felt like a really clever chatbot. fast-forward to 2026 and we're asking these models to write software, run commands, open browsers, and occasionally manage entire teams of other models.</p>
+<p>we went from writing prompts, to <em>prompt engineering</em>, to chaining prompts together, to giving models tools, memory, planning loops, and retrieval. then came agents. then subagents. then agent swarms. now we're building agents to supervise all those agents.</p>
+<p>somewhere along the way, i became part of the architecture.</p>
+<p>before i started building a proper orchestration system, my workflow was embarrassingly manual. i'd have a supervisor chat that planned what to build and a worker chat that actually wrote code. the supervisor would generate instructions, i'd ctrl+c and ctrl+v them into the worker, and then i'd copy the worker's results back into the supervisor.</p>
+<p>i was basically the middleman between two AI chats. a human API. not exactly the future of software engineering.</p>
+<p>eventually i got tired of doing that and tried to build an orchestrator. my first attempt didn't turn out the way i imagined. passing text between models is easy; preserving context, recovering from failed commands, managing permissions, and knowing when an agent's output is actually correct is not. a worker can confidently say it's finished while leaving behind broken tests. a supervisor can miss it, too. and if you let an agent retry forever, you've invented a very efficient way to waste compute.</p>
+<p>so i stepped away from it for a while.</p>
+<p>months later, with access to more model usage than i was actually using, i came back to the problem. i'm working on my own coding-supervisor project, <em>Project Elder</em>, built around a simple idea: automate the annoying coordination work i was doing by hand. the irony is pretty funny. i'm building an AI layer specifically to replace my job of telling other AIs what to do.</p>
+<p>but then comes the question i can't get out of my head: <em>who supervises the supervisor?</em></p>
+<p>you could add a verification agent to check the worker, and another agent to check the verifier. maybe a council of agents: one cares about security, another about tests, another about architecture, another about performance. they debate the result and vote on what should ship. sort of like human teams, except they can all hallucinate at once.</p>
+<p>that sounds powerful. it also sounds expensive, slow, and unnecessarily complicated for plenty of tasks. a five-agent system isn't automatically better than one capable agent with a good set of tools. sometimes you're just multiplying coordination overhead, token usage, and the number of ways things can fail.</p>
+<p>the part i find most interesting now is the <em>deterministic</em> layer around the model. let code enforce filesystem boundaries. let tests decide whether tests pass. require explicit approval for destructive actions. make retries, budgets, and timeouts predictable. a model can make judgment calls, but it shouldn't have to improvise the rules of the entire system every time.</p>
+<p>maybe the future is thousands of specialized agents talking to each other. maybe it's a small number of really capable models inside a boring, reliable harness.</p>
+<p>either way, i'm starting to think the most important agent in the system might be the part that isn't an agent at all.</p>
+<p><small>for context, <a href="https://openai.com/index/chatgpt/">chatgpt was introduced on november 30, 2022</a>.</small></p>
+        </div>
+      </article>
+    </main>
+    <footer class="site-footer container">
+      <p>Utkarsh Sonawane · Penn State</p>
+      <nav aria-label="Contact">
+        <a href="mailto:utkarshsonawane@psu.edu">Email</a
+        ><a href="https://github.com/sonawaneutkarsh">GitHub</a
+        ><a href="https://www.linkedin.com/in/sonawaneutkarsh/">LinkedIn</a
+        ><a href="/resume.pdf">Résumé</a>
+      </nav>
+    </footer>
+    <script src="/script.js"></script>
+  </body>
+</html>
