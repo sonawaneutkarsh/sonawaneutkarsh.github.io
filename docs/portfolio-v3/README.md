@@ -240,7 +240,8 @@ metaphor.
 - Screenshots were taken with headless Chromium only. Safari and Firefox
   were not run in this environment. Everything used (ES modules, `inert`,
   `IntersectionObserver`, pointer events) is supported in current versions.
-- HTML validation (`html-validate@10`) could not be installed offline in the
-  build sandbox. The workflow runs it on the pull request.
+- `html-validate@10` could not be installed in the offline build sandbox.
+  The pull-request workflow runs it. Its first run caught two rule issues on
+  the new pages, which are fixed, and the check job now passes.
 - The workbench zoom uses CSS transforms, so very high zoom on low-DPI
   screens can soften the raster illustrations. The 1.8× cap keeps this mild.
