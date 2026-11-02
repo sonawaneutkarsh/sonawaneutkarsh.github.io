@@ -12,10 +12,14 @@ Plain HTML, CSS, and a little JavaScript. No framework and no build step.
 | `projects/<name>/` | Case studies: Nytr and Clage (with demo videos), Talks, Devvy, ScholarAI |
 | `blog/` | Static writing index and three posts (`hello-world/` redirects to the first post) |
 | `notebook/` | Public research notebook index (nothing unpublished or in progress exposed) |
+| `notebook/adr-extraction-demo/` | Step-through illustration of an ADR extraction workflow on synthetic sentences (no model calls, data or results) |
+| `explore/` | "Explore my work": optional workbench view of the published projects, with filters, pan/zoom and detail panels; the homepage list stays the primary route |
 | `feed.xml` | RSS 2.0 feed of published writing |
 | `resume.pdf` | Résumé (built separately from LaTeX; the source is not in this repo) |
 | `images/`, `videos/`, `icons/` | Screenshots, Nytr and Clage Studio demos, social icons |
-| `styles.css`, `script.js` | Cream/sage editorial styles, contents scrollspy, copy-email button |
+| `styles.css`, `script.js` | Cream/sage editorial styles, contents scrollspy, copy-email button, nav section state |
+| `css/`, `js/` | V3 interactions as ES modules, loaded only by the pages that use them (homepage, explorer, ADR walkthrough) |
+| `tests/e2e/` | Zero-dependency browser regression tests and performance probe (Chrome over DevTools protocol) |
 | `404.html`, `sitemap.xml`, `robots.txt` | Not-found page and crawler files |
 | `artifacts/website-history/` | Visual history gallery (`timeline.html`, 5 curated milestones, WebP/PNGs, `manifest.json`, `screenshot-audit.md`) |
 
@@ -26,6 +30,23 @@ Project facts on the site (years, test counts, results) follow each project's ow
 ```bash
 python3 -m http.server 8000
 # open http://localhost:8000
+```
+
+## Portfolio V3 interactions
+
+V3 adds motion on top of V2 without changing its content or architecture. See [docs/portfolio-v3/README.md](docs/portfolio-v3/README.md) for the full design and implementation notes.
+
+- **Hero icons**: "software", "AI systems" and "research" in the introduction carry small original SVG drawings that animate on hover or keyboard focus. On wide screens a larger copy appears beside the intro, so the text never moves. Touch screens play each icon once, and a tap follows the link.
+- **Project previews**: Nytr and Clage play their existing demo videos, muted, on hover, focus or the Preview button. Talks and Devvy show animated architecture diagrams. Videos are created only on demand.
+- **`/explore/`**: an optional workbench of the published projects by area.
+- **`/notebook/adr-extraction-demo/`**: an illustrated walkthrough of the research workflow on synthetic examples.
+
+Everything respects `prefers-reduced-motion` and works as plain content without JavaScript.
+
+```bash
+node tests/e2e/run.mjs                 # browser regression tests (Node 22+, Chrome/Chromium; set CHROME_PATH if needed)
+SCREENSHOTS=1 node tests/e2e/run.mjs   # also refresh docs/portfolio-v3/screenshots/
+node tests/e2e/perf.mjs                # page weight, paint timing, idle animation frames
 ```
 
 ## Deploy
@@ -43,7 +64,7 @@ The implementation follows `docs/portfolio-v2/`: system serif typography, the ow
 python3 scripts/check_links.py
 python3 scripts/check_feed.py
 python3 scripts/check_preservation.py
-npx --yes html-validate@10 index.html 404.html projects/*/index.html blog/index.html blog/*/index.html notebook/index.html
+npx --yes html-validate@10 index.html 404.html projects/*/index.html blog/index.html blog/*/index.html notebook/index.html notebook/*/index.html explore/index.html
 ```
 
 `check_preservation.py` compares complete article/case-study prose, dates, titles, original anchors, evidence targets and immutable asset bytes against the pre-redesign Git baseline. Shared template changes and resolved root-relative links are intentional. It needs only Python's standard library and the repository's Git history.
