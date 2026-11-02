@@ -179,6 +179,7 @@ try {
   check("explore: clicking opens the panel and pushes one entry", await until("!document.getElementById('bench-panel').hidden && location.hash === '#clage'") && (await evaluate("history.length")) === lenStart + 1);
   await evaluate("(document.querySelector('#bench-panel [data-step=\"1\"]').click(), true)");
   check("explore: Next replaces the entry", (await evaluate("history.length")) === lenStart + 1 && (await until("location.hash === '#pyopt'")));
+  await sleep(900); // let the panel's entrance animation and the view spring finish
   await shot("explore-selected");
   await evaluate("(history.back(), true)");
   check("explore: Back closes the panel", await until("document.getElementById('bench-panel').hidden && location.hash === ''"));

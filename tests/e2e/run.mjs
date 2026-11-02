@@ -714,6 +714,36 @@ const suites = {
     await page.click('[data-goto="5"]');
     check("demo: example 2 contains a contradicted candidate", await page.eval(() => Boolean(document.querySelector('.adr-example:not([hidden]) [data-verdict="rejected"]'))));
     await page.wait(800);
+    for (const ex of ["0", "1", "2"]) {
+      await page.click(`[data-example="${ex}"]`);
+      await page.click('[data-goto="5"]');
+      await page.wait(300);
+      const problems = await page.eval(() => {
+        const out = [];
+        const example = document.querySelector(".adr-example:not([hidden])");
+        const badges = Array.from(example.querySelectorAll(".adr-link-badge")).map((b) => b.getBoundingClientRect());
+        badges.forEach((a, i) => badges.slice(i + 1).forEach((b, j) => {
+          if (a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top) out.push(`badges ${i + 1}/${i + j + 2} overlap`);
+        }));
+        Array.from(example.querySelectorAll(".adr-link path")).forEach((path, i) => {
+          const pair = example.querySelectorAll(".adr-pairs > li")[i];
+          const len = path.getTotalLength();
+          const ends = [path.getPointAtLength(0), path.getPointAtLength(len)];
+          const svg = path.ownerSVGElement.getBoundingClientRect();
+          const near = (pt, id) => {
+            const m = example.querySelector(`mark[data-id="${id}"]`);
+            return Array.from(m.getClientRects()).some((r) => r.width > 2 && svg.left + pt.x >= r.left - 2 && svg.left + pt.x <= r.right + 2 && Math.abs(svg.top + pt.y - r.top) < 8 || Math.abs(svg.top + pt.y - r.bottom) < 8 && svg.left + pt.x >= r.left - 2 && svg.left + pt.x <= r.right + 2);
+          };
+          const ok = (near(ends[0], pair.dataset.from) && near(ends[1], pair.dataset.to)) || (near(ends[0], pair.dataset.to) && near(ends[1], pair.dataset.from));
+          if (!ok) out.push(`connector ${i + 1} does not attach to its marks`);
+        });
+        return out;
+      });
+      check(`demo example ${Number(ex) + 1}: connectors attach to their marks and badges do not collide`, problems.length === 0, problems.join("; "));
+    }
+    await page.click('[data-example="1"]');
+    await page.click('[data-goto="5"]');
+    await page.wait(800);
     await shot("demo-desktop-review", true);
     await page.click('[data-goto="6"]');
     check("demo: final step explains reports are not causation", await page.eval(() => /does not\s+show the drug caused it/.test(document.querySelector('.adr-explanations li[data-for="6"]').innerText)));

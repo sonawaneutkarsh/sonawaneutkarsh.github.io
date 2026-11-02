@@ -38,12 +38,22 @@ function init() {
     layer.replaceChildren();
     const box = (id) => {
       const mark = post.querySelector(`mark[data-id="${id}"]`);
-      const r = mark.getClientRects()[0];
+      // A mark that starts at a line break has an empty fragment at the end of
+      // the previous line; anchor on the first fragment with real width.
+      const rects = Array.from(mark.getClientRects());
+      const r = rects.find((rect) => rect.width > 2) || rects[0];
       return { x: r.left + r.width / 2 - frame.left, top: r.top - frame.top - 2, bottom: r.bottom - frame.top + 2 };
     };
-    Array.from(example.querySelectorAll(".adr-pairs > li")).forEach((pair, index) => {
+    const pairs = Array.from(example.querySelectorAll(".adr-pairs > li"));
+    // Same-line arches nest: wider spans go higher, so arches never cross.
+    const spans = pairs.map((pair) => {
       const from = box(pair.dataset.from);
       const to = box(pair.dataset.to);
+      return { from, to, same: Math.abs(from.top - to.top) < 8, width: Math.abs(from.x - to.x) };
+    });
+    const sameLine = spans.filter((sp) => sp.same).sort((a, b) => a.width - b.width);
+    pairs.forEach((pair, index) => {
+      const { from, to } = spans[index];
       const group = document.createElementNS(SVG_NS, "g");
       group.setAttribute("class", "adr-link");
       group.dataset.verdict = pair.dataset.verdict;
@@ -52,7 +62,7 @@ function init() {
       let my;
       if (Math.abs(from.top - to.top) < 8) {
         // Same line: an arch above the text, higher for each extra pair.
-        const lift = 16 + index * 12;
+        const lift = 16 + sameLine.indexOf(spans[index]) * 14;
         const top = Math.min(from.top, to.top) - lift;
         path.setAttribute("d", `M${from.x} ${from.top} C ${from.x} ${top}, ${to.x} ${top}, ${to.x} ${to.top}`);
         mx = (from.x + to.x) / 2;
