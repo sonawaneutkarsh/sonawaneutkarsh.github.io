@@ -3,6 +3,7 @@
 
 import { reducedMotion } from "./motion.js";
 import { initProjectPreviews } from "./project-previews.js";
+import { initHeroIcons } from "./hero-icons.js";
 
 function initReveal() {
   if (reducedMotion() || !("IntersectionObserver" in window)) return;
@@ -35,6 +36,7 @@ function initReveal() {
 function start() {
   initReveal();
   initProjectPreviews();
+  initHeroIcons();
 }
 
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);

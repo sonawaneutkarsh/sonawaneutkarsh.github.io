@@ -26,6 +26,105 @@
 }
 
 /* ---------------------------------------------------------------------
+   Introduction lede with inline animated icons
+   --------------------------------------------------------------------- */
+.hero-lede {
+  font: 22px/1.66 var(--serif);
+  color: var(--ink);
+  margin-bottom: 20px;
+  text-wrap: pretty;
+}
+.hero-link {
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.hero-word {
+  text-decoration: underline;
+  text-decoration-color: var(--sage);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: color 160ms;
+}
+.hero-link:hover .hero-word,
+.hero-link:focus-visible .hero-word,
+.hero-link.is-lit .hero-word {
+  color: var(--sage-hover);
+  text-decoration-thickness: 2px;
+}
+.hero-icon {
+  display: inline-block;
+  width: 2.5em;
+  height: 1.75em;
+  margin: -0.3em 0.06em -0.3em 0;
+  vertical-align: -0.5em;
+  border-radius: 0.4em;
+  transition: background-color 240ms var(--ease-out);
+}
+.hero-icon-narrow {
+  width: 1.75em;
+}
+.hero-link.is-lit .hero-icon {
+  background-color: var(--wash);
+}
+.hero-icon-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.intro-art {
+  position: relative;
+  margin-top: 32px;
+}
+.intro > .intro-art > .illustration {
+  width: 180px;
+}
+.hero-figure {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: calc(100% + 20px);
+  padding: 10px 12px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--paper);
+  box-shadow: var(--shadow-lift);
+  opacity: 0;
+  transform: translateY(6px) scale(0.98);
+  transform-origin: 50% 0;
+  transition:
+    opacity 220ms var(--ease-out),
+    transform 360ms var(--ease-settle);
+  pointer-events: none;
+}
+.hero-figure.is-showing {
+  opacity: 1;
+  transform: none;
+}
+.hero-figure-art {
+  aspect-ratio: 60 / 42;
+}
+.hero-figure-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+/* Keep hairline strokes when the icon is drawn about 2.6x larger. */
+.hero-figure-svg [stroke-width="1.5"] { stroke-width: 0.72; }
+.hero-figure-svg [stroke-width="1.3"],
+.hero-figure-svg [stroke-width="1.25"] { stroke-width: 0.62; }
+.hero-figure-svg [stroke-width="1.1"],
+.hero-figure-svg [stroke-width="1"] { stroke-width: 0.5; }
+.hero-figure-caption {
+  margin: 8px 0 0;
+  font: 12px/1.5 var(--sans);
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------------
    Underline reveal used by project titles and small inline actions
    --------------------------------------------------------------------- */
 .home-page .project-row h3 a,
@@ -240,6 +339,20 @@
 }
 
 @media (max-width: 719px) {
+  .hero-lede {
+    font-size: 19px;
+    max-width: none;
+  }
+  .intro > .intro-art {
+    order: 2;
+    margin: 0;
+  }
+  .intro > .intro-art > .illustration {
+    width: 112px;
+  }
+  .hero-figure {
+    display: none;
+  }
   .home-page .project-row {
     display: block;
   }
