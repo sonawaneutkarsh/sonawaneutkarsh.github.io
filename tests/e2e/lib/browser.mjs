@@ -135,15 +135,32 @@ export class Page {
     this.listeners.get(method).push(fn);
   }
 
-  once(method) {
-    return new Promise((resolve) => {
-      const fn = (params) => {
+  /** Resolve on the next `method` event; reject after `timeout` ms. */
+  once(method, timeout = 10000) {
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        remove();
+        reject(new Error(`Timed out waiting for ${method}`));
+      }, timeout);
+      const remove = () => {
         const list = this.listeners.get(method);
-        list.splice(list.indexOf(fn), 1);
+        if (list.includes(fn)) list.splice(list.indexOf(fn), 1);
+      };
+      const fn = (params) => {
+        clearTimeout(timer);
+        remove();
         resolve(params);
       };
       this.on(method, fn);
     });
+  }
+
+  /** Run `fn` in the page (e.g. set location or call history.back()) and wait for the resulting load. */
+  async navigateBy(fn, timeout = 10000) {
+    const loaded = this.once("Page.loadEventFired", timeout);
+    await this.eval(fn);
+    await loaded;
+    await sleep(300);
   }
 
   async goto(url) {

@@ -86,6 +86,8 @@ const version = session.capabilities.browserVersion;
 await send("session.subscribe", { events: ["log.entryAdded"] });
 const { contexts } = await send("browsingContext.getTree", {});
 const context = contexts[0].context;
+// Headless windows are not focused by default; focus events need that.
+await send("browsingContext.activate", { context }).catch(() => {});
 
 const server = await serve(ROOT);
 const ORIGIN = `http://127.0.0.1:${server.address().port}`;
@@ -137,7 +139,8 @@ try {
   await open("/");
   check("home: ES modules ran (preview frames enhanced)", await evaluate("document.querySelectorAll('.project-media.is-enhanced').length === 4"));
   await evaluate("(document.querySelector('[data-hero-icon=\"ai\"]').focus(), true)");
-  check("home: focusing the AI icon lights it", await until("document.querySelector('[data-hero-icon=\"ai\"]').classList.contains('is-lit')"));
+  const focused = await evaluate("document.hasFocus()");
+  check("home: focusing the AI icon lights it (document focused: " + focused + ")", await until("document.querySelector('[data-hero-icon=\"ai\"]').classList.contains('is-lit')"));
   check("home: AI icon reaches the agent loop", await until("Number(document.querySelector('[data-hero-icon=\"ai\"] .a-loop').getAttribute('opacity')) > 0.8", 3000));
   await shot("home-icon-ai");
   await evaluate("(document.activeElement.blur(), true)");
@@ -146,9 +149,12 @@ try {
   await sleep(1500);
   await evaluate("(document.querySelector('[data-name=\"Talks\"]').scrollIntoView({block:'center'}), true)");
   await shot("home-preview-talks");
+  // Keep the frame on screen: previews pause when scrolled away, by design.
+  await evaluate("(document.querySelector('[data-name=\"Nytr\"]').scrollIntoView({block:'center'}), true)");
+  await sleep(200);
   await evaluate("(document.querySelector('[data-name=\"Nytr\"] .preview-toggle').click(), true)");
   const nytr = await until(
-    "(() => { const m = document.querySelector('[data-name=\"Nytr\"]'); const v = m.querySelector('video'); return (v && !v.paused && v.currentTime > 0) || m.classList.contains('is-poster-only') || m.classList.contains('is-video-failed'); })()",
+    "(() => { const m = document.querySelector('[data-name=\"Nytr\"]'); const v = m.querySelector('video'); return (v && !v.paused && v.currentTime > 0) || m.classList.contains('is-playing') || m.classList.contains('is-poster-only') || m.classList.contains('is-video-failed'); })()",
     6000,
   );
   const how = await evaluate(

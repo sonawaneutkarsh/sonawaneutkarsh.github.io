@@ -347,11 +347,9 @@ const suites = {
 
     // Arrive from another page, so Back can also leave the explorer.
     await open("/");
-    await page.eval(() => {
+    await page.navigateBy(() => {
       location.href = "/explore/";
     });
-    await page.once("Page.loadEventFired");
-    await page.wait(300);
     const start = await st();
     check("history: initial load adds no extra entry", start.url === "/explore/" && !start.open, JSON.stringify(start));
 
@@ -424,39 +422,29 @@ const suites = {
 
     // Leaving: from the first explorer entry, Back leaves the page.
     await open("/");
-    await page.eval(() => {
+    await page.navigateBy(() => {
       location.href = "/explore/";
     });
-    await page.once("Page.loadEventFired");
-    await page.wait(300);
     await page.click("#nytr .bench-object");
     await page.wait(200);
     await back();
-    await page.eval(() => history.back());
-    await page.once("Page.loadEventFired").catch(() => {});
-    await page.wait(400);
+    await page.navigateBy(() => history.back());
     check("history: Back from the overview leaves for the previous page", await page.eval(() => location.pathname === "/"));
 
     // Deep link: Close replaces (there is no explorer entry to go back to).
     await open("/");
-    await page.eval(() => {
+    await page.navigateBy(() => {
       location.href = "/explore/?filter=ai#pyopt";
     });
-    await page.once("Page.loadEventFired");
-    await page.wait(400);
     const deep = await st();
     check("history: deep link opens the filtered project", deep.open && deep.title === "PyOpt" && deep.filter === "ai", JSON.stringify(deep));
     await page.click(".bench-close");
     await page.wait(300);
     const deepClosed = await st();
     check("history: closing a deep link replaces it (same length, hash cleared)", !deepClosed.open && deepClosed.len === deep.len && deepClosed.url === "/explore/?filter=ai", JSON.stringify(deepClosed));
-    await page.eval(() => history.back());
-    await page.once("Page.loadEventFired").catch(() => {});
-    await page.wait(400);
+    await page.navigateBy(() => history.back());
     check("history: Back after closing a deep link leaves the page", await page.eval(() => location.pathname === "/"));
-    await page.eval(() => history.forward());
-    await page.once("Page.loadEventFired").catch(() => {});
-    await page.wait(400);
+    await page.navigateBy(() => history.forward());
     check("history: Forward into the explorer restores its closed, filtered state", await page.eval(() => location.search === "?filter=ai" && document.getElementById("bench-panel").hidden));
 
     await open("/explore/?filter=nonsense#not-a-project");
@@ -751,7 +739,14 @@ const selected = process.argv.slice(2).length ? process.argv.slice(2) : Object.k
 try {
   for (const name of selected) {
     console.log(`\n# ${name}`);
-    await suites[name]();
+    const limit = Number(process.env.SUITE_TIMEOUT_MS || 240000);
+    let timer;
+    await Promise.race([
+      suites[name](),
+      new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error(`suite "${name}" exceeded ${limit} ms`)), limit);
+      }),
+    ]).finally(() => clearTimeout(timer));
   }
 } catch (error) {
   check("suite crashed", false, error.stack || String(error));
