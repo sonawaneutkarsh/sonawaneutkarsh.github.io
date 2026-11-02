@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Explore my work — Utkarsh Sonawane</title>
+    <meta
+      content="An interactive workbench of Utkarsh Sonawane’s published projects and research, grouped by area, with links to every case study."
+      name="description">
+    <meta content="Utkarsh Sonawane" name="author">
+    <link href="https://sonawaneutkarsh.github.io/explore/" rel="canonical">
+    <meta content="Explore my work — Utkarsh Sonawane" property="og:title">
+    <meta
+      content="An interactive workbench of Utkarsh Sonawane’s published projects and research, grouped by area, with links to every case study."
+      property="og:description">
+    <meta content="https://sonawaneutkarsh.github.io/explore/" property="og:url">
+    <meta content="website" property="og:type">
+    <meta content="Utkarsh Sonawane" property="og:site_name">
+    <meta
+      content="https://sonawaneutkarsh.github.io/images/og-image.png"
+      property="og:image">
+    <meta content="1200" property="og:image:width">
+    <meta content="630" property="og:image:height">
+    <meta content="Utkarsh Sonawane — portfolio" property="og:image:alt">
+    <meta content="summary_large_image" name="twitter:card">
+
+    <link href="/styles.css" rel="stylesheet">
+    <link href="/css/explore.css" rel="stylesheet">
+    <link href="/favicon.svg" rel="icon" type="image/svg+xml">
+    <link href="/favicon.ico" rel="icon" sizes="any">
+    <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
+    <link href="/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
+    <link href="/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="/feed.xml" rel="alternate" title="Utkarsh Sonawane — Writing RSS" type="application/rss+xml">
+  </head>
+  <body class="explore-page">
+    <a class="skip-link" href="#content">Skip to content</a>
+    <header class="masthead container">
+      <a aria-label="Utkarsh Sonawane — home" class="wordmark" href="/"
+        ><img
+          alt=""
+          height="230"
+          src="/images/brand/utkarsh-wordmark.png"
+          width="684"></a>
+      <nav aria-label="Primary">
+        <a href="/#projects">Projects</a
+        ><a href="/notebook/">Research notebook</a><a href="/blog/">Blog</a
+        ><a href="/resume.pdf">Résumé ↗</a>
+      </nav>
+    </header>
+    <main class="container explore-main" id="content">
+      <div class="explore-head">
+        <div>
+          <a class="back-link" href="/#projects">← All projects</a>
+          <h1>Explore my work</h1>
+          <p class="index-intro">
+            My published projects and research, laid out on one workbench and
+            grouped by area. Pick anything to read what it is, how it was
+            tested, and where to go next. Every case study is also listed on
+            the <a href="/#projects">homepage</a>.
+          </p>
+        </div>
+      </div>
+
+      <div class="bench-toolbar">
+        <div aria-label="Filter by area" class="bench-filters" role="group">
+          <button aria-pressed="true" data-filter="all" type="button">All</button>
+          <button aria-pressed="false" data-filter="ai" type="button">AI &amp; machine learning</button>
+          <button aria-pressed="false" data-filter="apps" type="button">Applications</button>
+          <button aria-pressed="false" data-filter="systems" type="button">Systems &amp; developer tools</button>
+          <button aria-pressed="false" data-filter="research" type="button">Research</button>
+          <button aria-pressed="false" data-filter="other" type="button">Other experiments</button>
+        </div>
+        <div class="bench-view-controls" hidden>
+          <div aria-label="View" class="bench-mode" role="group">
+            <button aria-pressed="true" data-mode="bench" type="button">Workbench</button>
+            <button aria-pressed="false" data-mode="list" type="button">List</button>
+          </div>
+          <div aria-label="Zoom" class="bench-zoom" role="group">
+            <button aria-label="Zoom out" data-zoom="out" type="button">−</button>
+            <button aria-label="Zoom in" data-zoom="in" type="button">+</button>
+            <button data-zoom="reset" type="button">Reset view</button>
+          </div>
+        </div>
+      </div>
+      <p aria-live="polite" class="bench-status" id="bench-status"></p>
+
+      <div class="bench" id="bench">
+        <p class="bench-hint" hidden>
+          Drag to move around · zoom with the buttons or Ctrl + scroll (trackpad
+          pinch) · Esc closes a project
+        </p>
+        <div aria-label="Project workbench" class="bench-viewport" role="region">
+          <div class="bench-plane">
+            <div aria-hidden="true" class="bench-zones">
+              <div class="bench-zone" data-zone="ai" data-box="40 40 520 400"><span>AI &amp; machine learning</span></div>
+              <div class="bench-zone" data-zone="apps" data-box="600 40 560 400"><span>Applications</span></div>
+              <div class="bench-zone" data-zone="systems" data-box="40 480 360 300"><span>Systems &amp; developer tools</span></div>
+              <div class="bench-zone" data-zone="research" data-box="440 480 360 300"><span>Research</span></div>
+              <div class="bench-zone" data-zone="other" data-box="840 480 320 300"><span>Other experiments</span></div>
+            </div>
+            <svg aria-hidden="true" class="bench-links" focusable="false" viewBox="0 0 1200 820"></svg>
+
+            <ul class="bench-items">
+              <li class="bench-item" data-categories="ai" data-links="pyopt:machine learning" data-pos="80 90" id="clage">
+                <button aria-controls="bench-panel" aria-expanded="false" class="bench-object" type="button">
+                  <span class="bench-sketch"
+                    ><img alt="" height="308" loading="lazy" src="/images/illustrations/clage.webp" width="386"></span>
+                  <span class="bench-label">Clage</span>
+                  <span class="bench-note">neuroevolution engine</span>
+                </button>
+                <div class="bench-detail">
+                  <p class="bench-tags">AI &amp; machine learning</p>
+                  <h2 class="bench-title"><a href="/projects/clage/">Clage</a></h2>
+                  <p>
+                    A from-scratch neuroevolution engine and local browser
+                    workbench for inspecting agents, experiments, and
+                    deterministic replay.
+                  </p>
+                  <figure class="bench-figure">
+                    <img alt="Frame from the Clage Studio demo: the live ecosystem view and population chart" height="319" loading="lazy" src="/images/previews/clage-studio-demo-poster-640.webp" width="640">
+                    <figcaption>Poster frame from the Clage Studio demo video.</figcaption>
+                  </figure>
+                  <p class="project-tech">
+                    Python, FastAPI, JavaScript, Canvas · pytest, Playwright,
+                    mypy, Ruff
+                  </p>
+                  <p class="bench-evidence">
+                    429 Python tests + 4 JavaScript tests + 21 browser workflows
+                    in CI · OR/AND/XOR 5/5; sine 0/5 with minimal initialization
+                  </p>
+                  <div class="project-links">
+                    <a class="pill-btn" href="/projects/clage/">Case study</a>
+                    <a class="pill-btn" href="https://github.com/sonawaneutkarsh/Clage" rel="noopener">Code</a>
+                    <a href="/projects/clage/#demo">Demo</a>
+                  </div>
+                </div>
+              </li>
+
+              <li class="bench-item" data-categories="ai" data-links="adr-research:language models" data-pos="335 240" id="pyopt">
+                <button aria-controls="bench-panel" aria-expanded="false" class="bench-object" type="button">
+                  <span class="bench-sketch"
+                    ><svg aria-hidden="true" focusable="false" viewBox="0 0 160 110">
+                      <rect fill="#fcfaf0" height="70" rx="6" stroke="#282d27" stroke-width="1.5" width="96" x="14" y="20"/>
+                      <path d="M14 34 H110" stroke="#282d27" stroke-width="1.5"/>
+                      <circle cx="24" cy="27" fill="#6b745d" r="2"/><circle cx="32" cy="27" fill="#6b745d" r="2"/>
+                      <path d="M26 46 h22 M32 56 h34 M32 66 h26 M26 76 h18" stroke="#6b745d" stroke-linecap="round" stroke-width="3"/>
+                      <path d="M100 82 C 118 82, 128 68, 140 44" fill="none" stroke="#455c47" stroke-linecap="round" stroke-width="1.75"/>
+                      <path d="M131 46 L141 42 L144 52" fill="none" stroke="#455c47" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"/>
+                    </svg></span>
+                  <span class="bench-label">PyOpt</span>
+                  <span class="bench-note">LoRA code optimizer</span>
+                </button>
+                <div class="bench-detail">
+                  <p class="bench-tags">AI &amp; machine learning</p>
+                  <h2 class="bench-title"><a href="https://github.com/sonawaneutkarsh/pyopt-slm-exp" rel="noopener">PyOpt</a></h2>
+                  <p class="compact-meta">Sep 2026 · Qwen3-4B, LoRA, Unsloth</p>
+                  <p>
+                    LoRA-tuned a 4B model to rewrite Python functions to run
+                    faster, scored by running the code. Published v1.1 run:
+                    correct 40/40 → 40/40, faster 29/40 → 36/40, median speedup
+                    3.57× → 5.65×; out-of-distribution probe base 9/10, LoRA
+                    8/10. <strong>Caveat:</strong> 13 of the 40 test prompts
+                    leaked from training, so this is not a clean held-out
+                    result. The split is fixed in v1.2; the model is not
+                    retrained yet.
+                  </p>
+                  <div class="project-links">
+                    <a class="pill-btn" href="https://github.com/sonawaneutkarsh/pyopt-slm-exp" rel="noopener">Code</a>
+                  </div>
+                </div>
+              </li>
+
+              <li class="bench-item" data-categories="apps" data-links="talks:Swift · SwiftUI" data-pos="630 75" id="nytr">
+                <button aria-controls="bench-panel" aria-expanded="false" class="bench-object" type="button">
+                  <span class="bench-sketch"
+                    ><img alt="" height="433" loading="lazy" src="/images/illustrations/nytr-v2.webp" width="645"></span>
+                  <span class="bench-label">Nytr</span>
+                  <span class="bench-note">paused · nutrition &amp; training</span>
+                </button>
+                <div class="bench-detail">
+                  <p class="bench-tags">Applications</p>
+                  <h2 class="bench-title"><a href="/projects/nytr/">Nytr</a></h2>
+                  <p>
+                    A nutrition and training app built around Penn State dining
+                    data. Deterministic recommendations, a Python backend, and a
+                    native iOS client.
+                  </p>
+                  <p class="project-status">
+                    Development paused ·
+                    <a href="/blog/why-i-stopped-working-on-nytr-problems-and-lessons/">lessons from building it</a>
+                  </p>
+                  <figure class="bench-figure">
+                    <img alt="Frame from the Nytr demo video: the Today screen on iPhone" height="360" loading="lazy" src="/images/previews/nytr-demo-poster-640.webp" width="640">
+                    <figcaption>Poster frame from the Nytr demo video.</figcaption>
+                  </figure>
+                  <p class="project-tech">
+                    Python, FastAPI, PostgreSQL (Supabase, row-level security) ·
+                    Swift, SwiftUI, HealthKit
+                  </p>
+                  <p class="bench-evidence">
+                    1,135 backend tests (1,124 passing in CI with Postgres) · 251
+                    iOS XCTest cases
+                  </p>
+                  <div class="project-links">
+                    <a class="pill-btn" href="/projects/nytr/">Case study</a>
+                    <a class="pill-btn" href="https://github.com/sonawaneutkarsh/Nytr" rel="noopener">Code</a>
+                    <a href="/projects/nytr/#demo">Demo</a>
+                  </div>
+                </div>
+              </li>
+
+              <li class="bench-item" data-categories="apps" data-pos="950 75" id="talks">
+                <button aria-controls="bench-panel" aria-expanded="false" class="bench-object" type="button">
+                  <span class="bench-sketch"
+                    ><img alt="" height="371" loading="lazy" src="/images/illustrations/talks-v2.webp" width="486"></span>
+                  <span class="bench-label">Talks</span>
+                  <span class="bench-note">watch → phone → Notion</span>
+                </button>
+                <div class="bench-detail">
+                  <p class="bench-tags">Applications</p>
+                  <h2 class="bench-title"><a href="/projects/talks/">Talks</a></h2>
+                  <p>
+                    Record on Apple Watch; transcribe and summarize on iPhone;
+                    save to Notion. Built around recoverable transfers and
+                    persistent jobs.
+                  </p>
+                  <p class="project-tech">
+                    Swift 6, SwiftUI, watchOS, iOS · WatchConnectivity ·
+                    SpeechAnalyzer · Foundation Models · Notion API
+                  </p>
+                  <p class="bench-evidence">
+                    57 XCTest cases passing in CI · iOS and watchOS builds on
+                    macOS runners
+                  </p>
+                  <p class="bench-caveat">
+                    CI tests the code on each side of the watch–phone boundary;
+                    end-to-end behavior needs a real iPhone and Apple Watch.
+                  </p>
+                  <div class="project-links">
+                    <a class="pill-btn" href="/projects/talks/">Case study</a>
+                    <a class="pill-btn" href="https://github.com/sonawaneutkarsh/Talks" rel="noopener">Code</a>
+                  </div>
+                </div>
+              </li>
+
+              <li class="bench-item" data-categories="apps ai" data-links="adr-research:evidence checks" data-pos="790 255" id="medclarity">
+                <button aria-controls="bench-panel" aria-expanded="false" class="bench-object" type="button">
+                  <span class="bench-sketch"
+                    ><svg aria-hidden="true" focusable="false" viewBox="0 0 160 110">
+                      <path d="M30 26 H74 L84 36 V92 H30 Z" fill="#edf0e5" stroke="#6b745d" stroke-linejoin="round" stroke-width="1.5"/>
+                      <path d="M42 16 H86 L96 26 V82 H42 Z" fill="#fcfaf0" stroke="#282d27" stroke-linejoin="round" stroke-width="1.5"/>
+                      <path d="M52 38 h30 M52 47 h34 M52 56 h22 M52 65 h28" stroke="#6b745d" stroke-linecap="round" stroke-width="3"/>
+                      <rect fill="#e6ebdd" height="9" rx="2" stroke="#455c47" stroke-width="1.25" width="26" x="50" y="51.5"/>
+                      <path d="M76 56 C 100 56, 108 60, 118 64" fill="none" stroke="#455c47" stroke-dasharray="3 3" stroke-width="1.5"/>
+                      <rect fill="#fcfaf0" height="20" rx="10" stroke="#455c47" stroke-width="1.5" width="28" x="116" y="54"/>
+                      <text fill="#455c47" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif" font-size="9" text-anchor="middle" x="130" y="67">p.4</text>
+                    </svg></span>
+                  <span class="bench-label">MedClarity</span>
+                  <span class="bench-note">cited answers from PDFs</span>
+                </button>
+                <div class="bench-detail">
+                  <p class="bench-tags">Applications · AI &amp; machine learning</p>
+                  <h2 class="bench-title"><a href="https://github.com/sonawaneutkarsh/MedClarity" rel="noopener">MedClarity</a></h2>
+                  <p class="compact-meta">2026 · React, TypeScript, Express, Gemini API</p>
+                  <p>
+                    Ask one question across several medical PDFs. One Gemini
+                    request returns an answer with page-level citations, and
+                    each citation is checked against the loaded documents.
+                    <strong>66 Vitest unit tests passing in CI.</strong>
+                  </p>
+                  <div class="project-links">
+                    <a class="pill-btn" href="https://github.com/sonawaneutkarsh/MedClarity" rel="noopener">Code</a>
+                    <a class="pill-btn" href="https://medclarity-one.vercel.app" rel="noopener">Live demo</a>
+                  </div>
+                </div>
+              </li>
+
+              <li class="bench-item" data-categories="systems" data-pos="125 550" id="devvy">
+                <button aria-controls="bench-panel" aria-expanded="false" class="bench-object" type="button">
+                  <span class="bench-sketch"
+                    ><img alt="" height="357" loading="lazy" src="/images/illustrations/devvy.webp" width="464"></span>
+                  <span class="bench-label">Devvy</span>
+                  <span class="bench-note">one daemon, one status</span>
+                </button>
+                <div class="bench-detail">
+                  <p class="bench-tags">Systems &amp; developer tools</p>
+                  <h2 class="bench-title"><a href="/projects/devvy/">Devvy</a></h2>
+                  <p>
+                    One local daemon coordinates Discord presence across coding
+                    tools while keeping prompts, code, and full paths private.
+                  </p>
+                  <p class="project-tech">
+                    JavaScript (Node.js), TypeScript integrations · Discord IPC ·
+                    GitHub Actions
+                  </p>
+                  <p class="bench-evidence">
+                    26 test scripts, all run in CI · releases only after CI
+                    passes · macOS released
+                  </p>
+                  <p class="bench-caveat">
+                    Windows support is on main but ships with the next release,
+                    v4.1.0.
+                  </p>
+                  <div class="project-links">
+                    <a class="pill-btn" href="/projects/devvy/">Case study</a>
+                    <a class="pill-btn" href="https://github.com/sonawaneutkarsh/devvy" rel="noopener">Code</a>
+                  </div>
+                </div>
+              </li>
+
+              <li class="bench-item" data-categories="research" data-pos="525 550" id="adr-research">
+                <button aria-controls="bench-panel" aria-expanded="false" class="bench-object" type="button">
+                  <span class="bench-sketch"
+                    ><img alt="" height="525" loading="lazy" src="/images/illustrations/evidence.webp" width="506"></span>
+                  <span class="bench-label">ADR extraction</span>
+                  <span class="bench-note">in progress · undergraduate research</span>
+                </button>
+                <div class="bench-detail">
+                  <p class="bench-tags">Research</p>
+                  <h2 class="bench-title"><a href="/#research">Extracting adverse drug reaction reports from Reddit</a></h2>
+                  <p class="compact-meta">Undergraduate research · Penn State · 2026–present</p>
+                  <p class="research-status">In progress</p>
+                  <p>
+                    With
+                    <a href="https://sites.google.com/view/sultanalnahian/home">Dr. Md Sultan Al Nahian</a>,
+                    I’m studying how language models can identify reported
+                    drug–reaction relationships in Reddit discussions. The work
+                    compares direct prompting, retrieval-augmented generation,
+                    and extraction with verification against human annotations.
+                  </p>
+                  <div class="project-links">
+                    <a class="pill-btn" href="/#research">Research summary</a>
+                    <a class="pill-btn" href="/notebook/">Research notebook</a>
+                    <a class="pill-btn" href="/notebook/adr-extraction-demo/">Illustrated workflow</a>
+                  </div>
+                </div>
+              </li>
+
+              <li class="bench-item" data-categories="other" data-pos="905 550" id="scholarai">
+                <button aria-controls="bench-panel" aria-expanded="false" class="bench-object" type="button">
+                  <span class="bench-sketch"
+                    ><svg aria-hidden="true" focusable="false" viewBox="0 0 160 110">
+                      <ellipse cx="62" cy="28" fill="#fcfaf0" rx="30" ry="9" stroke="#282d27" stroke-width="1.5"/>
+                      <path d="M32 28 V80 C 32 92, 92 92, 92 80 V28" fill="#fcfaf0" stroke="#282d27" stroke-width="1.5"/>
+                      <path d="M32 46 C 32 56, 92 56, 92 46 M32 63 C 32 73, 92 73, 92 63" fill="none" stroke="#6b745d" stroke-width="1.25"/>
+                      <circle cx="122" cy="34" fill="#e6ebdd" r="5" stroke="#455c47" stroke-width="1.25"/>
+                      <circle cx="136" cy="56" fill="#e6ebdd" r="5" stroke="#455c47" stroke-width="1.25"/>
+                      <circle cx="116" cy="74" fill="#e6ebdd" r="5" stroke="#455c47" stroke-width="1.25"/>
+                      <path d="M92 50 L117 36 M92 56 L131 56 M92 62 L112 72" stroke="#455c47" stroke-dasharray="3 3" stroke-width="1.25"/>
+                    </svg></span>
+                  <span class="bench-label">ScholarAI</span>
+                  <span class="bench-note">hackathon · team project</span>
+                </button>
+                <div class="bench-detail">
+                  <p class="bench-tags">Other experiments</p>
+                  <h2 class="bench-title"><a href="/projects/scholarai/">ScholarAI</a></h2>
+                  <p class="compact-meta">Jun 2026 · 5-person team · Python, pgvector</p>
+                  <p>
+                    Scheme-discovery platform from the USAII Global AI Hackathon
+                    2026. Our team was a finalist among 6,081+ participants. My
+                    part was the data engineering: normalization, embeddings,
+                    and pgvector ingestion for 1,008 schemes.
+                  </p>
+                  <div class="project-links">
+                    <a class="pill-btn" href="/projects/scholarai/">Case study</a>
+                    <a class="pill-btn" href="https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI" rel="noopener">Team repo</a>
+                    <a class="pill-btn" href="https://github.com/faridabachir769-code/USAII_GlobalAI-Hackathon-2026_ScholarAI/tree/main/data-engineering" rel="noopener">My code (data-engineering/)</a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <aside aria-labelledby="bench-panel-title" class="bench-panel" hidden id="bench-panel" tabindex="-1">
+          <div class="bench-panel-bar">
+            <p class="bench-panel-kicker" id="bench-panel-title">Project</p>
+            <button aria-label="Close project and return to the overview" class="bench-close" type="button">Close</button>
+          </div>
+          <div class="bench-panel-body"></div>
+          <nav aria-label="Browse projects" class="bench-panel-nav">
+            <button data-step="-1" type="button">← Previous</button>
+            <button data-step="1" type="button">Next →</button>
+          </nav>
+        </aside>
+      </div>
+
+      <p class="explore-foot">
+        Positions are fixed so the layout is the same on every visit. Lines join
+        projects that share a technology or idea; they do not imply a shared
+        codebase.
+      </p>
+    </main>
+    <footer class="site-footer container">
+      <p>Utkarsh Sonawane · Penn State</p>
+      <nav aria-label="Contact">
+        <a href="mailto:utkarshsonawane@psu.edu">Email</a
+        ><a href="https://github.com/sonawaneutkarsh">GitHub</a
+        ><a href="https://www.linkedin.com/in/sonawaneutkarsh/">LinkedIn</a
+        ><a href="/resume.pdf">Résumé</a>
+      </nav>
+    </footer>
+    <script src="/script.js"></script>
+    <script src="/js/explore.js" type="module"></script>
+  </body>
+</html>

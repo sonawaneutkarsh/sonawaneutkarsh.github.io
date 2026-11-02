@@ -1,0 +1,453 @@
+/* Illustrated ADR extraction workflow. Loaded only on its own page.
+   State classes on .adr-demo (show-drugs … show-caution) reveal each stage;
+   the HTML ships with all of them so the page is complete without JS. */
+
+:root {
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.adr-demo-page main.container {
+  max-width: 760px;
+}
+.adr-demo-page h1 {
+  max-width: 22ch;
+  margin-bottom: 16px;
+}
+
+.adr-notice {
+  margin: 0 0 40px;
+  padding: 16px 20px;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--sage);
+  border-radius: 6px;
+  background: var(--wash);
+  font: 15px/1.6 var(--sans);
+}
+.adr-notice p {
+  margin: 0;
+}
+.adr-notice .adr-notice-title {
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: var(--sage-hover);
+}
+
+.adr-demo h2 {
+  margin-bottom: 16px;
+}
+.adr-examples,
+.adr-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.adr-controls[hidden] {
+  display: none;
+}
+.adr-examples {
+  margin-bottom: 16px;
+}
+.adr-demo button {
+  font: 14px/1.3 var(--sans);
+  border-radius: 999px;
+  padding: 6px 14px;
+  background: var(--paper);
+  transition:
+    background-color 160ms,
+    color 160ms;
+}
+.adr-demo button:hover:not(:disabled) {
+  background: var(--sage-soft);
+}
+.adr-demo button[aria-pressed="true"] {
+  background: var(--sage);
+  color: var(--paper);
+}
+.adr-demo button:disabled {
+  color: var(--muted);
+  border-color: var(--rule);
+  cursor: default;
+}
+
+.adr-demo.is-settling *,
+.adr-demo.is-settling *::after {
+  transition: none !important;
+}
+
+/* ---------- stepper ---------- */
+.adr-stepper {
+  display: none;
+}
+.adr-demo.is-enhanced .adr-stepper {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  counter-reset: none;
+}
+.adr-stepper li {
+  position: relative;
+}
+.adr-demo .adr-stepper button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  height: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border-color: var(--rule);
+  text-align: left;
+  font-size: 13px;
+  color: var(--ink);
+}
+.adr-stepper button span {
+  font: 12px/1 var(--sans);
+  color: var(--muted);
+}
+.adr-stepper li.is-done button {
+  border-color: var(--sage);
+}
+.adr-demo .adr-stepper button[aria-current="step"] {
+  border-color: var(--sage);
+  background: var(--sage);
+  color: var(--paper);
+}
+.adr-stepper button[aria-current="step"] span {
+  color: var(--sage-soft);
+}
+
+/* ---------- the post ---------- */
+.adr-example {
+  margin: 0 0 24px;
+}
+.adr-example[hidden] {
+  display: none;
+}
+.adr-example + .adr-example {
+  margin-top: 32px;
+}
+.adr-example-label {
+  margin-bottom: 8px;
+  font: 13px/1.5 var(--sans);
+  color: var(--muted);
+}
+.adr-post {
+  position: relative;
+  padding: 18px 22px 22px;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--paper);
+  box-shadow: 0 10px 24px -22px rgba(40, 45, 39, 0.5);
+}
+.adr-post-meta {
+  margin: 0 0 4px;
+  font: 12px/1.5 var(--mono);
+  color: var(--muted);
+}
+.adr-text {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding-top: 18px;
+  font: 21px/2.5 var(--serif);
+  overflow-wrap: break-word;
+}
+.adr-links {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: visible;
+  pointer-events: none;
+}
+
+mark[data-kind] {
+  color: inherit;
+  background: transparent;
+  border-radius: 3px;
+  padding: 1px 2px;
+  transition:
+    background-color 320ms var(--ease-out),
+    box-shadow 320ms var(--ease-out);
+}
+.show-drugs mark[data-kind="drug"],
+.adr-legend mark[data-kind="drug"] {
+  background: var(--sage-soft);
+  box-shadow: inset 0 -2px 0 var(--sage);
+}
+.show-reactions mark[data-kind="reaction"],
+.adr-legend mark[data-kind="reaction"] {
+  background: var(--wash);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+mark[data-norm]::after {
+  content: " " attr(data-norm);
+  display: inline-block;
+  max-width: 0;
+  overflow: hidden;
+  vertical-align: super;
+  font: 11px/1 var(--sans);
+  color: var(--muted);
+  opacity: 0;
+  transition:
+    opacity 280ms var(--ease-out),
+    max-width 360ms var(--ease-out);
+  white-space: nowrap;
+}
+.show-reactions mark[data-norm]::after {
+  max-width: 12em;
+  opacity: 1;
+  margin-left: 3px;
+}
+
+.adr-link path {
+  fill: none;
+  stroke: var(--sage);
+  stroke-width: 1.5;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  transition:
+    stroke-dashoffset 700ms var(--ease-out),
+    opacity 200ms;
+}
+.show-pairs .adr-link path {
+  stroke-dashoffset: 0;
+  opacity: 1;
+}
+.adr-demo.is-drawing .adr-link path {
+  stroke-dashoffset: 1;
+  transition: none;
+}
+.adr-link-badge {
+  opacity: 0;
+  transition: opacity 240ms 300ms;
+}
+.show-pairs .adr-link-badge {
+  opacity: 1;
+}
+.adr-link-badge circle {
+  fill: var(--paper);
+  stroke: var(--sage);
+  stroke-width: 1.25;
+}
+.adr-link-badge text {
+  font: 600 10px/1 var(--sans);
+  fill: var(--sage-hover);
+}
+.show-review .adr-link[data-verdict="rejected"] path {
+  stroke: var(--ink);
+  stroke-dasharray: 0.03 0.02;
+}
+.show-review .adr-link[data-verdict="flagged"] path {
+  stroke-dasharray: 0.05 0.025;
+}
+.show-review .adr-link[data-verdict="uncertain"] path {
+  stroke: var(--muted);
+  stroke-dasharray: 0.01 0.02;
+}
+.show-review .adr-link[data-verdict="rejected"] .adr-link-badge circle {
+  stroke: var(--ink);
+}
+
+/* ---------- candidate pairs ---------- */
+.adr-pairs {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: none;
+}
+.show-pairs .adr-pairs {
+  display: block;
+}
+.adr-pairs li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 12px;
+  align-items: baseline;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+  font: 15px/1.5 var(--sans);
+  animation: adr-rise 360ms var(--ease-out);
+}
+.adr-pairs li::before {
+  content: attr(data-number);
+  grid-row: span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--sage);
+  border-radius: 50%;
+  font: 600 11px/1 var(--sans);
+  color: var(--sage-hover);
+}
+.adr-pair b {
+  font-weight: 600;
+}
+.adr-verdict,
+.adr-chip {
+  justify-self: start;
+  font: 12px/1.4 var(--sans);
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  color: var(--muted);
+}
+.adr-verdict {
+  grid-column: 2;
+}
+.adr-pairs .adr-verdict {
+  font-size: 0;
+  padding: 0;
+  border: 0;
+}
+.adr-pairs .adr-verdict::before {
+  content: "Candidate";
+  display: inline-block;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px dashed var(--muted);
+}
+.show-review .adr-pairs .adr-verdict {
+  font-size: 12px;
+  padding: 2px 8px;
+  border: 1px solid var(--rule);
+}
+.show-review .adr-pairs .adr-verdict::before {
+  content: none;
+}
+.show-review [data-verdict="supported"] > .adr-verdict,
+.adr-chip[data-verdict="supported"] {
+  background: var(--sage-soft);
+  border-color: var(--sage);
+  color: var(--sage-hover);
+}
+.show-review [data-verdict="rejected"] > .adr-verdict,
+.adr-chip[data-verdict="rejected"] {
+  border-color: var(--ink);
+  color: var(--ink);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+.show-review [data-verdict="flagged"] > .adr-verdict,
+.adr-chip[data-verdict="flagged"] {
+  border-style: dashed;
+  border-color: var(--sage);
+  color: var(--sage-hover);
+}
+.show-review [data-verdict="uncertain"] > .adr-verdict,
+.adr-chip[data-verdict="uncertain"] {
+  border-style: dotted;
+  border-color: var(--muted);
+}
+.adr-reason {
+  grid-column: 2;
+  display: none;
+  color: var(--muted);
+  font-size: 14px;
+}
+.show-review .adr-reason {
+  display: block;
+}
+.show-caution .adr-pairs [data-verdict="supported"] .adr-reason::after {
+  content: " Reported together, not shown to be caused.";
+  color: var(--ink);
+}
+
+/* ---------- explanations and controls ---------- */
+.adr-explanations {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+}
+.adr-explanations li {
+  padding: 16px 0 4px;
+}
+.adr-explanations li[hidden] {
+  display: none;
+}
+.adr-demo.is-enhanced .adr-explanations li {
+  animation: adr-rise 360ms var(--ease-out);
+}
+.adr-explanations h3 {
+  margin-bottom: 8px;
+}
+.adr-explanations p {
+  font: 17px/1.7 var(--serif);
+  max-width: 62ch;
+}
+.adr-explanations li[data-for="6"] {
+  border-left: 3px solid var(--sage);
+  padding-left: 16px;
+}
+.adr-progress {
+  flex: 1;
+  margin: 0;
+  text-align: center;
+  font: 13px/1.5 var(--sans);
+  color: var(--muted);
+}
+@keyframes adr-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.adr-legend {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+.adr-legend h2 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+.adr-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 24px;
+  font: 14px/1.6 var(--sans);
+}
+.adr-legend mark {
+  margin-right: 6px;
+}
+.adr-legend .adr-chip {
+  margin-right: 6px;
+}
+.adr-legend + .notebook-crosslink {
+  margin-top: 24px;
+}
+
+@media (max-width: 719px) {
+  .adr-demo.is-enhanced .adr-stepper {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .adr-text {
+    font-size: 18px;
+  }
+  .adr-post {
+    padding: 14px 16px 18px;
+  }
+  .adr-legend ul {
+    grid-template-columns: 1fr;
+  }
+  .adr-controls {
+    justify-content: space-between;
+  }
+  .adr-progress {
+    order: -1;
+    flex-basis: 100%;
+    text-align: left;
+  }
+}
