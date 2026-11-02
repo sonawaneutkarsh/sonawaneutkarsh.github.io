@@ -166,8 +166,11 @@ Added:
 - `css/interactive.css` (homepage only), `css/explore.css`, `css/adr-demo.css`
 - `explore/index.html`, `notebook/adr-extraction-demo/index.html`
 - `images/previews/*-640.webp`, made by `scripts/make_preview_posters.mjs`
-- `tests/e2e/run.mjs`, `tests/e2e/perf.mjs`, `tests/e2e/lib/{browser,server}.mjs`
-- `docs/portfolio-v3/` (this file and screenshots)
+- `tests/e2e/run.mjs`, `tests/e2e/firefox.mjs`, `tests/e2e/perf.mjs`,
+  `tests/e2e/lib/{browser,server}.mjs`
+- `.github/workflows/browser-tests.yml` (read-only browser CI, no deploy)
+- `docs/portfolio-v3/`: this file, plus screenshots rendered in CI. The
+  Chrome set has no prefix; the Firefox set is named `firefox-*.png`.
 
 Changed:
 
