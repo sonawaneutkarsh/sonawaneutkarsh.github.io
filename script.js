@@ -107,9 +107,32 @@ function initTOC() {
 }
 
 // ==========================================================================
+// Primary navigation: mark the section the current page belongs to
+// ==========================================================================
+function initNavState() {
+  const path = window.location.pathname;
+  const sections = [
+    ["/notebook/", "/notebook/"],
+    ["/blog/", "/blog/"],
+    ["/projects/", "/#projects"],
+    ["/explore/", "/#projects"],
+  ];
+  const match = sections.find(([prefix]) => path.startsWith(prefix));
+  if (!match) return;
+  document
+    .querySelectorAll('nav[aria-label="Primary"] a')
+    .forEach((link) => {
+      if (link.getAttribute("href") === match[1]) {
+        link.setAttribute("aria-current", path === match[0] ? "page" : "true");
+      }
+    });
+}
+
+// ==========================================================================
 // Lifecycle Init
 // ==========================================================================
 document.addEventListener("DOMContentLoaded", () => {
   initCopyEmail();
   initTOC();
+  initNavState();
 });

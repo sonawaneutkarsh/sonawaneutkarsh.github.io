@@ -24,7 +24,8 @@ class Collector(HTMLParser):
         a = dict(attrs)
         if a.get("id"):
             self.ids.add(a["id"])
-        for key in ("href", "src", "poster"):
+        # data-video/data-poster feed the homepage's lazily created previews.
+        for key in ("href", "src", "poster", "data-video", "data-poster"):
             if a.get(key):
                 self.refs.append((tag, key, a[key]))
         if tag == "meta" and a.get("http-equiv", "").lower() == "refresh":

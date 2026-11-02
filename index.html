@@ -28,6 +28,7 @@
     <meta content="summary_large_image" name="twitter:card">
 
     <link href="styles.css" rel="stylesheet">
+    <link href="/css/interactive.css" rel="stylesheet">
     <link href="/favicon.svg" rel="icon" type="image/svg+xml">
     <link href="/favicon.ico" rel="icon" sizes="any">
     <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
@@ -130,13 +131,15 @@
           Things I’ve built, and what I learned from them.
         </p>
         <article class="project-row">
-          <img
-            alt=""
-            class="illustration"
-            height="433"
-            loading="lazy"
-            src="/images/illustrations/nytr-v2.webp"
-            width="645">
+          <div class="project-media" data-preview="video" data-name="Nytr" data-video="/videos/nytr-demo.mp4" data-poster="/images/previews/nytr-demo-poster-640.webp" data-caption="Demo recording · muted">
+            <img
+              alt=""
+              class="illustration"
+              height="433"
+              loading="lazy"
+              src="/images/illustrations/nytr-v2.webp"
+              width="645">
+          </div>
           <div>
             <h3><a href="/projects/nytr/">Nytr</a></h3>
             <p>
@@ -145,6 +148,7 @@
               client.
             </p>
             <p class="project-status">
+              Development paused ·
               <a
                 href="/blog/why-i-stopped-working-on-nytr-problems-and-lessons/"
                 >lessons from building it</a
@@ -184,13 +188,15 @@
           </div>
         </article>
         <article class="project-row">
-          <img
-            alt=""
-            class="illustration"
-            height="308"
-            loading="lazy"
-            src="/images/illustrations/clage.webp"
-            width="386">
+          <div class="project-media" data-preview="video" data-overlay="network" data-name="Clage" data-video="/videos/clage-studio-demo.mp4" data-poster="/images/previews/clage-studio-demo-poster-640.webp" data-caption="Clage Studio demo · muted">
+            <img
+              alt=""
+              class="illustration"
+              height="308"
+              loading="lazy"
+              src="/images/illustrations/clage.webp"
+              width="386">
+          </div>
           <div>
             <h3><a href="/projects/clage/">Clage</a></h3>
             <p>
@@ -230,13 +236,15 @@
           </div>
         </article>
         <article class="project-row">
-          <img
-            alt=""
-            class="illustration"
-            height="371"
-            loading="lazy"
-            src="/images/illustrations/talks-v2.webp"
-            width="486">
+          <div class="project-media" data-preview="diagram" data-diagram="talks" data-name="Talks" data-caption="Illustration, not a device recording">
+            <img
+              alt=""
+              class="illustration"
+              height="371"
+              loading="lazy"
+              src="/images/illustrations/talks-v2.webp"
+              width="486">
+          </div>
           <div>
             <h3><a href="/projects/talks/">Talks</a></h3>
             <p>
@@ -273,13 +281,15 @@
           </div>
         </article>
         <article class="project-row">
-          <img
-            alt=""
-            class="illustration"
-            height="357"
-            loading="lazy"
-            src="/images/illustrations/devvy.webp"
-            width="464">
+          <div class="project-media" data-preview="diagram" data-diagram="devvy" data-name="Devvy" data-caption="Illustration of the daemon’s choice">
+            <img
+              alt=""
+              class="illustration"
+              height="357"
+              loading="lazy"
+              src="/images/illustrations/devvy.webp"
+              width="464">
+          </div>
           <div>
             <h3><a href="/projects/devvy/">Devvy</a></h3>
             <p>
@@ -411,7 +421,7 @@
       </section>
       <section id="research">
         <h2>Research</h2>
-        <div class="research-entry">
+        <div class="research-entry" data-reveal>
           <img
             alt=""
             class="illustration"
@@ -458,7 +468,7 @@
         <p class="research-crosslink">
           <a href="/#research">Undergraduate Research Assistant → Research</a>
         </p>
-        <div class="experience-list">
+        <div class="experience-list" data-reveal>
           <div class="exp-item">
             <div class="exp-header">
               <h3 class="exp-role-org">
@@ -555,5 +565,6 @@
       </nav>
     </footer>
     <script src="/script.js"></script>
+    <script src="/js/home.js" type="module"></script>
   </body>
 </html>
