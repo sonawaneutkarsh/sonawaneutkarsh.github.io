@@ -250,7 +250,7 @@
   position: absolute;
   top: 8px;
   left: 8px;
-  max-width: calc(100% - 16px);
+  max-width: calc(100% - 60px);
   padding: 1px 7px;
   border-radius: 3px;
   background: rgba(252, 250, 240, 0.94);
@@ -276,7 +276,8 @@
   position: absolute;
   inset: 0;
   display: flex;
-  align-items: flex-end;
+  /* Top-right: the bottom of the Talks and Devvy diagrams carries labels. */
+  align-items: flex-start;
   justify-content: flex-end;
   width: 100%;
   min-height: 0;
@@ -301,7 +302,7 @@
   color: var(--sage);
   font: 12px/1.4 var(--sans);
   opacity: 0;
-  transform: translateY(4px);
+  transform: translateY(-4px);
   transition:
     opacity 200ms var(--ease-out),
     transform 260ms var(--ease-out);

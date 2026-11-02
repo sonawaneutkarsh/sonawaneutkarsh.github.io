@@ -189,10 +189,12 @@ export class Page {
   }
 
   async box(selector) {
-    const box = await this.eval((sel) => {
+    const box = await this.eval(async (sel) => {
       const el = document.querySelector(sel);
       if (!el) return null;
       el.scrollIntoView({ block: "center", inline: "nearest", behavior: "instant" });
+      // Let scroll listeners (e.g. the explorer's viewport guard) run first.
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
       const r = el.getBoundingClientRect();
       return { x: r.x + r.width / 2, y: r.y + r.height / 2, width: r.width, height: r.height };
     }, selector);
@@ -233,6 +235,30 @@ export class Page {
   async tap(selector) {
     const { x, y } = await this.box(selector);
     await this.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x, y }] });
+    await this.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+  }
+
+  /**
+   * Real touch gesture through Chrome's input pipeline (so touch-action,
+   * scrolling and pointer events behave as on a device). `fingers` is a list
+   * of [from, to] points; all fingers go down together and move in `steps`.
+   */
+  async touchGesture(fingers, { steps = 12, interval = 16 } = {}) {
+    const at = (i) =>
+      fingers.map(([from, to], id) => ({
+        id,
+        x: from.x + ((to.x - from.x) * i) / steps,
+        y: from.y + ((to.y - from.y) * i) / steps,
+        radiusX: 4,
+        radiusY: 4,
+        force: 1,
+      }));
+    await this.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: at(0) });
+    for (let i = 1; i <= steps; i++) {
+      await sleep(interval);
+      await this.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: at(i) });
+    }
+    await sleep(interval);
     await this.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
   }
 

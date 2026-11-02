@@ -320,13 +320,388 @@ const suites = {
       check(`explore ${width}: no overflow`, (await overflow()) <= 0);
       await shot(`explore-mobile-${width}`);
     }
+  },
+
+  /* Back/Forward: every user-visible state is one history entry, popstate
+     replays it, and nothing pushes during replay. */
+  async history() {
+    const st = () =>
+      page.eval(() => ({
+        len: history.length,
+        url: location.pathname + location.search + location.hash,
+        open: Boolean(document.getElementById("bench-panel") && !document.getElementById("bench-panel").hidden),
+        title: document.querySelector("#bench-panel .bench-title")?.textContent.trim() || null,
+        filter: document.querySelector('[data-filter][aria-pressed="true"]')?.dataset.filter || null,
+        list: Boolean(document.getElementById("bench")?.classList.contains("is-list")),
+      }));
+    const back = async () => {
+      await page.eval(() => history.back());
+      await page.wait(350);
+      return st();
+    };
+    const fwd = async () => {
+      await page.eval(() => history.forward());
+      await page.wait(350);
+      return st();
+    };
+
+    // Arrive from another page, so Back can also leave the explorer.
+    await open("/");
+    await page.eval(() => {
+      location.href = "/explore/";
+    });
+    await page.once("Page.loadEventFired");
+    await page.wait(300);
+    const start = await st();
+    check("history: initial load adds no extra entry", start.url === "/explore/" && !start.open, JSON.stringify(start));
+
+    await page.click("#clage .bench-object");
+    await page.wait(200);
+    const opened = await st();
+    check("history: opening a project pushes one entry", opened.len === start.len + 1 && opened.url === "/explore/#clage", JSON.stringify(opened));
+    await page.click('#bench-panel [data-step="1"]');
+    await page.wait(200);
+    await page.click('#bench-panel [data-step="1"]');
+    await page.wait(200);
+    const browsed = await st();
+    check("history: Previous/Next replace the entry instead of stacking", browsed.len === opened.len && browsed.title === "Nytr" && browsed.url === "/explore/#nytr", JSON.stringify(browsed));
+    let s1 = await back();
+    check("history: Back from a browsed project returns to the overview", !s1.open && s1.url === "/explore/", JSON.stringify(s1));
+    check("history: Back returns focus to the last project, not the body", await page.eval(() => document.activeElement && document.activeElement.classList.contains("bench-object")));
+    s1 = await fwd();
+    check("history: Forward reopens the same project", s1.open && s1.url === `/explore/#${browsed.url.split("#")[1]}`, JSON.stringify(s1));
+    await page.key("Escape");
+    await page.wait(350);
+    const closed = await st();
+    check("history: Esc on a pushed entry goes Back (no new entry)", !closed.open && closed.url === "/explore/" && closed.len === opened.len, JSON.stringify(closed));
+    const afterClose = await fwd();
+    check("history: Forward after Esc reopens it", afterClose.open, JSON.stringify(afterClose));
+    await page.click(".bench-close");
+    await page.wait(350);
+
+    await page.click('[data-filter="apps"]');
+    await page.wait(200);
+    await page.click('[data-filter="systems"]');
+    await page.wait(200);
+    const filtered = await st();
+    check("history: filters push entries", filtered.url === "/explore/?filter=systems" && filtered.filter === "systems");
+    let f = await back();
+    check("history: Back restores the previous filter", f.filter === "apps" && f.url === "/explore/?filter=apps", JSON.stringify(f));
+    check("history: restored filter re-mutes entries", await page.eval(() => document.querySelector("#devvy").classList.contains("is-muted") && !document.querySelector("#nytr").classList.contains("is-muted")));
+    f = await back();
+    check("history: Back again restores All", f.filter === "all" && f.url === "/explore/", JSON.stringify(f));
+    f = await fwd();
+    check("history: Forward restores the filter", f.filter === "apps", JSON.stringify(f));
+
+    await page.click("#talks .bench-object");
+    await page.wait(200);
+    await page.click('[data-filter="ai"]');
+    await page.wait(300);
+    const hidden = await st();
+    check("history: a filter that hides the open project closes it", !hidden.open && hidden.url === "/explore/?filter=ai", JSON.stringify(hidden));
+    f = await back();
+    check("history: Back brings the project and its filter back together", f.open && f.title === "Talks" && f.filter === "apps", JSON.stringify(f));
+    await page.click(".bench-close");
+    await page.wait(350);
+
+    await page.click('[data-mode="list"]');
+    await page.wait(200);
+    const listed = await st();
+    check("history: switching to list view pushes an entry", listed.list && listed.url.includes("view=list"), JSON.stringify(listed));
+    f = await back();
+    check("history: Back returns to the workbench", !f.list && !f.url.includes("view="), JSON.stringify(f));
+    check("history: workbench redraws its connectors after list view", await page.eval(() => document.querySelectorAll(".bench-link").length === 4));
+    f = await fwd();
+    check("history: Forward returns to list view", f.list, JSON.stringify(f));
+
+    // Replay must not create entries: walk all the way back and forward.
+    const top = await st();
+    for (let i = 0; i < 2; i++) await back();
+    const bottom = await st();
+    for (let i = 0; i < 2; i++) await fwd();
+    const again = await st();
+    check("history: Back/Forward replay creates no entries (no loops)", again.len === top.len && again.url === top.url && bottom.url === "/explore/", `${top.url} → ${bottom.url} → ${again.url}, len ${top.len}/${again.len}`);
+
+    // Leaving: from the first explorer entry, Back leaves the page.
+    await open("/");
+    await page.eval(() => {
+      location.href = "/explore/";
+    });
+    await page.once("Page.loadEventFired");
+    await page.wait(300);
+    await page.click("#nytr .bench-object");
+    await page.wait(200);
+    await back();
+    await page.eval(() => history.back());
+    await page.once("Page.loadEventFired").catch(() => {});
+    await page.wait(400);
+    check("history: Back from the overview leaves for the previous page", await page.eval(() => location.pathname === "/"));
+
+    // Deep link: Close replaces (there is no explorer entry to go back to).
+    await open("/");
+    await page.eval(() => {
+      location.href = "/explore/?filter=ai#pyopt";
+    });
+    await page.once("Page.loadEventFired");
+    await page.wait(400);
+    const deep = await st();
+    check("history: deep link opens the filtered project", deep.open && deep.title === "PyOpt" && deep.filter === "ai", JSON.stringify(deep));
+    await page.click(".bench-close");
+    await page.wait(300);
+    const deepClosed = await st();
+    check("history: closing a deep link replaces it (same length, hash cleared)", !deepClosed.open && deepClosed.len === deep.len && deepClosed.url === "/explore/?filter=ai", JSON.stringify(deepClosed));
+    await page.eval(() => history.back());
+    await page.once("Page.loadEventFired").catch(() => {});
+    await page.wait(400);
+    check("history: Back after closing a deep link leaves the page", await page.eval(() => location.pathname === "/"));
+    await page.eval(() => history.forward());
+    await page.once("Page.loadEventFired").catch(() => {});
+    await page.wait(400);
+    check("history: Forward into the explorer restores its closed, filtered state", await page.eval(() => location.search === "?filter=ai" && document.getElementById("bench-panel").hidden));
+
+    await open("/explore/?filter=nonsense#not-a-project");
+    check("history: unknown filter and hash are normalized without an entry", await page.eval(() => location.search === "" && location.hash === "" && document.querySelector('[data-filter="all"]').getAttribute("aria-pressed") === "true"));
+    check("history: no console errors during history replay", page.errors.length === 0, page.errors.join("; "));
+  },
+
+  /* Real touch gestures through Chrome's input pipeline (touch emulation on). */
+  async touch() {
     await open("/explore/", { width: 390, height: 844, touch: true });
+    check("touch: phone starts in list view", await page.eval(() => document.getElementById("bench").classList.contains("is-list")));
+    const scroll0 = await page.eval(() => scrollY);
+    await page.touchGesture([[{ x: 200, y: 700 }, { x: 205, y: 300 }]]);
+    await page.wait(600);
+    check("touch: list view scrolls the page with a vertical swipe", (await page.eval(() => scrollY)) > scroll0 + 100);
+
     await page.tap('[data-mode="bench"]');
     await page.wait(300);
-    await page.tap("#talks .bench-object");
-    check("explore touch: workbench mode opens a project on tap", await until(() => !document.getElementById("bench-panel").hidden));
+    check("touch: hint describes touch gestures", await page.eval(() => /pinch with two fingers/.test(document.querySelector(".bench-hint").textContent)));
+    await page.eval(() => document.getElementById("bench").scrollIntoView({ block: "center", behavior: "instant" }));
+    await page.wait(200);
+    const frame = await page.eval(() => document.querySelector(".bench-viewport").getBoundingClientRect().toJSON());
+    const c = { x: frame.x + frame.width / 2, y: frame.y + frame.height / 2 };
+    const t = () => page.eval(() => document.querySelector(".bench-plane").style.transform);
+    const nums = (v) => (v.match(/-?\d+(\.\d+)?/g) || []).map(Number);
+    const offscreen = () =>
+      page.eval(() => {
+        const f = document.querySelector(".bench-viewport").getBoundingClientRect();
+        const r = document.querySelector("#talks .bench-object").getBoundingClientRect();
+        return r.right > f.right;
+      });
+    check("touch: Talks starts (at least partly) off to the right on a phone", await offscreen());
+
+    const before = nums(await t());
+    const y0 = await page.eval(() => scrollY);
+    await page.touchGesture([[{ x: c.x + 120, y: c.y }, { x: c.x - 120, y: c.y + 6 }]]);
+    await page.wait(300);
+    const after = nums(await t());
+    check("touch: one-finger sideways swipe pans the bench", after[0] < before[0] - 150, `${before} → ${after}`);
+    check("touch: sideways swipe does not scroll the page", (await page.eval(() => scrollY)) === y0);
+
+    const yBefore = await page.eval(() => scrollY);
+    const tBefore = await t();
+    await page.touchGesture([[{ x: c.x, y: c.y + 160 }, { x: c.x + 4, y: c.y - 160 }]]);
+    await page.wait(600);
+    check("touch: vertical swipe over the bench scrolls the page", (await page.eval(() => scrollY)) > yBefore + 80);
+    check("touch: vertical swipe leaves the bench where it was", (await t()) === tBefore, `${tBefore} vs ${await t()}`);
+
+    await page.eval(() => document.getElementById("bench").scrollIntoView({ block: "center", behavior: "instant" }));
+    await page.wait(200);
+    const f2 = await page.eval(() => document.querySelector(".bench-viewport").getBoundingClientRect().toJSON());
+    const c2 = { x: f2.x + f2.width / 2, y: f2.y + f2.height / 2 };
+    const s0 = nums(await t())[2];
+    await page.touchGesture([
+      [{ x: c2.x - 30, y: c2.y }, { x: c2.x - 100, y: c2.y }],
+      [{ x: c2.x + 30, y: c2.y }, { x: c2.x + 100, y: c2.y }],
+    ]);
+    await page.wait(300);
+    const s1 = nums(await t())[2];
+    check("touch: two-finger pinch out zooms the bench in", s1 > s0 * 2.5, `${s0} → ${s1}`);
+    check("touch: pinch does not zoom the page itself", await page.eval(() => !window.visualViewport || window.visualViewport.scale === 1));
+    check("touch: pinch does not open a project", await page.eval(() => document.getElementById("bench-panel").hidden));
+    await page.touchGesture([
+      [{ x: c2.x - 120, y: c2.y }, { x: c2.x - 20, y: c2.y }],
+      [{ x: c2.x + 120, y: c2.y }, { x: c2.x + 20, y: c2.y }],
+    ]);
+    await page.wait(300);
+    const s2 = nums(await t())[2];
+    check("touch: pinch in zooms out, bounded at 0.25", s2 < s1 && s2 >= 0.25 - 1e-6, `${s1} → ${s2}`);
+
+    await page.tap('[data-zoom="reset"]');
+    await page.wait(900);
+    await page.eval(() => document.getElementById("bench").scrollIntoView({ block: "center", behavior: "instant" }));
+    await page.wait(200);
+    const f3 = await page.eval(() => document.querySelector(".bench-viewport").getBoundingClientRect().toJSON());
+    const c3 = { x: f3.x + f3.width / 2, y: f3.y + f3.height / 2 };
+    // Swipe until Talks is fully in view, like a visitor would, then tap it.
+    for (let i = 0; i < 4 && (await offscreen()); i++) {
+      await page.touchGesture([[{ x: c3.x + 60, y: c3.y }, { x: c3.x - 60, y: c3.y }]]);
+      await page.wait(200);
+    }
+    check("touch: swiping brings Talks fully into view", !(await offscreen()));
+    const talks = await page.eval(() => {
+      const r = document.querySelector("#talks .bench-object").getBoundingClientRect();
+      return { x: r.x + r.width / 2, y: r.y + r.height / 2 };
+    });
+    await page.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [talks] });
+    await page.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+    check("touch: tapping a project after panning opens it", await until(() => !document.getElementById("bench-panel").hidden && document.querySelector("#bench-panel .bench-title").textContent.trim() === "Talks"));
     await page.wait(500);
     await shot("explore-mobile-bench-panel");
+    const sheet = await page.eval(() => {
+      const p = document.getElementById("bench-panel").getBoundingClientRect();
+      const f = document.querySelector(".bench-viewport").getBoundingClientRect();
+      return p.left >= f.left && p.right <= f.right + 1 && p.bottom <= f.bottom + 1;
+    });
+    check("touch: the panel is a bottom sheet inside the bench", sheet);
+    check("touch: the selected card is visible above the bottom sheet", await page.eval(() => {
+      const f = document.querySelector(".bench-viewport").getBoundingClientRect();
+      const p = document.getElementById("bench-panel").getBoundingClientRect();
+      const r = document.querySelector("#talks .bench-object").getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
+      return cx > f.left && cx < f.right && cy > f.top && cy < p.top;
+    }));
+    check("touch: no console errors", page.errors.length === 0, page.errors.join("; "));
+  },
+
+  /* Does each non-ASCII glyph the pages use actually render in the page's own
+     fonts? A glyph is "missing" when it rasterizes exactly like a code point no
+     font has (U+10FFFD). Set REQUIRE_GLYPHS=1 to fail on missing glyphs (CI,
+     where the runner has DejaVu fonts); otherwise they are reported only. */
+  async glyphs() {
+    const GLYPHS = ["←", "→", "↗", "−", "·", "—", "–", "×", "’", "“", "”", "é"];
+    for (const [path, selector] of [["/explore/", ".bench-toolbar button"], ["/explore/", ".back-link"], ["/notebook/adr-extraction-demo/", ".adr-explanations p"], ["/", ".hero-lede"]]) {
+      await open(path);
+      const missing = await page.eval(
+        (sel, glyphs) => {
+          const el = document.querySelector(sel);
+          const font = getComputedStyle(el).font;
+          const canvas = document.createElement("canvas");
+          canvas.width = canvas.height = 48;
+          const ctx = canvas.getContext("2d", { willReadFrequently: true });
+          const draw = (ch) => {
+            ctx.clearRect(0, 0, 48, 48);
+            ctx.font = font.replace(/\d+(\.\d+)?px/, "32px");
+            ctx.fillText(ch, 4, 36);
+            return Array.from(ctx.getImageData(0, 0, 48, 48).data).join(",");
+          };
+          const none = draw("\u{10FFFD}");
+          return glyphs.filter((g) => draw(g) === none);
+        },
+        selector,
+        GLYPHS,
+      );
+      const label = `glyphs on ${path} (${selector}): ${missing.length ? `missing ${missing.join(" ")}` : "all render"}`;
+      if (process.env.REQUIRE_GLYPHS) check(label, missing.length === 0);
+      else console.log(`  info ${label}`);
+    }
+  },
+
+  /* Overlap audit: connector labels, cards, zone captions, panel and icons. */
+  async layout() {
+    const audit = () =>
+      page.eval(() => {
+        const box = (el) => el.getBoundingClientRect();
+        const hit = (a, b, pad = 0) => a.left < b.right + pad && a.right + pad > b.left && a.top < b.bottom + pad && a.bottom + pad > b.top;
+        const name = (el) => el.textContent.trim().slice(0, 24);
+        const visible = (el) => getComputedStyle(el.closest(".bench-link, .bench-zone, .bench-item") || el).opacity !== "0";
+        const labels = Array.from(document.querySelectorAll(".bench-link text")).filter(visible);
+        const cards = Array.from(document.querySelectorAll(".bench-object"));
+        const captions = Array.from(document.querySelectorAll(".bench-zone span"));
+        const problems = [];
+        labels.forEach((l, i) => {
+          cards.forEach((c) => hit(box(l), box(c)) && problems.push(`label "${name(l)}" × card ${name(c.querySelector(".bench-label"))}`));
+          captions.forEach((c) => hit(box(l), box(c)) && problems.push(`label "${name(l)}" × caption ${name(c)}`));
+          labels.slice(i + 1).forEach((o) => hit(box(l), box(o)) && problems.push(`label "${name(l)}" × label "${name(o)}"`));
+        });
+        cards.forEach((c, i) =>
+          cards.slice(i + 1).forEach((o) => hit(box(c), box(o)) && problems.push(`card ${name(c.querySelector(".bench-label"))} × card ${name(o.querySelector(".bench-label"))}`)),
+        );
+        cards.forEach((c) => {
+          const zone = c.closest(".bench-plane").querySelector(`.bench-zone[data-zone="${c.closest(".bench-item").dataset.categories.split(" ")[0]}"]`);
+          const z = box(zone);
+          const r = box(c);
+          if (r.left < z.left || r.right > z.right || r.top < z.top || r.bottom > z.bottom) problems.push(`card ${name(c.querySelector(".bench-label"))} outside its zone`);
+          captions.forEach((cap) => hit(r, box(cap)) && problems.push(`card ${name(c.querySelector(".bench-label"))} × caption ${name(cap)}`));
+          const label = c.querySelector(".bench-label");
+          const note = c.querySelector(".bench-note");
+          if (note.scrollWidth > note.clientWidth + 1 || label.scrollWidth > label.clientWidth + 1) problems.push(`card ${name(label)} text overflows`);
+        });
+        return problems;
+      });
+
+    for (const [width, height] of [[1440, 900], [1280, 800], [1024, 768], [900, 1000], [768, 1024]]) {
+      await open("/explore/", { width, height });
+      const p = await audit();
+      check(`layout ${width}: no connector, card or caption overlaps on the workbench`, p.length === 0, p.join("; "));
+      for (const filter of ["ai", "apps"]) {
+        await page.click(`[data-filter="${filter}"]`);
+        await page.wait(900);
+        const q = await audit();
+        check(`layout ${width} filter=${filter}: no overlaps`, q.length === 0, q.join("; "));
+      }
+      await page.click('[data-filter="all"]');
+      await page.wait(300);
+      // Every panel at this width: text stays inside the panel, nothing scrolls sideways.
+      const panelProblems = [];
+      for (const id of ["clage", "pyopt", "nytr", "talks", "medclarity", "devvy", "adr-research", "scholarai"]) {
+        await page.eval((i) => document.querySelector(`#${i} .bench-object`).click(), id);
+        await page.wait(80);
+        const bad = await page.eval(() => {
+          const p = document.getElementById("bench-panel");
+          const body = p.querySelector(".bench-panel-body");
+          const pr = p.getBoundingClientRect();
+          const out = Array.from(body.querySelectorAll("*")).filter((el) => {
+            const r = el.getBoundingClientRect();
+            return r.width && (r.right > pr.right + 1 || r.left < pr.left - 1);
+          });
+          return [body.scrollWidth > body.clientWidth + 1, out.length, pr.right <= document.querySelector(".bench-viewport").getBoundingClientRect().right + 1];
+        });
+        if (bad[0] || bad[1] || !bad[2]) panelProblems.push(`${id}: ${JSON.stringify(bad)}`);
+      }
+      await page.key("Escape");
+      check(`layout ${width}: every detail panel fits without sideways overflow`, panelProblems.length === 0, panelProblems.join("; "));
+    }
+
+    // Preview frames and hero icons: drawings stay inside their frames.
+    for (const width of [1440, 1024, 768, 390, 320]) {
+      await open("/", { width, height: 900, touch: width < 720 });
+      const p = await page.eval(() => {
+        const out = [];
+        document.querySelectorAll(".hero-link").forEach((a) => {
+          const icon = a.querySelector(".hero-icon").getBoundingClientRect();
+          const word = a.querySelector(".hero-word").getBoundingClientRect();
+          if (icon.top > word.bottom || icon.bottom < word.top) out.push(`${a.dataset.heroIcon} icon split from its word`);
+          if (icon.right > word.left + 1 && icon.top === word.top) out.push(`${a.dataset.heroIcon} icon overlaps word`);
+        });
+        const lede = document.querySelector(".hero-lede").getBoundingClientRect();
+        if (lede.right > document.documentElement.clientWidth) out.push("lede overflows");
+        return out;
+      });
+      check(`layout ${width}: hero icons stay with their words and inside the column`, p.length === 0, p.join("; "));
+      for (const name of ["Talks", "Devvy"]) {
+        await page.eval((n) => document.querySelector(`[data-name="${n}"] .preview-toggle`).click(), name);
+        await page.wait(1600);
+        const fit = await page.eval((n) => {
+          const frame = document.querySelector(`[data-name="${n}"]`).getBoundingClientRect();
+          const svg = document.querySelector(`[data-name="${n}"] .preview-diagram`);
+          const texts = Array.from(svg.querySelectorAll("text")).map((t) => t.getBoundingClientRect());
+          const caption = document.querySelector(`[data-name="${n}"] .preview-caption`).getBoundingClientRect();
+          const chip = document.querySelector(`[data-name="${n}"] .preview-chip`).getBoundingClientRect();
+          const overlapsCaption = texts.filter((r) => r.width && r.left < caption.right && r.right > caption.left && r.top < caption.bottom && r.bottom > caption.top).length;
+          const overlapsChip = texts.filter((r) => r.width && r.left < chip.right && r.right > chip.left && r.top < chip.bottom && r.bottom > chip.top).length;
+          const outside = texts.filter((r) => r.width && (r.left < frame.left - 1 || r.right > frame.right + 1)).length;
+          return { overlapsCaption, overlapsChip, outside };
+        }, name);
+        check(`layout ${width}: ${name} preview caption is not truncated`, await page.eval((n) => {
+          const c = document.querySelector(`[data-name="${n}"] .preview-caption`);
+          return c.scrollWidth <= c.clientWidth;
+        }, name));
+        check(`layout ${width}: ${name} diagram labels clear the caption, chip and frame`, !fit.overlapsCaption && !fit.overlapsChip && !fit.outside, JSON.stringify(fit));
+        await page.eval((n) => document.querySelector(`[data-name="${n}"] .preview-toggle`).click(), name);
+      }
+    }
   },
 
   async demo() {
