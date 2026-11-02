@@ -139,11 +139,20 @@ try {
   await open("/");
   check("home: ES modules ran (preview frames enhanced)", await evaluate("document.querySelectorAll('.project-media.is-enhanced').length === 4"));
   await evaluate("(document.querySelector('[data-hero-icon=\"ai\"]').focus(), true)");
+  // Headless Firefox never gives the document focus, so focus events do not
+  // fire there; keyboard focus is covered by the Chrome suite. Use a mouse
+  // pointerenter, which is what a hover delivers.
   const focused = await evaluate("document.hasFocus()");
-  check("home: focusing the AI icon lights it (document focused: " + focused + ")", await until("document.querySelector('[data-hero-icon=\"ai\"]').classList.contains('is-lit')"));
+  if (focused) {
+    check("home: focusing the AI icon lights it", await until("document.querySelector('[data-hero-icon=\"ai\"]').classList.contains('is-lit')"));
+  } else {
+    console.log("  skip home: keyboard focus (headless document has no focus)");
+    await evaluate("(document.querySelector('[data-hero-icon=\"ai\"]').dispatchEvent(new PointerEvent('pointerenter', { pointerType: 'mouse' })), true)");
+    check("home: hovering the AI icon (pointerenter) lights it", await until("document.querySelector('[data-hero-icon=\"ai\"]').classList.contains('is-lit')"));
+  }
   check("home: AI icon reaches the agent loop", await until("Number(document.querySelector('[data-hero-icon=\"ai\"] .a-loop').getAttribute('opacity')) > 0.8", 3000));
   await shot("home-icon-ai");
-  await evaluate("(document.activeElement.blur(), true)");
+  await evaluate("(document.activeElement.blur(), document.querySelector('[data-hero-icon=\"ai\"]').dispatchEvent(new PointerEvent('pointerleave', { pointerType: 'mouse' })), true)");
   await evaluate("(document.querySelector('[data-name=\"Talks\"] .preview-toggle').click(), true)");
   check("home: Talks diagram runs", await until("document.querySelector('[data-name=\"Talks\"]').classList.contains('is-active') && !!document.querySelector('[data-name=\"Talks\"] .preview-diagram')"));
   await sleep(1500);

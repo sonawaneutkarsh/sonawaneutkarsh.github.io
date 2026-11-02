@@ -156,10 +156,32 @@ export class Page {
   }
 
   /** Run `fn` in the page (e.g. set location or call history.back()) and wait for the resulting load. */
+  //  Waits for the main frame to commit (Page.frameNavigated also fires for
+  //  back/forward-cache restores, which fire no load event), then for the
+  //  document to be complete.
   async navigateBy(fn, timeout = 10000) {
-    const loaded = this.once("Page.loadEventFired", timeout);
+    const committed = new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error("Timed out waiting for a main-frame navigation")), timeout);
+      const handler = (p) => {
+        if (p.frame.parentId) return;
+        clearTimeout(timer);
+        const list = this.listeners.get("Page.frameNavigated");
+        list.splice(list.indexOf(handler), 1);
+        resolve(p);
+      };
+      this.on("Page.frameNavigated", handler);
+    });
     await this.eval(fn);
-    await loaded;
+    await committed;
+    const start = Date.now();
+    while (Date.now() - start < timeout) {
+      try {
+        if ((await this.eval("document.readyState")) === "complete") break;
+      } catch {
+        /* context being replaced */
+      }
+      await sleep(50);
+    }
     await sleep(300);
   }
 
