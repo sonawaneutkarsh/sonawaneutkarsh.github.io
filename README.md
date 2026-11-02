@@ -41,10 +41,11 @@ V3 adds motion on top of V2 without changing its content or architecture. See [d
 - **`/explore/`**: an optional workbench of the published projects by area.
 - **`/notebook/adr-extraction-demo/`**: an illustrated walkthrough of the research workflow on synthetic examples.
 
-Everything respects `prefers-reduced-motion` and works as plain content without JavaScript.
+Everything respects `prefers-reduced-motion` and works as plain content without JavaScript. The explorer keeps its filter, view and open project in the URL, so Back/Forward and deep links work. Browser tests run on every pull request in `.github/workflows/browser-tests.yml` (Chrome and Firefox, read-only, no deploy).
 
 ```bash
 node tests/e2e/run.mjs                 # browser regression tests (Node 22+, Chrome/Chromium; set CHROME_PATH if needed)
+node tests/e2e/firefox.mjs             # Firefox smoke tests over WebDriver BiDi (set FIREFOX_PATH if needed)
 SCREENSHOTS=1 node tests/e2e/run.mjs   # also refresh docs/portfolio-v3/screenshots/
 node tests/e2e/perf.mjs                # page weight, paint timing, idle animation frames
 ```

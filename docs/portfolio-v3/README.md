@@ -83,7 +83,10 @@ Talks, Devvy, MedClarity, PyOpt, ScholarAI, and the ADR research entry.
 Positions are fixed in `data-pos`. Dotted lines join projects that share
 something stated on the site: Nytr–Talks (Swift · SwiftUI), Clage–PyOpt
 (machine learning), PyOpt–research (language models), MedClarity–research
-(evidence checks).
+(evidence checks). Lines run under the opaque cards. Each label sits at the
+first point on its curve that clears every card, zone caption and other
+label, and wraps to two lines if one line will not fit. The `layout` test
+suite checks this at five widths and under two filters.
 
 - The HTML holds the data. Each entry's detail (text, tech line, test counts,
   caveats, links) is in the page, copied from the homepage and case studies.
@@ -92,17 +95,47 @@ something stated on the site: Nytr–Talks (Swift · SwiftUI), Clage–PyOpt
   team-versus-individual attribution. Without JS it is a plain list.
 - Selecting an object springs the view to it and opens a side panel (a bottom
   sheet below 900px). Focus moves to the panel. Previous/Next browse
-  entries, and Esc or Close returns focus to the object. The URL hash reflects
-  the selection via `replaceState`, so deep links work and Back still leaves
-  the page.
+  entries, and Esc or Close returns focus to the object.
 - Filters dim and `inert` entries outside the area, then fit the view to the
-  rest. `?filter=` is kept in the URL.
-- Pan by dragging. Zoom with the buttons or Ctrl/⌘ + wheel (trackpad pinch).
-  Scale is bounded to 0.4–1.8 and the plane's centre stays in view. A plain
-  wheel is never captured. Touch uses `touch-action: pan-y`, so vertical
-  swipes still scroll the page.
+  rest.
 - Narrow screens start in **List** view. The Workbench view can still be
   chosen.
+
+**Browser history.** The URL is the single source of truth:
+`?filter=<area>`, `?view=list|bench` (only when it differs from the
+screen-size default) and `#<project>`. User actions write history; the
+`popstate` handler only reads the URL and redraws, so replaying history
+never creates entries.
+
+| Action | History | Back afterwards |
+| --- | --- | --- |
+| Open a project from the overview | push | closes it |
+| Previous/Next, or pick another project while one is open | replace | returns to the overview in one step |
+| Close/Esc on an entry the explorer pushed | `history.back()` | (Forward reopens it) |
+| Close on a deep link (`/explore/#pyopt` opened directly) | replace | leaves the page |
+| Change filter | push; closes a project the filter hides | restores the filter and that project |
+| Switch List/Workbench | push | restores the other view |
+| Unknown filter or project in the URL | replaced with the normalized URL | — |
+
+If focus was inside the panel when history closes it, focus returns to that
+project's card. Pages restored from the back/forward cache keep their state.
+
+**Input.**
+
+| Device | Pan | Zoom | Page scroll |
+| --- | --- | --- | --- |
+| Mouse | drag the background | Ctrl/Cmd + wheel, or the + / − buttons | plain wheel, never captured |
+| Trackpad | drag | Ctrl/Cmd + scroll; pinch in Chromium-based browsers and Firefox, which report pinch as Ctrl + wheel | two-finger scroll |
+| Touch | one-finger sideways swipe | two-finger pinch around the midpoint, or the buttons | vertical swipes scroll the page (`touch-action: pan-y`) |
+| Keyboard | focusing a card brings it into view | + / − / Reset buttons | normal |
+
+Zoom is bounded to 0.25–1.8. Automatic fits stop at 0.4 so labels stay
+readable, and the viewport centre always stays over the bench, so any card
+can be centred on a phone. If the browser claims a one-finger gesture as a
+vertical page scroll, the few pixels it panned first are undone. A pinch
+never turns into a drag when one finger lifts, and a drag or pinch never
+opens a card. The on-screen hint is chosen by input type, so phones are told
+about pinch and swipe and desktops about Ctrl/Cmd + scroll.
 
 **Illustrated ADR workflow** (`notebook/adr-extraction-demo/`,
 `js/research-demo.js`, `css/adr-demo.css`) steps through six stages on three
@@ -162,25 +195,43 @@ python3 scripts/check_links.py
 python3 scripts/check_feed.py
 python3 scripts/check_preservation.py
 npx --yes html-validate@10 index.html 404.html projects/*/index.html blog/index.html blog/*/index.html notebook/index.html notebook/*/index.html explore/index.html
-node tests/e2e/run.mjs              # 124 browser checks; needs Node 22+ and Chrome/Chromium
-SCREENSHOTS=1 node tests/e2e/run.mjs   # also refreshes docs/portfolio-v3/screenshots/
-node tests/e2e/perf.mjs             # page weight, FCP/DCL, idle animation frames
+node tests/e2e/run.mjs                 # Chrome/Chromium over the DevTools protocol
+node tests/e2e/run.mjs history touch   # selected suites
+FIREFOX_PATH=/usr/bin/firefox node tests/e2e/firefox.mjs   # Firefox over WebDriver BiDi
+SCREENSHOTS=1 node tests/e2e/run.mjs   # also refresh docs/portfolio-v3/screenshots/
+node tests/e2e/perf.mjs                # page weight, FCP/DCL, idle animation frames
 ```
 
-The browser tests drive Chrome directly over the DevTools protocol. A small
-client is included so the repo still needs no `package.json`. Set
-`CHROME_PATH` if Chrome is not found. The suites are `routes`, `home`,
-`explore` and `demo`. They cover:
+Both browser runners have no dependencies beyond Node 22+ and the browser.
+The repo still needs no `package.json`. Set `CHROME_PATH` or `FIREFOX_PATH`
+if a browser is not found. `REQUIRE_GLYPHS=1` turns glyph-rendering reports
+into failures. `SUITE_TIMEOUT_MS` (default 240 s) stops a stuck suite.
 
-- Every route at 1440/1024/768/390/320 for overflow and console errors.
-- Hero icon hover, keyboard, touch tour, reduced motion and no layout shift.
-- Preview start/stop rules, lazy video creation, muted inline playback and
-  touch.
-- Explorer selection, focus return, filters and `inert`, zoom/reset, drag
-  versus click, plain-wheel page scroll, Tab/Enter, deep links, list view
-  and mobile.
-- ADR demo stepping, keyboard, reset, example switching, reduced motion and
-  same-origin-only requests.
+| Chrome suite | Covers |
+| --- | --- |
+| `routes` | Every route at 1440/1024/768/390/320: overflow and console errors; blog posts load no V3 modules |
+| `home` | Hero icons (hover, keyboard, touch tour, reduced motion, no layout shift); previews (start/stop rules, lazy video, one at a time, touch) |
+| `explore` | Selection, focus return, filters and `inert`, zoom/reset, drag vs click, plain-wheel scroll, Tab/Enter, deep links, list view |
+| `history` | Every row of the history table above, plus leaving and re-entering the page, bfcache restores and no-loop replay |
+| `touch` | Real touch input through Chrome's input pipeline: sideways pan, vertical page scroll (list and bench), pinch out and in with bounds, no page zoom, tap after panning, bottom sheet |
+| `glyphs` | Whether ← → ↗ − · — – × ’ “ ” é render in the page fonts (canvas comparison against an unassigned code point) |
+| `layout` | Connector labels vs cards, zone captions and other labels; cards vs zones; card text overflow; every detail panel; hero icons vs their words; diagram labels vs caption, chip and frame |
+| `demo` | ADR stepping, keyboard, reset, example switching, connectors attached to their marks with no badge collisions, reduced motion, same-origin-only requests |
+
+**CI.** `.github/workflows/browser-tests.yml` runs on every pull request and
+on pushes to `main`. It has read-only permissions and no deploy step, and it
+is separate from the Pages workflow. It has two jobs:
+
+- **chrome**: the full suite on the runner's Google Chrome, with
+  `REQUIRE_GLYPHS=1`.
+- **firefox**: `tests/e2e/firefox.mjs` on the runner's Firefox. This smoke
+  suite covers routes at two widths, module loading, icon hover, preview
+  playback or fallback, explorer history and filters, connector overlaps,
+  and the ADR walkthrough.
+
+Screenshots from both jobs are uploaded as workflow artifacts.
+`docs/portfolio-v3/screenshots/` holds the copies from CI, which has real
+desktop fonts (DejaVu).
 
 ## Performance (local server, no throttling, cache disabled)
 
@@ -231,17 +282,36 @@ gallery is a garden. V3 uses its own SVG drawings, its own spring
 integrator, a margin figure instead of reflow, and an engineering-workbench
 metaphor.
 
-## Known limitations
+## Browser coverage and known limitations
 
-- The ← and → glyphs, and the "−" zoom label, depend on the system font.
-  They render on macOS, iOS, Windows and Android, but not in the minimal
-  headless Linux font set used for the screenshots, so they look absent
-  there.
-- Screenshots were taken with headless Chromium only. Safari and Firefox
-  were not run in this environment. Everything used (ES modules, `inert`,
-  `IntersectionObserver`, pointer events) is supported in current versions.
-- `html-validate@10` could not be installed in the offline build sandbox.
-  The pull-request workflow runs it. Its first run caught two rule issues on
-  the new pages, which are fixed, and the check job now passes.
-- The workbench zoom uses CSS transforms, so very high zoom on low-DPI
-  screens can soften the raster illustrations. The 1.8× cap keeps this mild.
+- **Arrow glyphs.** The earlier report of missing ← → ↗ and − was a font
+  problem in the build sandbox, not the site. That sandbox has only Noto
+  Sans, which lacks the arrows; the minus sign did render. The `glyphs` suite
+  shows all twelve characters rendering on the CI runner, which has DejaVu
+  fonts. V2's existing "← All writing" links rely on the same glyphs. macOS,
+  iOS, Windows and Android ship fonts with these arrows, but that was not
+  tested on those systems.
+- **Firefox** (158 on CI) was tested by the smoke suite only. Its
+  interactions are DOM events sent from script, not native input. Headless
+  Firefox never gives the document focus, so keyboard-focus behavior was
+  only verified in Chrome. In Firefox the icon was tested with a mouse
+  `pointerenter` instead. Touch, pinch and reduced motion were not tested in
+  Firefox.
+- **Safari / WebKit was not tested.** GitHub's Ubuntu runners have no
+  WebKit, and adding Playwright's WebKit build would bring in an npm
+  dependency and a browser download.
+  - Safari on macOS reports trackpad pinch as `gesture*` events rather than
+    Ctrl + wheel, so trackpad pinch does not zoom the bench there. The
+    buttons and Ctrl/Cmd + scroll still work.
+  - iOS Safari supports `touch-action: pan-y` and pointer events, so swipe
+    and pinch should work, but they are unverified.
+- **Touch tests are emulated.** They use Chrome's touch emulation through
+  the DevTools protocol, which goes through the real gesture and
+  `touch-action` pipeline. They were not run on a physical phone. Two-finger
+  pinch is detected only when both fingers land before the browser commits
+  to a one-finger scroll, as on most mobile sites with custom pinch.
+- **Video in Firefox CI.** The Nytr preview reached its `playing` state in
+  CI. Decoding H.264 depends on the system's codecs. Where it fails, the
+  poster fallback is used.
+- **Zoom softening.** The workbench zoom uses CSS transforms, so the raster
+  illustrations soften slightly near the 1.8× cap.
