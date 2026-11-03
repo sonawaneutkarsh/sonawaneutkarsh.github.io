@@ -2,11 +2,13 @@
 // (used by Playwright's webServer and the V3/Svelte comparison runs):
 // directory URLs serve index.html, unknown paths serve 404.html with status
 // 404, and byte-range requests work so videos can stream. Responses are not
-// compressed; size comparisons gzip the files separately.
+// compressed unless `{ gzip: true }` is passed, which gzips text files the way
+// GitHub Pages does (used by the throttled comparison runs).
 
 import { createServer } from "node:http";
-import { createReadStream, statSync, existsSync } from "node:fs";
+import { createReadStream, readFileSync, statSync, existsSync } from "node:fs";
 import { extname, join, normalize, resolve } from "node:path";
+import { gzipSync } from "node:zlib";
 
 const TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -25,9 +27,11 @@ const TYPES = {
   ".xml": "application/xml; charset=utf-8",
   ".txt": "text/plain; charset=utf-8",
 };
+const COMPRESSIBLE = new Set([".html", ".css", ".js", ".mjs", ".json", ".svg", ".xml", ".txt"]);
 
-export function serve(root, port = 0) {
+export function serve(root, port = 0, { gzip = false } = {}) {
   const base = resolve(root);
+  const compressed = new Map();
   const server = createServer((req, res) => {
     const url = new URL(req.url, "http://localhost");
     let path = normalize(join(base, decodeURIComponent(url.pathname)));
@@ -55,6 +59,13 @@ export function serve(root, port = 0) {
       const end = range[2] ? Math.min(Number(range[2]), size - 1) : size - 1;
       res.writeHead(206, { ...headers, "Content-Range": `bytes ${start}-${end}/${size}`, "Content-Length": end - start + 1 });
       createReadStream(path, { start, end }).pipe(res);
+      return;
+    }
+    if (gzip && COMPRESSIBLE.has(extname(path)) && /\bgzip\b/.test(req.headers["accept-encoding"] ?? "")) {
+      if (!compressed.has(path)) compressed.set(path, gzipSync(readFileSync(path), { level: 6 }));
+      const body = compressed.get(path);
+      res.writeHead(status, { ...headers, "Content-Encoding": "gzip", Vary: "Accept-Encoding", "Content-Length": body.length });
+      res.end(req.method === "HEAD" ? undefined : body);
       return;
     }
     res.writeHead(status, { ...headers, "Content-Length": size });

@@ -10,6 +10,11 @@
 // Numbers come from a local server with no throttling in headless Chromium,
 // so read them as relative, not as field performance.
 //
+// A second, phone-like profile loads the interactive pages at 390×844 with
+// touch, 4× CPU slowdown and a slow-4G link (150 ms RTT, 1.6 Mbit/s down,
+// 750 kbit/s up; request-level throttling through the DevTools protocol),
+// with text files served gzip-compressed as GitHub Pages serves them.
+//
 // Writes docs/portfolio-v3-svelte/compare/results.json and, with
 // SCREENSHOTS=1, the same scenes from both into docs/portfolio-v3-svelte/compare/.
 
@@ -31,6 +36,8 @@ if (!VANILLA || !existsSync(join(VANILLA, 'index.html'))) {
 mkdirSync(OUT, { recursive: true });
 
 const ROUTES = ['/', '/explore/', '/notebook/adr-extraction-demo/', '/blog/', '/blog/80-percent-sleep/', '/projects/clage/'];
+const PHONE_ROUTES = ['/', '/explore/', '/notebook/adr-extraction-demo/'];
+const PHONE = { latency: 150, downloadThroughput: 1.6e6 / 8, uploadThroughput: 750e3 / 8, cpu: 4 };
 const median = (xs) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)];
 const kb = (n) => Math.round((n / 1024) * 10) / 10;
 
@@ -41,6 +48,7 @@ const INIT = () => {
 	window.requestAnimationFrame = (cb) => (w.__raf++, raf(cb));
 	w.__cls = 0;
 	w.__lcp = 0;
+	w.__blocking = 0;
 	w.__ready = null;
 	try {
 		new PerformanceObserver((list) => {
@@ -49,11 +57,58 @@ const INIT = () => {
 		new PerformanceObserver((list) => {
 			for (const e of list.getEntries()) w.__lcp = e.startTime;
 		}).observe({ type: 'largest-contentful-paint', buffered: true });
+		new PerformanceObserver((list) => {
+			for (const e of list.getEntries()) w.__blocking += Math.max(0, e.duration - 50);
+		}).observe({ type: 'longtask', buffered: true });
 	} catch {}
+	// Init scripts run before <html> exists, so watch the document itself.
 	new MutationObserver(() => {
-		if (w.__ready === null && document.documentElement.hasAttribute('data-hydrated')) w.__ready = performance.now();
-	}).observe(document.documentElement, { attributes: true });
+		if (w.__ready === null && document.documentElement?.hasAttribute('data-hydrated')) w.__ready = performance.now();
+	}).observe(document, { subtree: true, attributes: true, attributeFilter: ['data-hydrated'] });
 };
+
+/** Pages that boot SvelteKit are ready once hydrated; others (vanilla, static) once DOMContentLoaded has run. */
+const waitReady = (page) =>
+	page.waitForFunction(() => window.__ready !== null || !Object.keys(window).some((k) => k.startsWith('__sveltekit_')), undefined, { timeout: 30_000 });
+
+/** Load a route on the phone profile and record when it paints and becomes interactive. */
+async function measurePhone(browser, origin, route) {
+	const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+	const page = await context.newPage();
+	await page.addInitScript(INIT);
+	const cdp = await context.newCDPSession(page);
+	await cdp.send('Network.enable');
+	await cdp.send('Network.setCacheDisabled', { cacheDisabled: true });
+	await cdp.send('Network.emulateNetworkConditions', { offline: false, latency: PHONE.latency, downloadThroughput: PHONE.downloadThroughput, uploadThroughput: PHONE.uploadThroughput });
+	await cdp.send('Emulation.setCPUThrottlingRate', { rate: PHONE.cpu });
+	let transferred = 0;
+	let scriptTransferred = 0;
+	page.on('requestfinished', async (request) => {
+		try {
+			const sizes = await request.sizes();
+			transferred += sizes.responseBodySize + sizes.responseHeadersSize;
+			if (request.resourceType() === 'script') scriptTransferred += sizes.responseBodySize;
+		} catch {}
+	});
+	await page.goto(origin + route, { waitUntil: 'load', timeout: 60_000 });
+	await waitReady(page);
+	await page.waitForTimeout(1500);
+	const timing = await page.evaluate(() => {
+		const nav = performance.getEntriesByType('navigation')[0];
+		const fcp = performance.getEntriesByName('first-contentful-paint')[0];
+		return {
+			fcp: fcp ? Math.round(fcp.startTime) : null,
+			lcp: Math.round(window.__lcp),
+			dcl: Math.round(nav.domContentLoadedEventEnd),
+			load: Math.round(nav.loadEventEnd),
+			ready: window.__ready === null ? Math.round(nav.domContentLoadedEventEnd) : Math.round(window.__ready),
+			blockingMs: Math.round(window.__blocking),
+			cls: Math.round(window.__cls * 1000) / 1000
+		};
+	});
+	await context.close();
+	return { ...timing, transferredKB: kb(transferred), jsTransferredKB: kb(scriptTransferred) };
+}
 
 async function measure(browser, origin, route) {
 	const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
@@ -80,6 +135,7 @@ async function measure(browser, origin, route) {
 			dcl: Math.round(nav.domContentLoadedEventEnd),
 			load: Math.round(nav.loadEventEnd),
 			ready: window.__ready === null ? Math.round(nav.domContentLoadedEventEnd) : Math.round(window.__ready),
+			blockingMs: Math.round(window.__blocking),
 			cls: Math.round(window.__cls * 1000) / 1000
 		};
 	});
@@ -189,24 +245,41 @@ async function screenshots(browser, name, origin) {
 	}
 }
 
+const medians = (runs) => Object.fromEntries(Object.keys(runs[0]).map((k) => [k, median(runs.map((r) => r[k]))]));
+
 const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH, args: ['--enable-unsafe-swiftshader'] });
 const sites = { vanilla: VANILLA, svelte: SVELTE };
-const results = { generated: new Date().toISOString(), browser: browser.version(), runs: RUNS, routes: {}, interaction: {} };
+const results = {
+	generated: new Date().toISOString(),
+	browser: browser.version(),
+	runs: RUNS,
+	phoneProfile: '390×844, touch, 4× CPU slowdown, 150 ms RTT, 1.6 Mbit/s down, 750 kbit/s up, gzip',
+	routes: {},
+	phone: {},
+	interaction: {}
+};
 for (const [name, root] of Object.entries(sites)) {
 	const server = await serve(root);
 	const origin = `http://127.0.0.1:${server.address().port}`;
 	for (const route of ROUTES) {
 		const runs = [];
 		for (let i = 0; i < RUNS; i++) runs.push(await measure(browser, origin, route));
-		const merged = {};
-		for (const key of Object.keys(runs[0])) merged[key] = median(runs.map((r) => r[key]));
-		(results.routes[route] ??= {})[name] = merged;
+		(results.routes[route] ??= {})[name] = medians(runs);
 	}
 	const inter = [];
 	for (let i = 0; i < RUNS; i++) inter.push(await interaction(browser, origin));
-	results.interaction[name] = Object.fromEntries(Object.keys(inter[0]).map((k) => [k, median(inter.map((r) => r[k]))]));
+	results.interaction[name] = medians(inter);
 	if (process.env.SCREENSHOTS) await screenshots(browser, name, origin);
 	server.close();
+
+	const gzipServer = await serve(root, 0, { gzip: true });
+	const gzipOrigin = `http://127.0.0.1:${gzipServer.address().port}`;
+	for (const route of PHONE_ROUTES) {
+		const runs = [];
+		for (let i = 0; i < RUNS; i++) runs.push(await measurePhone(browser, gzipOrigin, route));
+		(results.phone[route] ??= {})[name] = medians(runs);
+	}
+	gzipServer.close();
 }
 await browser.close();
 writeFileSync(join(OUT, 'results.json'), JSON.stringify(results, null, 2) + '\n');
@@ -215,5 +288,11 @@ const rows = [];
 for (const [route, r] of Object.entries(results.routes)) {
 	for (const name of ['vanilla', 'svelte']) rows.push({ route, impl: name, ...r[name] });
 }
-console.table(rows.map(({ route, impl, totalKB, jsKB, jsGzipKB, jsFiles, cssGzipKB, requests, fcp, lcp, dcl, ready, cls, idleFrames, idleTaskMs, heapMB }) => ({ route, impl, totalKB, jsKB, jsGzipKB, jsFiles, cssGzipKB, requests, fcp, lcp, dcl, ready, cls, idleFrames, idleTaskMs, heapMB })));
+console.table(rows.map(({ route, impl, totalKB, jsKB, jsGzipKB, jsFiles, cssGzipKB, requests, fcp, lcp, dcl, ready, blockingMs, cls, idleFrames, idleTaskMs, heapMB }) => ({ route, impl, totalKB, jsKB, jsGzipKB, jsFiles, cssGzipKB, requests, fcp, lcp, dcl, ready, blockingMs, cls, idleFrames, idleTaskMs, heapMB })));
+const phoneRows = [];
+for (const [route, r] of Object.entries(results.phone)) {
+	for (const name of ['vanilla', 'svelte']) phoneRows.push({ route, impl: name, ...r[name] });
+}
+console.log(`Phone profile: ${results.phoneProfile}`);
+console.table(phoneRows);
 console.table(results.interaction);

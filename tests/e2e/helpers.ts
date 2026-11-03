@@ -49,10 +49,13 @@ export async function countFrames(page: Page) {
 	};
 }
 
+/** With SCREENSHOTS=1, save the viewport; files from browsers other than Chromium get a `firefox-`-style prefix. */
 export async function shot(page: Page, name: string, options: { fullPage?: boolean } = {}) {
 	if (!process.env.SCREENSHOTS) return;
 	mkdirSync(SHOTS, { recursive: true });
-	await page.screenshot({ path: join(SHOTS, `${name}.png`), ...options });
+	const browser = page.context().browser()?.browserType().name() ?? 'chromium';
+	const prefix = browser === 'chromium' ? '' : `${browser}-`;
+	await page.screenshot({ path: join(SHOTS, `${prefix}${name}.png`), ...options });
 }
 
 /** Every route of the site, built output. */

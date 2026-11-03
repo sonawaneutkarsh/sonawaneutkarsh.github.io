@@ -173,10 +173,16 @@ test.describe('hero objects', () => {
 
 	test('hover lights an object in Firefox @firefox', async ({ page }) => {
 		await page.goto('/');
+		await hydrated(page);
 		await page.hover('[data-hero-icon="research"] .hero-word');
 		expect(await until(page, () => document.querySelector('[data-hero-icon="research"]')!.classList.contains('is-lit'))).toBe(true);
 		const state = await stageState(page, 'research');
 		expect(state.covers).toEqual([]);
+		expect(await until(page, () => document.querySelector('[data-hero-icon="research"] .rs-filed')!.getAttribute('opacity') === '1', undefined, 4000)).toBe(true);
+		await shot(page, 'home-research');
+		await page.hover('[data-hero-icon="ai"] .hero-word');
+		await page.waitForTimeout(900);
+		await shot(page, 'home-ai-depth');
 	});
 
 	for (const width of WIDTHS.filter((w) => w >= 720)) {
