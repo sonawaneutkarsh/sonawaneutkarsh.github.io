@@ -1,0 +1,65 @@
+name: Sandbox dependency bundle (temporary)
+
+# TEMPORARY, experiment branch only. The agent sandbox that builds this
+# experiment has no npm registry access, so this job runs `npm install` on
+# GitHub's runner and uploads node_modules + the lockfile as a short-lived
+# artifact for the sandbox to download. It has read-only permissions, uses no
+# secrets and deploys nothing. Delete this file before the experiment is
+# reviewed or merged.
+
+on:
+  push:
+    branches: [experiment/svelte-portfolio-v3]
+    paths:
+      - package.json
+      - package-lock.json
+      - .github/workflows/sandbox-deps.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sandbox-deps-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bundle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then npm ci --no-audit --no-fund; else npm install --no-audit --no-fund; fi
+          node --version
+          npm --version
+          npm ls --depth=0
+
+      - name: Download the Chromium headless shell Playwright expects
+        run: |
+          npx playwright install --only-shell chromium
+          ls ~/.cache/ms-playwright
+
+      - name: Pack
+        run: |
+          tar -czf deps.tgz node_modules package-lock.json
+          tar -czf browsers.tgz -C ~/.cache ms-playwright
+          ls -lh deps.tgz browsers.tgz
+
+      - name: Upload dependency bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: sandbox-deps
+          path: |
+            deps.tgz
+            browsers.tgz
+          retention-days: 3

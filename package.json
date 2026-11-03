@@ -1,0 +1,39 @@
+{
+	"name": "sonawaneutkarsh-github-io",
+	"version": "3.0.0-svelte.0",
+	"private": true,
+	"description": "Portfolio V3, Svelte experiment: SvelteKit static build of sonawaneutkarsh.github.io",
+	"type": "module",
+	"engines": {
+		"node": ">=22.17"
+	},
+	"imports": {
+		"#lib/*": "./src/lib/*"
+	},
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --fail-on-warnings",
+		"test:unit": "node --test \"tests/unit/**/*.test.ts\"",
+		"test:e2e": "playwright test",
+		"validate:html": "html-validate \"build/**/*.html\"",
+		"verify": "python3 scripts/check_links.py --root build && python3 scripts/check_feed.py --root build && python3 scripts/check_preservation.py --root build && python3 scripts/check_content_parity.py --root build"
+	},
+	"devDependencies": {
+		"@playwright/test": "^1.64.1",
+		"@sveltejs/adapter-static": "^4.0.1",
+		"@sveltejs/kit": "^3.1.1",
+		"@sveltejs/vite-plugin-svelte": "^7.3.1",
+		"@types/three": "^0.187.0",
+		"html-validate": "^10.0.0",
+		"svelte": "^5.57.3",
+		"svelte-check": "^4.7.8",
+		"typescript": "~6.0.3",
+		"vite": "^8.3.5"
+	},
+	"dependencies": {
+		"gsap": "^3.15.0",
+		"three": "^0.187.0"
+	}
+}
