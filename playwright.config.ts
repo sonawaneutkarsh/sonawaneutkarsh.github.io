@@ -40,7 +40,10 @@ export default defineConfig({
 			use: {
 				...devices['Desktop Firefox'],
 				viewport: { width: 1440, height: 900 },
-				launchOptions: { executablePath: firefoxPath }
+				// Headless Firefox on a GPU-less runner blocklists WebGL; desktop
+				// Firefox has it, so let the lab's three.js variant run (it still
+				// falls back to SVG if no context can be created).
+				launchOptions: { executablePath: firefoxPath, firefoxUserPrefs: { 'webgl.force-enabled': true } }
 			}
 		}
 	]

@@ -28,6 +28,7 @@ test('lab: both variants play, measure, and B loads lazily @firefox', async ({ p
 	const frames = await page.evaluate(() =>
 		[...document.querySelectorAll('.lab-metrics')].map((dl) => Object.fromEntries([...dl.querySelectorAll('div')].map((d) => [d.querySelector('dt')!.textContent, d.querySelector('dd')!.textContent])))
 	);
+	test.info().annotations.push({ type: 'lab-metrics', description: JSON.stringify({ a: frames[0], b: frames[1] }) });
 	expect(Number(frames[0]['Frames in the last run'])).toBeGreaterThan(20);
 	expect(Number(frames[1]['Frames in the last run'])).toBeGreaterThan(20);
 	// GSAP's ticker sleeps within its autoSleep window (120 frames) after the last tween.
@@ -81,6 +82,12 @@ test('lab: without WebGL, B falls back to the SVG version and says so', async ({
 	await expect(page.locator('button[data-variant="b"] .hero-drawing')).toHaveCount(1);
 	await page.hover('button[data-variant="b"]');
 	expect(await until(page, () => document.querySelector('button[data-variant="b"]')!.getAttribute('aria-pressed') === 'true')).toBe(true);
+	await page.waitForTimeout(1400);
+	await page.mouse.move(2, 2);
+	// The fallback's motion counts as B's run, not as idle frames.
+	const framesB = '.lab-metrics[data-variant="b"] div:nth-last-child(4) dd'; // "Frames in the last run"
+	expect(await until(page, (sel) => /^\d+$/.test(document.querySelector(sel)!.textContent!.trim()), framesB, 8000)).toBe(true);
+	expect(Number((await page.textContent(framesB))!.trim()), 'frames drawn by the SVG fallback').toBeGreaterThan(20);
 });
 
 test.describe('reduced motion', () => {

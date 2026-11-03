@@ -30,6 +30,22 @@
 		if (lit) fallback.light({ still: true });
 	}
 
+	// The SVG fallback is variant A's drawing, so it reports its frames the
+	// way A does: once per change of the drawing's inputs. Without this a
+	// fallback run would read 0 frames and its motion would be counted as
+	// idle frames of the other variant.
+	$effect(() => {
+		const model = fallback;
+		if (!model) return;
+		void model.nodes;
+		void model.clock.t;
+		void model.arrows.current;
+		void model.loop.current;
+		void model.token.current;
+		void model.signals.current;
+		meter.frame('B');
+	});
+
 	export function light() {
 		if (lit) return;
 		lit = true;
