@@ -15,7 +15,7 @@ export default defineConfig({
 				// the résumé) are checked by scripts/check_links.py against the build
 				// output, so the crawler only needs to visit the Svelte routes.
 				crawl: false,
-				entries: ['/', '/blog/', '/explore/', '/notebook/adr-extraction-demo/', '/feed.xml']
+				entries: ['/', '/blog/', '/explore/', '/notebook/adr-extraction-demo/', '/lab/motion/', '/feed.xml']
 			},
 			// A static site has no deployments to detect between page loads.
 			version: { pollInterval: 0 }
