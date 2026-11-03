@@ -120,7 +120,7 @@
 			<li><strong>Reversal.</strong> “Brush past” reverses each variant mid-flight. A’s springs turn round with the speed they had; B’s timeline runs backwards at a constant rate, so it stops and restarts.</li>
 			<li><strong>Clarity.</strong> A draws 1–2 px lines at any size; B shades real spheres and boxes and can turn in depth, but its lines are always one device pixel.</li>
 			<li><strong>Weight.</strong> A adds nothing to the homepage bundle beyond its own code; B fetches three.js and GSAP the first time it is shown.</li>
-			<li><strong>Idle cost.</strong> “Idle frames” counts frames requested in the 2 s after a run ends. Zero means the loop really stops.</li>
+			<li><strong>Idle cost.</strong> “Idle frames” counts frames anything requested in the 2 s after a run ends. A’s loop stops when its springs settle. GSAP’s ticker checks for work every 120 frames (its <code>autoSleep</code> default), so after B finishes it can keep requesting empty frames for up to about 2 s before it sleeps.</li>
 			<li><strong>Reduced motion.</strong> Both jump to a still of the lit state.</li>
 			<li><strong>Failure.</strong> Without WebGL, B shows the SVG version and says so; switching away disposes its context.</li>
 		</ul>
@@ -130,7 +130,10 @@
 {#snippet runMetrics(variant: 'A' | 'B')}
 	{@const run = meter.runs[variant]}
 	<div><dt>Frames in the last run</dt><dd>{run ? run.frames : 'play it to measure'}</dd></div>
-	<div><dt>Frame gap, mean / longest</dt><dd>{run ? `${run.meanMs} ms / ${run.maxMs} ms` : '—'}</dd></div>
+	<div><dt>Frame gap while moving, mean / longest</dt><dd>{run ? `${run.meanMs} ms / ${run.maxMs} ms` : '—'}</dd></div>
 	<div><dt>Input to first frame</dt><dd>{run?.firstFrameMs != null ? `${run.firstFrameMs} ms` : '—'}</dd></div>
-	<div><dt>Idle frames afterwards (2 s)</dt><dd>{run ? (run.idleFrames ?? 'measuring…') : '—'}</dd></div>
+	<div>
+		<dt>Idle frames afterwards (2 s)</dt>
+		<dd>{run ? (run.idleFrames === null ? 'measuring…' : run.idleFrames < 0 ? 'not measured: the other variant was moving' : run.idleFrames) : '—'}</dd>
+	</div>
 {/snippet}

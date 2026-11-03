@@ -1,6 +1,7 @@
 <script lang="ts">
 	// Shared frame for the Svelte routes: skip link, masthead and footer, the
 	// same markup the static pages carry. Each page renders its own <main>.
+	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import Masthead from '#lib/components/Masthead.svelte';
 	import SiteFooter from '#lib/components/SiteFooter.svelte';
@@ -17,6 +18,11 @@
 		'/lab/motion': 'lab-page'
 	};
 	const pageClass = $derived(PAGE_CLASS[page.route.id ?? ''] ?? '');
+
+	// A marker for tests and tools: the page is interactive.
+	onMount(() => {
+		document.documentElement.dataset.hydrated = '';
+	});
 </script>
 
 <div class="site {pageClass}">

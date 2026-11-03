@@ -70,7 +70,7 @@
 			y1={r2(nodes[3].y - nodes[3].h / 2)}
 			y2={r2(nodes[2].y + nodes[2].h / 2)}
 		/>
-		<path class="w1 sage" d={loopPath} opacity={loop > 0.02 ? 1 : 0} pathLength="100" stroke-dasharray={dashedDraw(loop, 3.4, 3)} />
+		<path class="w1 sage ai-loop" d={loopPath} opacity={loop > 0.02 ? 1 : 0} pathLength="100" stroke-dasharray={dashedDraw(loop, 3.4, 3)} />
 		<path
 			class="w1 sage"
 			d={`M${r2(nodes[0].x - 2)} ${r2(nodes[0].y + nodes[0].h / 2 + 2.6)} L${r2(nodes[0].x)} ${r2(nodes[0].y + nodes[0].h / 2 + 0.2)} L${r2(nodes[0].x + 2)} ${r2(nodes[0].y + nodes[0].h / 2 + 2.6)}`}

@@ -94,7 +94,7 @@
 		<circle class="dot-reaction" cx="2" cy="0" r="0.85" />
 		<path class="w075 sage" d="M-1 0 H1" stroke-dasharray="0.6 0.5" />
 	</g>
-	<g opacity={filed > 0.02 ? 1 : 0} transform={`translate(${r2(tray.x + 11.4)} ${r2(tray.y + 1.3)}) scale(${r2(Math.max(0.01, filed))})`}>
+	<g class="rs-filed" opacity={filed > 0.02 ? 1 : 0} transform={`translate(${r2(tray.x + 11.4)} ${r2(tray.y + 1.3)}) scale(${r2(Math.max(0.01, filed))})`}>
 		<circle class="badge" r="1.15" />
 	</g>
 

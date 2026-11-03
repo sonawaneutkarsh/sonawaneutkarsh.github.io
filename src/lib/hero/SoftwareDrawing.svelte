@@ -99,7 +99,7 @@
 	</g>
 
 	<!-- Completed. -->
-	<g opacity={done > 0.02 ? 1 : 0} transform={`translate(${r2(f.x + f.w - 0.5)} ${r2(f.y + 0.8)}) scale(${r2(Math.max(0.01, done))})`}>
+	<g class="sw-done" opacity={done > 0.02 ? 1 : 0} transform={`translate(${r2(f.x + f.w - 0.5)} ${r2(f.y + 0.8)}) scale(${r2(Math.max(0.01, done))})`}>
 		<circle class="badge" r="3.4" />
 		<path class="w11 paper-ink" d="M-1.6 0 l1.1 1.2 l2.2 -2.4" fill="none" />
 	</g>

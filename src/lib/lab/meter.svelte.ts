@@ -13,7 +13,7 @@ export interface Run {
 	meanMs: number;
 	maxMs: number;
 	firstFrameMs: number | null;
-	/** Frames requested by anything on the page in the 2 s after the run; null while measuring. */
+	/** Frames requested by anything on the page in the 2 s after the run; null while measuring, -1 if another run overlapped. */
 	idleFrames: number | null;
 }
 
@@ -24,6 +24,8 @@ const RUN_END = 1000;
 
 interface Active {
 	start: number;
+	/** rAF timestamp of the last counted frame (a variant may report several times per frame). */
+	stamp: number;
 	frames: number;
 	gaps: number[];
 	last: number;
@@ -66,7 +68,7 @@ export class FrameMeter {
 			this.#arm(variant, ongoing);
 			return;
 		}
-		const run: Active = { start: performance.now(), frames: 0, gaps: [], last: 0, first: null, timer: 0 };
+		const run: Active = { start: performance.now(), stamp: -1, frames: 0, gaps: [], last: 0, first: null, timer: 0 };
 		this.#active.set(variant, run);
 		this.#arm(variant, run);
 	}
@@ -74,7 +76,8 @@ export class FrameMeter {
 	/** A variant drew a frame. */
 	frame(variant: string) {
 		const run = this.#active.get(variant);
-		if (!run) return;
+		if (!run || run.stamp === this.#lastFrame) return;
+		run.stamp = this.#lastFrame;
 		const now = performance.now();
 		if (run.first === null) run.first = now - run.start;
 		if (run.last) run.gaps.push(now - run.last);
@@ -91,7 +94,8 @@ export class FrameMeter {
 	#finish(variant: string, run: Active) {
 		if (this.#active.get(variant) !== run) return;
 		this.#active.delete(variant);
-		const gaps = run.gaps;
+		// Gaps of 100 ms or more are holds (sequence finished, pointer still on it), not slow frames.
+		const gaps = run.gaps.filter((g) => g < 100);
 		const mean = gaps.length ? gaps.reduce((a, b) => a + b, 0) / gaps.length : 0;
 		this.runs = {
 			...this.runs,
@@ -105,14 +109,17 @@ export class FrameMeter {
 			}
 		};
 		// Count every frame requested in the next 2 s, if nothing else is running.
-		if (this.#active.size) return;
+		if (this.#active.size) {
+			this.runs = { ...this.runs, [variant]: { ...this.runs[variant], idleFrames: -1 } };
+			return;
+		}
 		const watch = { frames: 0 };
 		this.#idleWatch = watch;
 		window.setTimeout(() => {
 			if (this.#idleWatch !== watch) return;
 			this.#idleWatch = null;
 			const prev = this.runs[variant];
-			if (prev && !this.#active.size) this.runs = { ...this.runs, [variant]: { ...prev, idleFrames: watch.frames } };
+			if (prev) this.runs = { ...this.runs, [variant]: { ...prev, idleFrames: this.#active.size ? -1 : watch.frames } };
 		}, 2000);
 	}
 }
