@@ -48,6 +48,12 @@
 .bench-view-controls.is-pending {
 	visibility: hidden;
 }
+/* The pre-paint script marks pages that open on the workbench; the others
+   (phones, ?view=list) open in the list, which has no zoom, so the zoom group
+   takes no room before hydration either and the bench does not move. */
+html.js:not(.explore-bench) .bench-view-controls.is-pending .bench-zoom {
+	display: none;
+}
 html:not(.js) .bench-view-controls {
 	display: none;
 }

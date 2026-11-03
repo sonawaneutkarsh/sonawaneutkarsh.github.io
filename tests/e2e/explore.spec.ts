@@ -161,6 +161,35 @@ test('no layout jump on load: the prerendered list is laid out as the workbench 
 	expect(shift, 'cumulative layout shift').toBeLessThan(0.02);
 });
 
+for (const [width, query] of [
+	[390, ''],
+	[1024, '?view=list']
+] as const) {
+	test(`no layout shift at hydration when the page opens in the list (${width}px ${query || 'default'})`, async ({ browser }) => {
+		const mobile = width < 720;
+		const context = await browser.newContext({ viewport: { width, height: mobile ? 844 : 900 }, isMobile: mobile, hasTouch: mobile });
+		const page = await context.newPage();
+		// Hold the app scripts (not the CSS) back so the prerendered layout is painted well before hydration.
+		await page.route('**/_app/**/*.js', async (route) => {
+			await new Promise((resolve) => setTimeout(resolve, 700));
+			await route.continue();
+		});
+		await page.addInitScript(() => {
+			const w = window as unknown as { __shift: number };
+			w.__shift = 0;
+			new PerformanceObserver((list) => {
+				for (const entry of list.getEntries() as (PerformanceEntry & { value: number; hadRecentInput: boolean })[]) if (!entry.hadRecentInput) w.__shift += entry.value;
+			}).observe({ type: 'layout-shift', buffered: true });
+		});
+		await page.goto(`/explore/${query}`);
+		await hydrated(page);
+		await page.waitForTimeout(400);
+		await expect(page.locator('.bench.is-list')).toHaveCount(1);
+		expect(await page.evaluate(() => (window as unknown as { __shift: number }).__shift), 'layout shift').toBeLessThan(0.001);
+		await context.close();
+	});
+}
+
 test('no overlaps between connector labels, cards and zone captions; panels fit', async ({ page }) => {
 	for (const [width, height] of [[1440, 900], [1280, 800], [1024, 768], [900, 1000], [768, 1024]]) {
 		await page.setViewportSize({ width, height });
