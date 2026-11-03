@@ -158,18 +158,8 @@ try {
   await sleep(1500);
   await evaluate("(document.querySelector('[data-name=\"Talks\"]').scrollIntoView({block:'center'}), true)");
   await shot("home-preview-talks");
-  // Keep the frame on screen: previews pause when scrolled away, by design.
-  await evaluate("(document.querySelector('[data-name=\"Nytr\"]').scrollIntoView({block:'center'}), true)");
-  await sleep(200);
-  await evaluate("(document.querySelector('[data-name=\"Nytr\"] .preview-toggle').click(), true)");
-  const nytr = await until(
-    "(() => { const m = document.querySelector('[data-name=\"Nytr\"]'); const v = m.querySelector('video'); return (v && !v.paused && v.currentTime > 0) || m.classList.contains('is-playing') || m.classList.contains('is-poster-only') || m.classList.contains('is-video-failed'); })()",
-    6000,
-  );
-  const how = await evaluate(
-    "(() => { const m = document.querySelector('[data-name=\"Nytr\"]'); const v = m.querySelector('video'); return v && !v.paused && v.currentTime > 0 ? 'plays' : m.className; })()",
-  );
-  check("home: Nytr preview plays, or falls back to its poster", nytr, how);
+  await evaluate("(document.querySelector('[data-name=\"Nytr\"]').scrollIntoView({block:'center'}), document.querySelector('[data-name=\"Nytr\"] .preview-toggle').click(), true)");
+  check("home: Nytr drawing plays (no video)", await until("document.querySelector('[data-name=\"Nytr\"]').classList.contains('is-active') && !document.querySelector('[data-name=\"Nytr\"] video')"));
   check("home: Talks stopped when Nytr started (one at a time)", await evaluate("!document.querySelector('[data-name=\"Talks\"]').classList.contains('is-active')"));
 
   await open("/explore/");

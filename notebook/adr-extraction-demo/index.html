@@ -58,17 +58,10 @@
         each pair against what the writer actually said.
       </p>
 
-      <aside aria-label="About this illustration" class="adr-notice">
-        <p class="adr-notice-title">Educational illustration, synthetic examples</p>
-        <p>
-          Every sentence on this page was written for this page. “Drug A” to
-          “Drug D” are placeholders, not real medications. Nothing here calls a
-          language model or any other service, uses Reddit posts or research
-          data, measures accuracy, or shows results from the project. The
-          highlights and verdicts are fixed by hand to show the shape of the
-          planned workflow.
-        </p>
-      </aside>
+      <p class="adr-note">
+        Illustration only: the posts and drug names are invented, and no real
+        data, models, or results are used.
+      </p>
 
       <section aria-labelledby="demo-heading" class="adr-demo show-drugs show-reactions show-pairs show-review show-caution" data-step="6" id="demo">
         <h2 id="demo-heading">Step through an example</h2>
@@ -88,11 +81,18 @@
           <li><button data-goto="6" type="button"><span>6</span> Not causation</button></li>
         </ol>
 
+        <div class="adr-controls" hidden>
+          <button data-move="-1" type="button">← Previous</button>
+          <button data-move="1" type="button">Next →</button>
+          <button data-move="reset" type="button">Reset</button>
+          <p aria-live="polite" class="adr-progress" id="adr-progress"></p>
+        </div>
+
         <div class="adr-examples-list">
           <figure class="adr-example" data-index="0">
-            <figcaption class="adr-example-label">Example 1 (synthetic): a clear first-person report</figcaption>
+            <figcaption class="adr-example-label">Example 1: a clear first-person report</figcaption>
             <div class="adr-post">
-              <p class="adr-post-meta">synthetic post · r/example</p>
+              <p class="adr-post-meta">example post</p>
               <p class="adr-text">
                 I started taking <mark data-id="d1" data-kind="drug">Drug A</mark>
                 last month and noticed
@@ -111,9 +111,9 @@
           </figure>
 
           <figure class="adr-example" data-index="1">
-            <figcaption class="adr-example-label">Example 2 (synthetic): two drugs, one reaction that went away</figcaption>
+            <figcaption class="adr-example-label">Example 2: two drugs, one reaction that went away</figcaption>
             <div class="adr-post">
-              <p class="adr-post-meta">synthetic post · r/example</p>
+              <p class="adr-post-meta">example post</p>
               <p class="adr-text">
                 Switched from <mark data-id="d1" data-kind="drug">Drug B</mark>
                 to <mark data-id="d2" data-kind="drug">Drug C</mark>. The
@@ -143,9 +143,9 @@
           </figure>
 
           <figure class="adr-example" data-index="2">
-            <figcaption class="adr-example-label">Example 3 (synthetic): someone else’s symptom and a hedged one</figcaption>
+            <figcaption class="adr-example-label">Example 3: someone else’s symptom and a hedged one</figcaption>
             <div class="adr-post">
-              <p class="adr-post-meta">synthetic post · r/example</p>
+              <p class="adr-post-meta">example post</p>
               <p class="adr-text">
                 My sister gets
                 <mark data-id="r1" data-kind="reaction" data-norm="dizziness">dizzy</mark>
@@ -229,12 +229,6 @@
           </li>
         </ol>
 
-        <div class="adr-controls" hidden>
-          <button data-move="-1" type="button">← Previous</button>
-          <p aria-live="polite" class="adr-progress" id="adr-progress"></p>
-          <button data-move="1" type="button">Next →</button>
-          <button data-move="reset" type="button">Reset</button>
-        </div>
       </section>
 
       <section aria-labelledby="legend-heading" class="adr-legend">

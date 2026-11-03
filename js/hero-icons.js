@@ -2,9 +2,9 @@
 //
 // Each icon is an ordinary link whose rest drawing is inline SVG in the HTML,
 // so it reads without JavaScript. This module adds the moving parts, runs
-// them with damped springs, and mirrors the lit icon into a larger "margin
-// figure" beside the introduction on wide screens, so the motion has room to
-// read without the sentence reflowing or anything covering the text.
+// them with damped springs, and mirrors the lit icon into a larger card that
+// springs out of the icon toward free space (the right margin when there is
+// room), so the motion can be read without the sentence reflowing.
 //
 // Triggers: mouse/pen hover and keyboard focus light an icon. A finger tap
 // follows the link at once (no double tap); on touch screens each icon instead
@@ -478,54 +478,137 @@ class HeroIcon {
   }
 }
 
-/** The enlarged copy of the lit icon shown beside the introduction (>= 720px). */
-class MarginFigure {
-  constructor(container) {
-    this.container = container;
-    this.stage = container.querySelector(".hero-figure-art");
-    this.caption = container.querySelector(".hero-figure-caption");
+/**
+ * The enlarged copy of the lit icon. It springs out of the icon itself (a
+ * FLIP from the icon's box to the card's box) and goes back into it on exit.
+ *
+ * Placement, first that fits and covers nothing protected (the notebook
+ * illustration, the heading, the other icons):
+ *   1. the right margin beside the text column, level with the icon;
+ *   2. below the icon, growing to the right;
+ *   3. below the icon, growing to the left.
+ * It never sits over the illustration column. Phones get no card: their
+ * icons animate in place.
+ */
+class PopCard {
+  constructor(host, protectedEls) {
+    this.host = host;
+    this.protected = protectedEls;
+    this.node = document.createElement("div");
+    this.node.className = "hero-pop";
+    this.node.setAttribute("aria-hidden", "true");
+    host.appendChild(this.node);
     this.owner = null;
     this.detach = null;
-    this.hideTimer = 0;
+    // Slightly underdamped: a small, soft overshoot, settling in ~450 ms.
+    this.p = new Spring(0, { stiffness: 230, damping: 19 });
+    this.loop = frameLoop((dt) => this.frame(dt));
+    this.from = null;
   }
 
   get usable() {
-    return this.container.offsetParent !== null && getComputedStyle(this.container).display !== "none";
+    return window.matchMedia("(min-width: 720px)").matches;
+  }
+
+  place(icon) {
+    const host = this.host.getBoundingClientRect();
+    const r = icon.link.querySelector(".hero-icon").getBoundingClientRect();
+    const column = icon.link.closest(".bio").getBoundingClientRect();
+    const edge = document.documentElement.clientWidth - 16;
+    const w = 176;
+    const h = Math.round(((w - 20) * 42) / 60) + 20;
+    const gap = 14;
+    const candidates = [
+      { side: "right", x: column.right + 24, y: r.top + r.height / 2 - h / 2 },
+      { side: "below-right", x: r.left - 10, y: r.bottom + gap },
+      { side: "below-left", x: r.right - w + 10, y: r.bottom + gap },
+    ];
+    const blocked = this.protected.map((el) => el.getBoundingClientRect()).concat(
+      Array.from(document.querySelectorAll(".hero-link .hero-icon"))
+        .filter((el) => el !== icon.link.querySelector(".hero-icon"))
+        .map((el) => el.getBoundingClientRect()),
+    );
+    const hits = (c) =>
+      blocked.some((b) => c.x < b.right + 6 && c.x + w > b.left - 6 && c.y < b.bottom + 6 && c.y + h > b.top - 6);
+    const fits = (c) => c.x >= 16 && c.x + w <= edge;
+    const chosen = candidates.find((c) => fits(c) && !hits(c)) || candidates.find(fits) || candidates[1];
+    this.side = chosen.side;
+    this.box = { x: chosen.x - host.left, y: chosen.y - host.top, w, h };
+    this.from = { x: r.left - host.left, y: r.top - host.top, w: r.width, h: r.height };
+    Object.assign(this.node.style, { left: `${this.box.x}px`, top: `${this.box.y}px`, width: `${w}px`, height: `${h}px` });
+    this.node.dataset.side = chosen.side;
   }
 
   show(icon) {
     if (!this.usable) return;
-    clearTimeout(this.hideTimer);
     if (this.detach) this.detach();
     this.owner = icon;
     const clone = icon.svg.cloneNode(true);
     clone.removeAttribute("class");
-    clone.classList.add("hero-figure-svg");
-    // Drop the live layers so bind() rebuilds fresh references on the clone.
+    clone.classList.add("hero-pop-svg");
     clone.querySelectorAll(".a-live, .a-signals, .b-live, .c-live").forEach((node) => node.remove());
-    this.stage.replaceChildren(clone);
-    this.caption.textContent = icon.def.caption;
+    this.node.replaceChildren(clone);
     this.detach = icon.addView(clone);
-    this.container.classList.add("is-showing");
+    this.place(icon);
+    this.node.classList.add("is-showing");
+    if (reducedMotion()) {
+      this.p.set(1);
+      this.apply();
+      return;
+    }
+    if (this.p.value < 0.02) this.p.set(0);
+    this.p.to(1);
+    this.loop.start();
   }
 
   hide(icon) {
     if (this.owner !== icon) return;
-    this.container.classList.remove("is-showing");
-    this.hideTimer = setTimeout(() => {
-      if (this.owner !== icon || icon.lit) return;
-      if (this.detach) this.detach();
-      this.detach = null;
-      this.owner = null;
-    }, 900);
+    if (reducedMotion()) {
+      this.p.set(0);
+      this.finish();
+      return;
+    }
+    this.p.to(0);
+    this.loop.start();
+  }
+
+  finish() {
+    this.apply();
+    this.node.classList.remove("is-showing");
+    if (this.detach) this.detach();
+    this.detach = null;
+    this.owner = null;
+  }
+
+  /** Map p = 0 (the icon's box) .. 1 (the card's box) to one transform. */
+  apply() {
+    if (!this.box) return;
+    const p = this.p.value;
+    const { x, y, w, h } = this.box;
+    const f = this.from;
+    const sx = f.w / w + (1 - f.w / w) * p;
+    const sy = f.h / h + (1 - f.h / h) * p;
+    const tx = (f.x - x) * (1 - p);
+    const ty = (f.y - y) * (1 - p);
+    this.node.style.transform = `translate(${tx.toFixed(2)}px, ${ty.toFixed(2)}px) scale(${sx.toFixed(4)}, ${sy.toFixed(4)})`;
+    this.node.style.opacity = Math.min(1, Math.max(0, p * 2.2)).toFixed(3);
+    this.node.style.setProperty("--content", Math.min(1, Math.max(0, (p - 0.35) / 0.5)).toFixed(3));
+  }
+
+  frame(dt) {
+    const moving = this.p.step(dt);
+    this.apply();
+    if (!moving && this.p.target === 0) this.finish();
+    return moving;
   }
 }
 
 export function initHeroIcons(root = document) {
   const links = Array.from(root.querySelectorAll("[data-hero-icon]"));
   if (!links.length) return [];
-  const figureNode = root.querySelector(".hero-figure");
-  const figure = figureNode ? new MarginFigure(figureNode) : null;
+  const intro = links[0].closest(".intro");
+  const protectedEls = [intro.querySelector(".intro-art"), intro.querySelector("h1")].filter(Boolean);
+  const figure = new PopCard(intro, protectedEls);
   const icons = links
     .map((link) => {
       const def = DEFINITIONS[link.dataset.heroIcon];

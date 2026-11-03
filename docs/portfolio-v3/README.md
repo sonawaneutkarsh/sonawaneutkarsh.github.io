@@ -5,6 +5,49 @@ structure and every case study, and adds motion where it explains something.
 Plain HTML, CSS and ES modules. There is still no framework, build step,
 backend, analytics or third-party runtime dependency.
 
+## Refinement pass (November 3, 2026)
+
+These changes replace the earlier descriptions further down where they
+conflict.
+
+- **Hero icon card** springs out of the icon and back into it on exit,
+  instead of a figure over the notebook illustration. It opens into the
+  right margin when there is room (≥ about 1300px). Otherwise it opens below
+  the icon, growing right, or left if needed. It never covers the
+  illustration, the heading or the other icons. The motion is a FLIP from
+  the icon's box with one slightly underdamped spring (stiffness 230,
+  damping 19). There are no captions, and phones keep the in-place
+  animation.
+- **Project frames** play no video on the homepage. Each project animates a
+  drawing:
+  - Nytr: dining menu → backend → iPhone Today view.
+  - Clage: a network that grows a node and a connection.
+  - Talks and Devvy: unchanged.
+
+  Two springs per frame (`--lift`, `--p`) drive the lift, shadow and the
+  illustration-to-drawing swap; only transform and opacity change. The
+  "muted", "Diagram, not a …" captions and the "Preview" text are gone. A
+  small play/pause mark shows only for keyboard focus and on touch screens.
+  The demo videos remain in the case studies.
+- **Explorer panel** opens on the side away from the selected card (cards on
+  the right half open it on the left), so the card's neighbours stay
+  visible. The "Showing …" status is screen-reader only, and the footnote
+  about fixed positions was removed.
+- **ADR walkthrough:** the boxed disclaimer is now one muted line. The
+  Previous/Next/Reset controls sit above the example, and the demo reserves
+  its tallest height. It also opts out of scroll anchoring, which was what
+  moved the page when the pair list collapsed. A test steps through every
+  state of every example and checks that the controls never move.
+- **Research notebook** lists the walkthrough as its first entry, dated
+  Nov 2026.
+- **Homepage Writing** shows the newest 3 posts plus "All posts →".
+  `publish_scheduled.py` trims the list back to 3 after each Sunday release.
+- **Nytr:** "Development paused" was removed from the homepage and explorer.
+  The "lessons from building it" link stays.
+- **Portrait slot:** a commented-out `<img class="intro-portrait">` in the
+  intro marks where a future illustrated self-portrait goes, with its CSS
+  ready. Nothing renders until the image exists.
+
 ## What changed
 
 ### Stage one: project previews and navigation

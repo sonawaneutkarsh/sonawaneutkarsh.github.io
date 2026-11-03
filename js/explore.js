@@ -214,6 +214,8 @@ function init() {
   const panelOpen = () => !panel.hidden;
   const sidePanel = () => window.matchMedia("(min-width: 900px)").matches;
   const usableWidth = () => size().w - (panelOpen() && sidePanel() ? panel.offsetWidth + 24 : 0);
+  // With the panel on the left, the free area starts after it.
+  const usableLeft = () => (panelOpen() && sidePanel() && bench.classList.contains("panel-left") ? panel.offsetWidth + 24 : 0);
   const usableHeight = () => size().h - (panelOpen() && !sidePanel() ? panel.offsetHeight : 0);
 
   function bounded(x, y, s) {
@@ -251,7 +253,7 @@ function init() {
     const h = usableHeight();
     const pad = 28;
     const s = clamp(Math.min((w - pad * 2) / box.w, (h - pad * 2) / box.h), FIT_MIN, 1.25);
-    moveTo({ x: (w - box.w * s) / 2 - box.x * s, y: (h - box.h * s) / 2 - box.y * s, s }, options);
+    moveTo({ x: usableLeft() + (w - box.w * s) / 2 - box.x * s, y: (h - box.h * s) / 2 - box.y * s, s }, options);
   }
 
   function visibleBox() {
@@ -315,13 +317,15 @@ function init() {
     });
     panelBody.replaceChildren(item.detail);
     panelTitle.textContent = item.querySelector(".bench-label").textContent;
+    // Cards on the right half of the bench open the panel on the left.
+    bench.classList.toggle("panel-left", centerOf(item).x > PLANE.width / 2);
     panel.hidden = false;
     bench.classList.add("has-panel");
     connections.forEach(({ group, a, b }) => group.classList.toggle("is-lit", a === item.id || b === item.id));
     panelBody.scrollTop = 0;
     const c = centerOf(item);
     const s = clamp(Math.max(view.s.target, 1), FIT_MIN, 1.15);
-    moveTo({ x: usableWidth() / 2 - c.x * s, y: usableHeight() / 2 - c.y * s, s }, { instant });
+    moveTo({ x: usableLeft() + usableWidth() / 2 - c.x * s, y: usableHeight() / 2 - c.y * s, s }, { instant });
     if (focus) panel.focus({ preventScroll: true });
   }
 
@@ -333,7 +337,7 @@ function init() {
     item.appendChild(item.detail);
     selected = null;
     panel.hidden = true;
-    bench.classList.remove("has-panel");
+    bench.classList.remove("has-panel", "panel-left");
     items.forEach((other) => {
       other.classList.remove("is-selected");
       other.button.setAttribute("aria-expanded", "false");

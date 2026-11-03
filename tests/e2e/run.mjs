@@ -93,7 +93,10 @@ const suites = {
       return {
         availability: text.includes("Looking for Summer 2027 software engineering and AI/ML internships."),
         pennState: text.includes("Computer science · Penn State · Class of 2028"),
-        paused: /Development paused/.test(document.querySelector("#projects").innerText),
+        noPausedLabel: !/Development paused/.test(document.querySelector("#projects").innerText),
+        nytrLessons: Boolean(document.querySelector('#projects a[href="/blog/why-i-stopped-working-on-nytr-problems-and-lessons/"]')),
+        threePosts: document.querySelectorAll("#blog .post-row").length === 3 && Boolean(document.querySelector('#blog a[href="/blog/"]')),
+        noPreviewCaptions: !document.querySelector(".preview-caption") && !/Diagram, not|muted/.test(document.querySelector("#projects").innerText),
         pyopt: text.includes("13 of the 40 test prompts leaked from training"),
         contacts: ["mailto:utkarshsonawane@psu.edu", "https://github.com/sonawaneutkarsh", "https://www.linkedin.com/in/sonawaneutkarsh/", "/resume.pdf"].every((h) =>
           document.querySelector(`a[href="${h}"]`),
@@ -110,8 +113,7 @@ const suites = {
     );
     check("three hero icon links with real destinations", icons.length === 3 && icons.every(([, href]) => href && href !== "#"), JSON.stringify(icons));
 
-    check("no demo video is requested before interaction", !requests.some((u) => u.endsWith(".mp4")));
-    check("no <video> exists on the homepage before interaction", await page.eval(() => !document.querySelector("#projects video")));
+    check("homepage requests no demo video", !requests.some((u) => u.endsWith(".mp4")));
 
     // Hero icon: hover lights it, the margin figure shows, the text does not move.
     const before = await page.eval(() => {
@@ -120,8 +122,17 @@ const suites = {
     });
     await page.hover('[data-hero-icon="ai"] .hero-word');
     check("AI icon lights on hover", await until(() => document.querySelector('[data-hero-icon="ai"]').classList.contains("is-lit")));
-    check("margin figure shows the lit icon", await until(() => document.querySelector(".hero-figure").classList.contains("is-showing")));
+    check("pop card shows the lit icon", await until(() => document.querySelector(".hero-pop").classList.contains("is-showing")));
     await page.wait(900);
+    const pop = await page.eval(() => {
+      const card = document.querySelector(".hero-pop").getBoundingClientRect();
+      const art = document.querySelector(".intro-art").getBoundingClientRect();
+      const bio = document.querySelector(".bio").getBoundingClientRect();
+      const icons = Array.from(document.querySelectorAll(".hero-link:not(.is-lit) .hero-icon")).map((e) => e.getBoundingClientRect());
+      const hit = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+      return { side: document.querySelector(".hero-pop").dataset.side, coversArt: hit(card, art), coversIcon: icons.some((i) => hit(card, i)), rightOfText: card.left >= bio.right, inView: card.right <= document.documentElement.clientWidth };
+    });
+    check("pop card opens to the right of the text at 1440 and covers neither the notebook nor other icons", pop.side === "right" && pop.rightOfText && !pop.coversArt && !pop.coversIcon && pop.inView, JSON.stringify(pop));
     const during = await page.eval(() => {
       const r = document.querySelector(".hero-lede").getBoundingClientRect();
       return [r.top, r.height, document.querySelector(".bio").getBoundingClientRect().height];
@@ -132,6 +143,7 @@ const suites = {
     await shot("home-icon-ai-final");
     await page.mouseMove(5, 880);
     check("AI icon dims when the pointer leaves", await until(() => !document.querySelector('[data-hero-icon="ai"]').classList.contains("is-lit")));
+    check("pop card springs back into the icon and hides", await until(() => !document.querySelector(".hero-pop").classList.contains("is-showing"), 2000));
     check("animation loop goes idle after settling", await until(() => Number(document.querySelector('[data-hero-icon="ai"] .a-loop').getAttribute("opacity")) === 0, 3000));
 
     await page.hover('[data-hero-icon="software"] .hero-word');
@@ -158,34 +170,31 @@ const suites = {
     check("moving to Devvy deactivates Talks (one preview at a time)", await until(() => !document.querySelector('[data-name="Talks"]').classList.contains("is-active") && document.querySelector('[data-name="Devvy"]').classList.contains("is-active")));
     await page.wait(1200);
     await shot("home-preview-devvy");
-    await page.hover(".project-row:nth-of-type(1) h3 a");
-    check("Nytr preview creates a muted inline video on intent", await until(() => {
-      const v = document.querySelector('[data-name="Nytr"] video');
-      return Boolean(v && v.muted && v.playsInline && v.loop && !v.controls);
-    }));
-    check("Nytr video starts playing", await until(() => {
-      const v = document.querySelector('[data-name="Nytr"] video');
-      return v && !v.paused && v.currentTime > 0;
-    }, 5000));
-    await shot("home-preview-nytr");
+    for (const [n, name] of [[1, "Nytr"], [2, "Clage"]]) {
+      await page.hover(`.project-row:nth-of-type(${n}) h3 a`);
+      check(`${name} hover animates its drawing (no video)`, await until((nm) => {
+        const m = document.querySelector(`[data-name="${nm}"]`);
+        return m.classList.contains("is-active") && m.querySelector(".preview-diagram") && !m.querySelector("video");
+      }, 2000, name));
+      await page.wait(1600);
+      await shot(`home-preview-${name.toLowerCase()}`);
+    }
+    check("Nytr drawing fills its ring", await page.eval(() => parseFloat(document.querySelector('[data-name="Nytr"] .n-ring').getAttribute("stroke-dasharray")) >= 0));
     await page.mouseMove(5, 5);
-    check("Nytr video pauses when the pointer leaves", await until(() => document.querySelector('[data-name="Nytr"] video').paused));
-
+    check("frame springs settle back to rest after the pointer leaves", await until(() => {
+      const m = document.querySelector('[data-name="Clage"]');
+      return !m.classList.contains("is-active") && Number(m.style.getPropertyValue("--p")) === 0 && Number(m.style.getPropertyValue("--lift")) === 0;
+    }, 3000));
     await page.click('[data-name="Clage"] .preview-toggle');
-    check("Clage preview button toggles aria-pressed", await until(() => document.querySelector('[data-name="Clage"] .preview-toggle').getAttribute("aria-pressed") === "true"));
-    check("Clage overlay network renders while the video loads", await page.eval(() => Boolean(document.querySelector('[data-name="Clage"] .preview-network'))));
-    await page.wait(1600);
-    await shot("home-preview-clage");
+    check("Clage button toggles aria-pressed", await until(() => document.querySelector('[data-name="Clage"] .preview-toggle').getAttribute("aria-pressed") === "true"));
     await page.click('[data-name="Clage"] .preview-toggle');
-    check("second press pauses Clage", await until(() => document.querySelector('[data-name="Clage"] video').paused));
-
-    check("only demo videos were fetched, not other media", requests.filter((u) => u.endsWith(".mp4")).every((u) => /nytr-demo|clage-studio-demo/.test(u)));
+    check("second press stops Clage", await until(() => !document.querySelector('[data-name="Clage"]').classList.contains("is-active")));
 
     // Reduced motion: no hover autoplay; icons snap to a still.
     await open("/", { reduced: true });
     await page.hover(".project-row:nth-of-type(1) h3 a");
     await page.wait(500);
-    check("reduced motion: hover does not start a video", await page.eval(() => !document.querySelector('[data-name="Nytr"]').classList.contains("is-active")));
+    check("reduced motion: hover does not start an animation", await page.eval(() => !document.querySelector('[data-name="Nytr"]').classList.contains("is-active")));
     await page.hover('[data-hero-icon="ai"] .hero-word');
     check("reduced motion: icon jumps straight to its final still", await until(() => Number(document.querySelector('[data-hero-icon="ai"] .a-loop').getAttribute("opacity")) > 0.9, 150));
     check("reduced motion: section reveal does not hide content", await page.eval(() => !document.querySelector(".is-pending")));
@@ -195,7 +204,7 @@ const suites = {
       await open("/", { width, height: 844, touch: true });
       await shot(`home-mobile-${width}`);
       check(`mobile ${width}: no overflow`, (await overflow()) <= 0);
-      check(`mobile ${width}: margin figure hidden`, await page.eval(() => getComputedStyle(document.querySelector(".hero-figure")).display === "none"));
+      check(`mobile ${width}: no pop card`, await page.eval(() => getComputedStyle(document.querySelector(".hero-pop")).display === "none"));
     }
     await open("/", { width: 390, height: 844, touch: true });
     check("touch: hero icons play a one-time tour", await until(() => document.querySelector(".hero-link.is-lit"), 2500));
@@ -486,11 +495,12 @@ const suites = {
     check("touch: one-finger sideways swipe pans the bench", after[0] < before[0] - 150, `${before} → ${after}`);
     check("touch: sideways swipe does not scroll the page", (await page.eval(() => scrollY)) === y0);
 
+    // Swipe down (page scrolls up): there is always room above the bench.
     const yBefore = await page.eval(() => scrollY);
     const tBefore = await t();
-    await page.touchGesture([[{ x: c.x, y: c.y + 160 }, { x: c.x + 4, y: c.y - 160 }]]);
+    await page.touchGesture([[{ x: c.x, y: c.y - 160 }, { x: c.x + 4, y: c.y + 160 }]]);
     await page.wait(600);
-    check("touch: vertical swipe over the bench scrolls the page", (await page.eval(() => scrollY)) > yBefore + 80);
+    check("touch: vertical swipe over the bench scrolls the page", (await page.eval(() => scrollY)) < yBefore - 80, `${yBefore} → ${await page.eval(() => scrollY)}`);
     check("touch: vertical swipe leaves the bench where it was", (await t()) === tBefore, `${tBefore} vs ${await t()}`);
 
     await page.eval(() => document.getElementById("bench").scrollIntoView({ block: "center", behavior: "instant" }));
@@ -668,25 +678,36 @@ const suites = {
         return out;
       });
       check(`layout ${width}: hero icons stay with their words and inside the column`, p.length === 0, p.join("; "));
-      for (const name of ["Talks", "Devvy"]) {
+      if (width >= 720) {
+        for (const icon of ["software", "ai", "research"]) {
+          await page.hover(`[data-hero-icon="${icon}"] .hero-word`);
+          await page.wait(700);
+          const q = await page.eval(() => {
+            const card = document.querySelector(".hero-pop").getBoundingClientRect();
+            const art = document.querySelector(".intro-art").getBoundingClientRect();
+            const h1 = document.querySelector(".intro h1").getBoundingClientRect();
+            const hit = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+            return { side: document.querySelector(".hero-pop").dataset.side, art: hit(card, art), h1: hit(card, h1), out: card.right > document.documentElement.clientWidth || card.left < 0 };
+          });
+          check(`layout ${width}: ${icon} pop card (${q.side}) clears the notebook, heading and viewport`, !q.art && !q.h1 && !q.out, JSON.stringify(q));
+          await page.mouseMove(2, 880);
+          await page.wait(500);
+        }
+      }
+      for (const name of ["Nytr", "Clage", "Talks", "Devvy"]) {
         await page.eval((n) => document.querySelector(`[data-name="${n}"] .preview-toggle`).click(), name);
         await page.wait(1600);
         const fit = await page.eval((n) => {
           const frame = document.querySelector(`[data-name="${n}"]`).getBoundingClientRect();
           const svg = document.querySelector(`[data-name="${n}"] .preview-diagram`);
           const texts = Array.from(svg.querySelectorAll("text")).map((t) => t.getBoundingClientRect());
-          const caption = document.querySelector(`[data-name="${n}"] .preview-caption`).getBoundingClientRect();
           const chip = document.querySelector(`[data-name="${n}"] .preview-chip`).getBoundingClientRect();
-          const overlapsCaption = texts.filter((r) => r.width && r.left < caption.right && r.right > caption.left && r.top < caption.bottom && r.bottom > caption.top).length;
+          const overlapsCaption = 0;
           const overlapsChip = texts.filter((r) => r.width && r.left < chip.right && r.right > chip.left && r.top < chip.bottom && r.bottom > chip.top).length;
           const outside = texts.filter((r) => r.width && (r.left < frame.left - 1 || r.right > frame.right + 1)).length;
           return { overlapsCaption, overlapsChip, outside };
         }, name);
-        check(`layout ${width}: ${name} preview caption is not truncated`, await page.eval((n) => {
-          const c = document.querySelector(`[data-name="${n}"] .preview-caption`);
-          return c.scrollWidth <= c.clientWidth;
-        }, name));
-        check(`layout ${width}: ${name} diagram labels clear the caption, chip and frame`, !fit.overlapsCaption && !fit.overlapsChip && !fit.outside, JSON.stringify(fit));
+        check(`layout ${width}: ${name} diagram labels clear the button and frame`, !fit.overlapsCaption && !fit.overlapsChip && !fit.outside, JSON.stringify(fit));
         await page.eval((n) => document.querySelector(`[data-name="${n}"] .preview-toggle`).click(), name);
       }
     }
@@ -695,12 +716,46 @@ const suites = {
   async demo() {
     await open("/notebook/adr-extraction-demo/");
     check("demo: no console errors", page.errors.length === 0, page.errors.join("; "));
-    check("demo: identified as a synthetic illustration", await page.eval(() => /Educational illustration, synthetic examples/.test(document.body.innerText) && /not real\s+medications/.test(document.body.innerText)));
+    check("demo: identified as a synthetic illustration", await page.eval(() => /Illustration only: the posts and drug names are invented, and no real\s+data, models, or results are used\./.test(document.body.innerText) && !document.querySelector(".adr-notice")));
     const stepIs = (n) => until((k) => document.querySelector(".adr-demo").dataset.step === String(k), 1000, n);
     check("demo: starts at step 1", await stepIs(1));
     check("demo: drug highlight hidden at step 1", await page.eval(() => getComputedStyle(document.querySelector('.adr-example:not([hidden]) mark[data-kind="drug"]')).backgroundColor === "rgba(0, 0, 0, 0)"));
     await page.click('[data-move="1"]');
     check("demo: Next goes to step 2", await stepIs(2));
+    {
+      // Scroll so the controls sit low on screen, then step through every
+      // state of every example: the controls must not move.
+      await page.eval(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }));
+      await page.wait(100);
+      const log = [];
+      const pos = async () => {
+        const v = await page.eval(() => [Math.round(document.querySelector('[data-move="1"]').getBoundingClientRect().top), Math.round(scrollY), document.documentElement.scrollHeight, document.querySelector(".adr-demo").dataset.step]);
+        log.push(v.join("/"));
+        return v[0];
+      };
+      const y0 = await pos();
+      const seen = new Set([y0]);
+      for (const ex of ["0", "1", "2"]) {
+        await page.eval((e) => document.querySelector(`[data-example="${e}"]`).click(), ex);
+        seen.add(await pos());
+        for (let k = 0; k < 6; k++) {
+          await page.eval(() => document.querySelector('[data-move="1"]').click());
+          await page.wait(60);
+          seen.add(await pos());
+        }
+        for (let k = 0; k < 6; k++) {
+          await page.eval(() => document.querySelector('[data-move="-1"]').click());
+          await page.wait(60);
+          seen.add(await pos());
+        }
+      }
+      check("demo: Next/Previous controls never move while stepping (any example)", seen.size === 1, seen.size === 1 ? "" : log.join(" "));
+      await page.eval(() => {
+        document.querySelector('[data-example="0"]').click();
+        document.querySelector('[data-goto="2"]').click();
+        window.scrollTo({ top: 0, behavior: "instant" });
+      });
+    }
     check("demo: drug mentions highlighted at step 2", await until(() => getComputedStyle(document.querySelector('.adr-example:not([hidden]) mark[data-kind="drug"]')).backgroundColor !== "rgba(0, 0, 0, 0)"));
     await page.click('[data-move="1"]');
     await page.click('[data-move="1"]');

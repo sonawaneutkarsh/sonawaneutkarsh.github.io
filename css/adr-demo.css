@@ -14,22 +14,10 @@
   margin-bottom: 16px;
 }
 
-.adr-notice {
-  margin: 0 0 40px;
-  padding: 16px 20px;
-  border: 1px solid var(--rule);
-  border-left: 3px solid var(--sage);
-  border-radius: 6px;
-  background: var(--wash);
-  font: 15px/1.6 var(--sans);
-}
-.adr-notice p {
-  margin: 0;
-}
-.adr-notice .adr-notice-title {
-  margin-bottom: 6px;
-  font-weight: 600;
-  color: var(--sage-hover);
+.adr-note {
+  margin: -28px 0 40px;
+  font: 13px/1.6 var(--sans);
+  color: var(--muted);
 }
 
 .adr-demo h2 {
@@ -392,12 +380,30 @@ mark[data-kind] {
   border-left: 3px solid var(--sage);
   padding-left: 16px;
 }
+/* Controls sit above the post, so content that grows or shrinks below them
+   between steps never moves them. The progress line is for screen readers;
+   the step list already shows where you are. */
+.adr-controls {
+  margin: 0 0 20px;
+}
+/* Scroll anchoring would pick an element inside the demo and scroll the page
+   to keep it still as steps reveal or hide content, which moves the controls.
+   With a reserved min-height, nothing below the demo moves, so opt out here. */
+.adr-demo,
+.adr-demo * {
+  overflow-anchor: none;
+}
+.adr-controls [data-move="reset"] {
+  margin-left: auto;
+}
 .adr-progress {
-  flex: 1;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
   margin: 0;
-  text-align: center;
-  font: 13px/1.5 var(--sans);
-  color: var(--muted);
 }
 @keyframes adr-rise {
   from {
@@ -446,13 +452,5 @@ mark[data-kind] {
   }
   .adr-legend ul {
     grid-template-columns: 1fr;
-  }
-  .adr-controls {
-    justify-content: space-between;
-  }
-  .adr-progress {
-    order: -1;
-    flex-basis: 100%;
-    text-align: left;
   }
 }

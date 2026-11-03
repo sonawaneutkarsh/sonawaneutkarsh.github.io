@@ -92,7 +92,7 @@ function init() {
     });
   }
 
-  function render({ announce = true } = {}) {
+  function render({ announce = true, quiet = false } = {}) {
     demo.dataset.step = String(step);
     demo.classList.toggle("show-drugs", step >= 2);
     demo.classList.toggle("show-reactions", step >= 3);
@@ -114,6 +114,7 @@ function init() {
     });
     prev.disabled = step === 1;
     next.disabled = step === STEPS;
+    if (quiet) return;
     drawLinks(examples[current]);
     if (announce) progress.textContent = `Step ${step} of ${STEPS}: ${TITLES[step - 1]}`;
     else progress.textContent = `Step ${step} of ${STEPS}`;
@@ -158,19 +159,53 @@ function init() {
     }
   });
 
+  // Reserve the tallest height any example/step reaches at this width, so
+  // stepping never shortens the page (which would make the browser clamp the
+  // scroll position and move the controls). Measured synchronously, before
+  // paint, by briefly rendering each state.
+  function reserve() {
+    const keep = { step, current };
+    const settling = demo.classList.contains("is-settling");
+    demo.classList.add("is-settling");
+    demo.style.minHeight = "";
+    let tallest = 0;
+    for (let i = 0; i < examples.length; i++) {
+      for (let k = 1; k <= STEPS; k++) {
+        current = i;
+        step = k;
+        render({ announce: false, quiet: true });
+        tallest = Math.max(tallest, demo.offsetHeight);
+      }
+    }
+    ({ step, current } = keep);
+    render({ announce: false, quiet: true });
+    demo.style.minHeight = `${Math.ceil(tallest)}px`;
+    if (!settling) {
+      void demo.offsetHeight;
+      requestAnimationFrame(() => demo.classList.remove("is-settling"));
+    }
+  }
+
   let resizeTimer = 0;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => drawLinks(examples[current]), 100);
+    resizeTimer = setTimeout(() => {
+      reserve();
+      drawLinks(examples[current]);
+    }, 100);
   });
   // Fonts settling can move the marks; redraw once everything has loaded.
-  window.addEventListener("load", () => drawLinks(examples[current]));
+  window.addEventListener("load", () => {
+    reserve();
+    drawLinks(examples[current]);
+  });
 
   // First render without transitions, so the fully annotated no-JS state
   // does not visibly animate away on load.
   step = 1;
   demo.classList.add("is-settling");
   render({ announce: false });
+  reserve();
   requestAnimationFrame(() => requestAnimationFrame(() => demo.classList.remove("is-settling")));
 }
 

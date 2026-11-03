@@ -16,8 +16,7 @@ const RULE = "#c9cfbf";
 
 const FONT = `font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif"`;
 
-function build(markup, label, viewBox = "0 -24 280 199") {
-  // The default view box leaves a band at the top for the frame's caption.
+function build(markup, label, viewBox = "0 -4 280 183") {
   const holder = document.createElementNS(SVG_NS, "svg");
   holder.setAttribute("viewBox", viewBox);
   holder.setAttribute("class", "preview-diagram");
@@ -274,7 +273,6 @@ export function clageNetwork() {
   ];
   const { holder, $, $$ } = build(
     `
-    <rect x="0" y="0" width="280" height="175" fill="${PAPER}"/>
     <g fill="none" stroke-linecap="round">
       ${direct
         .map(
@@ -294,8 +292,7 @@ export function clageNetwork() {
     <text x="58" y="160" text-anchor="middle" font-size="8.5" fill="${MUTED}" ${FONT}>inputs</text>
     <text x="222" y="160" text-anchor="middle" font-size="8.5" fill="${MUTED}" ${FONT}>outputs</text>
     `,
-    "Clage Studio demo",
-    "0 0 280 175",
+    "Clage network",
   );
 
   const edges = $$(".c-edge");
@@ -335,7 +332,100 @@ export function clageNetwork() {
     });
   }
 
-  return { svg: holder, render, cycle: 4200 };
+  // `once`: t keeps growing past 1, so the network builds once and the
+  // signals keep travelling instead of the drawing resetting each cycle.
+  return { svg: holder, render, cycle: 3000, once: true, still: 1.4 };
 }
 
-export const diagrams = { talks: talksDiagram, devvy: devvyDiagram };
+/* ----------------------------------------------------------------------- */
+/* Nytr: the day's dining menu -> deterministic backend -> iPhone Today view  */
+/* ----------------------------------------------------------------------- */
+export function nytrDiagram() {
+  const items = [36, 54, 72, 90, 108];
+  const { holder, $, $$ } = build(
+    `
+    <g transform="translate(14 18)">
+      <rect width="84" height="122" rx="6" fill="${PAPER}" stroke="${INK}" stroke-width="1.5"/>
+      <text x="10" y="17" font-size="9" fill="${INK}" ${FONT}>Dining menu</text>
+      <path d="M10 24 H74" stroke="${RULE}" stroke-width="1"/>
+      ${items
+        .map(
+          (y, i) => `<g class="n-item" opacity="0">
+            <rect class="n-hl" x="5" y="${y - 7}" width="74" height="13" rx="3" fill="${SOFT}" opacity="0"/>
+            <circle cx="12" cy="${y}" r="2.2" fill="${LINE}"/>
+            <rect x="18" y="${y - 1.5}" width="${[44, 34, 50, 30, 40][i]}" height="3" rx="1.5" fill="${LINE}"/>
+          </g>`,
+        )
+        .join("")}
+    </g>
+    <text x="56" y="160" text-anchor="middle" font-size="9.5" fill="${MUTED}" ${FONT}>Penn State dining</text>
+
+    <path id="n-a" d="M98 66 C 108 66, 110 79, 118 79" fill="none" stroke="${RULE}" stroke-width="1.25" stroke-dasharray="3 4"/>
+    <path id="n-b" d="M162 79 C 170 79, 172 70, 182 70" fill="none" stroke="${RULE}" stroke-width="1.25" stroke-dasharray="3 4"/>
+    <g transform="translate(118 62)">
+      <rect width="44" height="34" rx="6" fill="${WASH}" stroke="${SAGE}" stroke-width="1.5"/>
+      <text class="n-calc" x="22" y="21" text-anchor="middle" font-size="10" fill="${INK}" ${FONT}>Σ</text>
+    </g>
+    <text x="140" y="112" text-anchor="middle" font-size="9.5" fill="${MUTED}" ${FONT}>backend</text>
+
+    <g transform="translate(182 14)">
+      <rect width="66" height="130" rx="12" fill="${PAPER}" stroke="${INK}" stroke-width="1.5"/>
+      <rect x="5" y="10" width="56" height="112" rx="5" fill="${WASH}"/>
+      <rect x="26" y="4" width="14" height="3" rx="1.5" fill="${INK}"/>
+      <text x="11" y="25" font-size="9" fill="${INK}" ${FONT}>Today</text>
+      <circle cx="33" cy="52" r="15" fill="none" stroke="${RULE}" stroke-width="4"/>
+      <circle class="n-ring" cx="33" cy="52" r="15" fill="none" stroke="${SAGE}" stroke-width="4" stroke-linecap="round"
+        transform="rotate(-90 33 52)" pathLength="1" stroke-dasharray="0 1"/>
+      <rect x="11" y="78" width="44" height="3" rx="1.5" fill="${RULE}"/>
+      <rect class="n-bar" x="11" y="78" width="0" height="3" rx="1.5" fill="${SAGE}"/>
+      <rect x="11" y="86" width="44" height="3" rx="1.5" fill="${RULE}"/>
+      <rect class="n-bar" x="11" y="86" width="0" height="3" rx="1.5" fill="${LINE}"/>
+      <g class="n-rec" opacity="0">
+        <rect x="9" y="96" width="48" height="18" rx="4" fill="${PAPER}" stroke="${SAGE}" stroke-width="1.25"/>
+        <circle cx="16" cy="105" r="2.2" fill="${LINE}"/>
+        <rect x="21" y="103.5" width="30" height="3" rx="1.5" fill="${LINE}"/>
+      </g>
+    </g>
+    <text x="215" y="160" text-anchor="middle" font-size="9.5" fill="${MUTED}" ${FONT}>iPhone</text>
+
+    <rect class="n-packet" x="-6" y="-4" width="12" height="8" rx="2" fill="${SAGE}" opacity="0"/>
+    `,
+    "Nytr flow",
+  );
+  const rows = $$(".n-item");
+  const hl = $$(".n-hl");
+  const pa = $("#n-a");
+  const pb = $("#n-b");
+  const packet = $(".n-packet");
+  const bars = $$(".n-bar");
+  const ring = $(".n-ring");
+  const PICK = 1;
+
+  function render(t) {
+    rows.forEach((row, i) => show(row, phase(t, 0.02 + i * 0.04, 0.08 + i * 0.04)));
+    hl.forEach((h, i) => show(h, i === PICK ? phase(t, 0.3, 0.36) * (1 - phase(t, 0.9, 0.96)) : 0));
+    const a = ease(phase(t, 0.36, 0.48));
+    const b = ease(phase(t, 0.54, 0.66));
+    const moving = (a > 0 && a < 1) || (b > 0 && b < 1);
+    show(packet, moving ? 1 : 0);
+    if (a > 0 && a < 1) {
+      const pt = pointAt(pa, a);
+      packet.setAttribute("x", (pt.x - 6).toFixed(2));
+      packet.setAttribute("y", (pt.y - 4).toFixed(2));
+    } else if (b > 0 && b < 1) {
+      const pt = pointAt(pb, b);
+      packet.setAttribute("x", (pt.x - 6).toFixed(2));
+      packet.setAttribute("y", (pt.y - 4).toFixed(2));
+    }
+    $(".n-calc").setAttribute("fill", t > 0.47 && t < 0.56 ? SAGE : INK);
+    const fill = ease(phase(t, 0.66, 0.84)) * (1 - phase(t, 0.94, 1));
+    ring.setAttribute("stroke-dasharray", `${(0.72 * fill).toFixed(3)} 1`);
+    bars[0].setAttribute("width", (44 * 0.8 * fill).toFixed(2));
+    bars[1].setAttribute("width", (44 * 0.55 * fill).toFixed(2));
+    show($(".n-rec"), phase(t, 0.7, 0.76) * (1 - phase(t, 0.94, 1)));
+  }
+
+  return { svg: holder, render, cycle: 6200, still: 0.86 };
+}
+
+export const diagrams = { talks: talksDiagram, devvy: devvyDiagram, clage: clageNetwork, nytr: nytrDiagram };

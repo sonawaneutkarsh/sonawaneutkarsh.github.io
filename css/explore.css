@@ -75,6 +75,18 @@
   font-size: 18px;
   padding: 4px 0;
 }
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.bench-toolbar {
+  margin-bottom: 16px;
+}
 .bench-status {
   min-height: 1.5em;
   margin: 4px 0 12px;
@@ -150,12 +162,6 @@
 .bench-item:target {
   background: linear-gradient(var(--sage-soft), var(--sage-soft)) no-repeat 0 0 / 3px 100%;
   padding-left: 16px;
-}
-.explore-foot {
-  margin-top: 20px;
-  font: 13px/1.6 var(--sans);
-  color: var(--muted);
-  max-width: 680px;
 }
 
 /* ---------- spatial workbench ---------- */
@@ -385,6 +391,18 @@
   from {
     opacity: 0;
     transform: translateX(16px);
+  }
+}
+/* Opens on the side away from the selected card, so its neighbours stay visible. */
+.bench.panel-left .bench-panel {
+  right: auto;
+  left: 12px;
+  animation-name: bench-panel-in-left;
+}
+@keyframes bench-panel-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
   }
 }
 .bench-panel-bar {

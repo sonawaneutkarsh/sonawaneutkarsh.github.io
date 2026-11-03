@@ -2,6 +2,7 @@
 """Publish Sunday essays staged outside the GitHub Pages deployment directory."""
 import argparse
 import json
+import re
 from datetime import datetime, date, time, timezone
 from email.utils import format_datetime
 from html import escape
@@ -12,6 +13,18 @@ ROOT = Path(__file__).resolve().parent.parent
 STAGING = ROOT / ".publishing"
 ORIGIN = "https://sonawaneutkarsh.github.io"
 ET = ZoneInfo("America/New_York")
+
+
+HOME_POSTS = 3
+
+
+def trim_home(page, start):
+    """Keep only the newest HOME_POSTS rows in the homepage Writing list."""
+    needle = '<ul class="post-list">\n'
+    at = page.find(needle, start) + len(needle)
+    end = page.find("</ul>", at)
+    rows = re.findall(r'          <li class="post-row">.*?</li>\n', page[at:end], flags=re.S)
+    return page[:at] + "".join(rows[:HOME_POSTS]) + "        " + page[end:]
 
 
 def insert_index(page, post, home=False):
@@ -31,7 +44,8 @@ def insert_index(page, post, home=False):
         needle = '<ul class="post-list">\n'
         at = page.find(needle, start)
         assert at != -1, "Homepage post list missing"
-        return page[:at + len(needle)] + snippet + page[at + len(needle):]
+        page = page[:at + len(needle)] + snippet + page[at + len(needle):]
+        return trim_home(page, start)
 
     snippet = (
         f'          <li class="post-row">\n'
