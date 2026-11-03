@@ -1,122 +1,95 @@
 #!/usr/bin/env python3
-"""Publish Sunday essays staged outside the GitHub Pages deployment directory."""
+"""Publish Sunday essays staged outside the deployed site.
+
+Drafts wait in .publishing/posts/<slug>/index.html, listed in
+.publishing/schedule.json. When one is due (its Sunday has arrived in
+America/New_York) this script:
+
+1. checks every due draft before touching anything;
+2. moves the draft to static/blog/<slug>/index.html (its permanent URL);
+3. prepends its record to src/lib/content/posts.json, the single list of
+   published posts that the build turns into the homepage's latest three,
+   /blog/ and /feed.xml (RSS time: noon in New York, as before);
+4. adds the URL to static/sitemap.xml.
+
+The workflow then builds the site, runs the checks and deploys build/.
+Runs are idempotent: a post counts as published once its article exists.
+Drafts never enter static/ or posts.json before their date, so the build
+cannot expose them.
+"""
 import argparse
 import json
-import re
 from datetime import datetime, date, time, timezone
-from email.utils import format_datetime
-from html import escape
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parent.parent
 STAGING = ROOT / ".publishing"
+ARTICLES = ROOT / "static" / "blog"
+MANIFEST = ROOT / "src" / "lib" / "content" / "posts.json"
+SITEMAP = ROOT / "static" / "sitemap.xml"
 ORIGIN = "https://sonawaneutkarsh.github.io"
 ET = ZoneInfo("America/New_York")
 
 
-HOME_POSTS = 3
+def rss_time(day):
+    """Noon in New York on the publication day, as a UTC ISO timestamp."""
+    noon = datetime.combine(day, time(12), tzinfo=ET).astimezone(timezone.utc)
+    return noon.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def trim_home(page, start):
-    """Keep only the newest HOME_POSTS rows in the homepage Writing list."""
-    needle = '<ul class="post-list">\n'
-    at = page.find(needle, start) + len(needle)
-    end = page.find("</ul>", at)
-    rows = re.findall(r'          <li class="post-row">.*?</li>\n', page[at:end], flags=re.S)
-    return page[:at] + "".join(rows[:HOME_POSTS]) + "        " + page[end:]
-
-
-def insert_index(page, post, home=False):
-    url = f"/blog/{post['slug']}/"
+def record(post):
     day = date.fromisoformat(post["date"])
-    label = f"{day.strftime('%b')} {day.day}, {day.year}"
-    title = escape(post["title"])
-    if home:
-        snippet = (
-            f'          <li class="post-row">\n'
-            f'            <time class="post-date" datetime="{day}">{label}</time>\n'
-            f'            <a class="post-title" href="{url}">{title}</a>\n'
-            f'          </li>\n'
-        )
-        start = page.find('<section id="blog">')
-        assert start != -1, "Homepage writing section missing"
-        needle = '<ul class="post-list">\n'
-        at = page.find(needle, start)
-        assert at != -1, "Homepage post list missing"
-        page = page[:at + len(needle)] + snippet + page[at + len(needle):]
-        return trim_home(page, start)
-
-    snippet = (
-        f'          <li class="post-row">\n'
-        f'            <time class="post-date" datetime="{day}">{label}</time>\n'
-        f'            <div>\n'
-        f'              <a class="post-title" href="{url}">{title}</a>\n'
-        f'              <p>{escape(post["description"])}</p>\n'
-        f'            </div>\n'
-        f'          </li>\n'
-    )
-    needle = '<ul class="post-list">\n'
-    assert page.count(needle) == 1, "Blog post list missing or ambiguous"
-    return page.replace(needle, needle + snippet, 1)
-
-
-def insert_rss(xml, post):
-    day = date.fromisoformat(post["date"])
-    at_noon = datetime.combine(day, time(12), tzinfo=ET).astimezone(timezone.utc)
-    url = ORIGIN + f"/blog/{post['slug']}/"
-    item = (
-        "    <item>\n"
-        f"      <title>{escape(post['title'])}</title>\n"
-        f"      <link>{url}</link>\n"
-        f'      <guid isPermaLink="true">{url}</guid>\n'
-        f"      <pubDate>{format_datetime(at_noon, usegmt=True)}</pubDate>\n"
-        f"      <description>{escape(post['description'])}</description>\n"
-        "    </item>\n"
-    )
-    assert "    <item>" in xml, "Existing RSS items missing"
-    return xml.replace("    <item>", item + "    <item>", 1)
+    return {
+        "slug": post["slug"],
+        "title": post["title"],
+        "date": post["date"],
+        "pubDate": rss_time(day),
+        "description": post["description"],
+    }
 
 
 def insert_sitemap(xml, post):
-    url = ORIGIN + f"/blog/{post['slug']}/"
+    url = f"{ORIGIN}/blog/{post['slug']}/"
     assert "</urlset>" in xml, "Sitemap is missing closing urlset"
+    if f"<loc>{url}</loc>" in xml:
+        return xml
     return xml.replace(
         "</urlset>",
         f'  <url><loc>{url}</loc><lastmod>{post["date"]}</lastmod></url>\n</urlset>',
     )
 
 
-def main():
+def write_manifest(records):
+    MANIFEST.write_text(json.dumps(records, indent="\t", ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--as-of", help="simulate a publish date as YYYY-MM-DD")
     parser.add_argument("--dry-run", action="store_true")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     now = date.fromisoformat(args.as_of) if args.as_of else datetime.now(ET).date()
     posts = json.loads((STAGING / "schedule.json").read_text(encoding="utf-8"))
     assert len({post["slug"] for post in posts}) == len(posts), "duplicate slug"
     for post in posts:
         assert date.fromisoformat(post["date"]).weekday() == 6, f"Not a Sunday: {post['date']}"
 
+    published = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    known = {p["slug"] for p in published}
     due = [
         post for post in sorted(posts, key=lambda p: p["date"])
         if date.fromisoformat(post["date"]) <= now
-        and not (ROOT / "blog" / post["slug"] / "index.html").exists()
+        and not (ARTICLES / post["slug"] / "index.html").exists()
     ]
     print(f"Sunday publishing check for {now} America/New_York: {len(due)} due.")
     if args.dry_run:
         for post in due:
             print(f"Would publish {post['date']} — {post['title']}")
-        return
+        return 0
     if not due:
-        return
+        return 0
 
-    paths = {
-        "index": ROOT / "index.html",
-        "blog": ROOT / "blog" / "index.html",
-        "feed": ROOT / "feed.xml",
-        "map": ROOT / "sitemap.xml",
-    }
     # Validate all due drafts before modifying the working tree.
     for post in due:
         path = STAGING / "posts" / post["slug"] / "index.html"
@@ -125,26 +98,32 @@ def main():
         source = path.read_text(encoding="utf-8")
         if f'datetime="{post["date"]}"' not in source or "<article" not in source:
             raise RuntimeError(f"Malformed staged article: {path}")
+        if post["slug"] in known:
+            raise RuntimeError(f"{post['slug']} is already in posts.json but its article is missing")
 
-    result = {name: path.read_text(encoding="utf-8") for name, path in paths.items()}
+    sitemap = SITEMAP.read_text(encoding="utf-8")
     for post in due:
-        result["index"] = insert_index(result["index"], post, home=True)
-        result["blog"] = insert_index(result["blog"], post)
-        result["feed"] = insert_rss(result["feed"], post)
-        result["map"] = insert_sitemap(result["map"], post)
+        published.insert(0, record(post))
+        sitemap = insert_sitemap(sitemap, post)
+    published.sort(key=lambda p: p["date"], reverse=True)
 
     for post in due:
         staged = STAGING / "posts" / post["slug"] / "index.html"
-        destination = ROOT / "blog" / post["slug"] / "index.html"
+        destination = ARTICLES / post["slug"] / "index.html"
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_bytes(staged.read_bytes())
         staged.unlink()
+        try:
+            staged.parent.rmdir()
+        except OSError:
+            pass
         print(f"Released: {post['date']} — {post['title']}")
-    for name, path in paths.items():
-        path.write_text(result[name], encoding="utf-8")
-    # The manifest remains as a schedule audit trail. Completed posts are
-    # detected by their destination files, so runs are idempotent.
+    write_manifest(published)
+    SITEMAP.write_text(sitemap, encoding="utf-8")
+    # The schedule stays as an audit trail; completed posts are detected by
+    # their destination files, so runs are idempotent.
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
