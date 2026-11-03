@@ -14,3 +14,9 @@ _site/
 node_modules/
 next-env.d.ts
 __pycache__/
+
+# SvelteKit build output
+/build/
+/.svelte-kit/
+/test-results/
+/playwright-report/
