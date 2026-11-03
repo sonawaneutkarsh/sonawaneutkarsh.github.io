@@ -200,9 +200,9 @@ The Playwright suites also save their own scenes in [`screenshots/`](screenshots
 
 ## Accessibility
 
-- Keyboard focus lights a hero object exactly as hover does. Tab order follows reading order, and focus stays visible on every control (`tests/e2e/a11y.spec.ts`).
+- Keyboard focus lights a hero object exactly as hover does. On the homepage, Tab reaches every link in reading order with a visible focus ring. In the explorer, Esc closes the panel from anywhere inside it and returns focus to the card, with no focus trap (`tests/e2e/a11y.spec.ts`).
 - Everything respects `prefers-reduced-motion`. Objects jump to one still, the explorer camera moves instantly, and sections do not rise in.
-- Each page has one `main`, labelled regions and named controls. Decorative SVG is `aria-hidden`. The explorer and the walkthrough announce changes through `aria-live` status text.
+- Every Svelte page has one `main`, one `h1`, a skip link, unique ids, a name on every link and button, `alt` on every image, and `aria-hidden` on decorative SVG (checked in Chromium and Firefox). The explorer and the walkthrough announce changes through `aria-live` status text.
 - Without JavaScript nothing is hidden and no inert control is shown.
 - The caution sentence on step 6 of the walkthrough is now real text (see above).
 
@@ -222,6 +222,8 @@ The Sunday workflow (`.github/workflows/publish_scheduled.yml`) still runs at 17
 3. It runs every check (`npm run validate`) and only then commits, pushes to `main` and deploys `build/`.
 
 Canonical URLs are unchanged. The feed generated from today's `posts.json` is byte-identical to V3's `feed.xml`. Drafts never enter `static/` or `posts.json` before their date, so a build cannot expose them. `tests/publishing/test_publish.py` (13 tests) covers due and future posts, catching up after missed Sundays, idempotent re-runs, dry runs, malformed drafts and daylight saving. One test publishes the 8 November essay into a copy of the repository and builds it.
+
+**While this branch is a draft**, Sunday publishing keeps running from `main` with V3's workflow, so the live site is unaffected. The posts it publishes there land in V3's layout (root `index.html`, `blog/`, `feed.xml`, `sitemap.xml`) and are not on this branch, where the 8 and 15 November essays are still drafts. Before adopting this branch, run `python3 scripts/publish_scheduled.py` on it, then build and validate. The drafts are still in `.publishing/`, the publisher goes by date and skips posts that are already out, and `--dry-run --as-of 2026-11-15` lists both essays. Do this before merging `main`, which deletes the drafts. After the merge, drop `main`'s V3-layout copies of those posts: the publisher has already written them to `static/blog/`, `posts.json` and `static/sitemap.xml`.
 
 ## Tests
 
@@ -247,6 +249,7 @@ The Playwright suites check content against V3, the hero objects at 1440, 1280, 
 - SvelteKit 3 fetches `/_app/version.json` (27 bytes) whenever the tab regains focus or becomes visible, even with polling turned off. V3 makes no requests after load.
 - The springs depend on refresh rate (see above).
 - The three.js variant has no labels and runs only in the lab.
+- Posts that `main` publishes while this is a draft (8 and 15 November) have to be brought over; see Publishing.
 
 ## Run it
 
