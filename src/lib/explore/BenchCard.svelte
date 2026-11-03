@@ -91,8 +91,8 @@
 			{:else}
 				<img alt="" height={sketch.height} loading="lazy" src={sketch.src} width={sketch.width}>
 			{/if}
-		</span>
-		<span class="bench-label">{project.name}</span>
+		</span>{' '}
+		<span class="bench-label">{project.name}</span>{' '}
 		<span class="bench-note">{project.bench.note}</span>
 	</button>
 	<ProjectDetail {project} />

@@ -129,7 +129,7 @@
 		<p class="project-tech">{project.tech}</p>
 		<div class="project-links">
 			{#each project.links as link (link.href)}
-				<a class={link.pill ? 'pill-btn' : undefined} href={link.href} rel={rel(link.href)}>{link.label}</a>
+				<a class={link.pill ? 'pill-btn' : undefined} href={link.href} rel={rel(link.href)}>{link.label}</a>{' '}
 			{/each}
 		</div>
 		<details>
