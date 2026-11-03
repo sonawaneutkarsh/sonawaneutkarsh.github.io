@@ -125,7 +125,9 @@ async function measure(browser, origin, route) {
 		} catch {}
 	});
 	await page.goto(origin + route, { waitUntil: 'load' });
-	await page.waitForTimeout(1200);
+	// Entrance motion (sections rising in, the explorer's connectors drawing
+	// in) lasts up to about 1.3 s; the idle window starts 3 s after load.
+	await page.waitForTimeout(3000);
 	const timing = await page.evaluate(() => {
 		const nav = performance.getEntriesByType('navigation')[0];
 		const fcp = performance.getEntriesByName('first-contentful-paint')[0];
