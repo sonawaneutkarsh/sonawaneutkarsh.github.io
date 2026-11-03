@@ -82,7 +82,6 @@
 		{#each nodes as n, i (i)}
 			<rect
 				class="w15 node"
-				fill-opacity={r2(0.55 + 0.45 * n.ink)}
 				height={r2(n.h)}
 				opacity={n.w < 0.6 || n.h < 0.6 ? 0 : 1}
 				rx={r2(Math.min(n.w, n.h) / 2 - (Math.min(n.w, n.h) / 2 - 2.4) * n.f)}

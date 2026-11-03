@@ -95,7 +95,7 @@ export class AiModel extends HeroMotion {
 				h: Math.max(0, mix(NODE * s, fh, f)),
 				s,
 				f,
-				ink: Math.min(1, Math.max(0.4, 0.55 + (s - 1) * 2.6))
+				ink: Math.min(1, Math.max(0.35, 1 + (s - 1) * 2.6))
 			};
 		});
 	});
