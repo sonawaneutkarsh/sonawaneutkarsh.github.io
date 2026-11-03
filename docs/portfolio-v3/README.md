@@ -10,14 +10,14 @@ backend, analytics or third-party runtime dependency.
 These changes replace the earlier descriptions further down where they
 conflict.
 
-- **Hero icon card** springs out of the icon and back into it on exit,
-  instead of a figure over the notebook illustration. It opens into the
-  right margin when there is room (≥ about 1300px). Otherwise it opens below
-  the icon, growing right, or left if needed. It never covers the
-  illustration, the heading or the other icons. The motion is a FLIP from
-  the icon's box with one slightly underdamped spring (stiffness 230,
-  damping 19). There are no captions, and phones keep the in-place
-  animation.
+- **Hero icon card** springs out of the icon and back into it on exit. It
+  opens only into the right margin beside the text, and only when it fits
+  there without touching the heading, any paragraph, the notebook
+  illustration or another icon (about 1160px and wider). At narrower widths,
+  including tablets and phones, there is no card and the inline icon
+  animates in place. The motion is a FLIP from the icon's box with one
+  slightly underdamped spring (stiffness 230, damping 19). There are no
+  captions.
 - **Project frames** play no video on the homepage. Each project animates a
   drawing:
   - Nytr: dining menu → backend → iPhone Today view.
@@ -39,7 +39,7 @@ conflict.
   moved the page when the pair list collapsed. A test steps through every
   state of every example and checks that the controls never move.
 - **Research notebook** lists the walkthrough as its first entry, dated
-  Nov 2026.
+  Nov 2026, and its introduction now mentions it.
 - **Homepage Writing** shows the newest 3 posts plus "All posts →".
   `publish_scheduled.py` trims the list back to 3 after each Sunday release.
 - **Nytr:** "Development paused" was removed from the homepage and explorer.

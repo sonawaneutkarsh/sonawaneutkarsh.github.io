@@ -3,8 +3,8 @@
 // Each icon is an ordinary link whose rest drawing is inline SVG in the HTML,
 // so it reads without JavaScript. This module adds the moving parts, runs
 // them with damped springs, and mirrors the lit icon into a larger card that
-// springs out of the icon toward free space (the right margin when there is
-// room), so the motion can be read without the sentence reflowing.
+// springs out of the icon into the right margin on wide screens. Where the
+// margin is too narrow, only the inline icon animates.
 //
 // Triggers: mouse/pen hover and keyboard focus light an icon. A finger tap
 // follows the link at once (no double tap); on touch screens each icon instead
@@ -482,13 +482,11 @@ class HeroIcon {
  * The enlarged copy of the lit icon. It springs out of the icon itself (a
  * FLIP from the icon's box to the card's box) and goes back into it on exit.
  *
- * Placement, first that fits and covers nothing protected (the notebook
- * illustration, the heading, the other icons):
- *   1. the right margin beside the text column, level with the icon;
- *   2. below the icon, growing to the right;
- *   3. below the icon, growing to the left.
- * It never sits over the illustration column. Phones get no card: their
- * icons animate in place.
+ * Placement: only in the right margin beside the text column, level with
+ * the icon, and only when it fits inside the viewport without touching the
+ * heading, any paragraph, the notebook illustration or another icon. When it
+ * does not fit (medium widths, phones) there is no card: the inline icon
+ * animates in place.
  */
 class PopCard {
   constructor(host, protectedEls) {
@@ -510,6 +508,7 @@ class PopCard {
     return window.matchMedia("(min-width: 720px)").matches;
   }
 
+  /** Returns false (and shows nothing) when the right margin has no room. */
   place(icon) {
     const host = this.host.getBoundingClientRect();
     const r = icon.link.querySelector(".hero-icon").getBoundingClientRect();
@@ -518,29 +517,29 @@ class PopCard {
     const w = 176;
     const h = Math.round(((w - 20) * 42) / 60) + 20;
     const gap = 14;
-    const candidates = [
-      { side: "right", x: column.right + 24, y: r.top + r.height / 2 - h / 2 },
-      { side: "below-right", x: r.left - 10, y: r.bottom + gap },
-      { side: "below-left", x: r.right - w + 10, y: r.bottom + gap },
-    ];
-    const blocked = this.protected.map((el) => el.getBoundingClientRect()).concat(
-      Array.from(document.querySelectorAll(".hero-link .hero-icon"))
-        .filter((el) => el !== icon.link.querySelector(".hero-icon"))
-        .map((el) => el.getBoundingClientRect()),
+    const chosen = { side: "right", x: column.right + 24, y: r.top + r.height / 2 - h / 2 };
+    const blocked = this.protected
+      .flatMap((el) => (el.matches(".bio") ? Array.from(el.children) : [el]))
+      .map((el) => el.getBoundingClientRect())
+      .concat(
+        Array.from(document.querySelectorAll(".hero-link .hero-icon"))
+          .filter((el) => el !== icon.link.querySelector(".hero-icon"))
+          .map((el) => el.getBoundingClientRect()),
+      );
+    const hits = blocked.some(
+      (b) => chosen.x < b.right + 6 && chosen.x + w > b.left - 6 && chosen.y < b.bottom + 6 && chosen.y + h > b.top - 6,
     );
-    const hits = (c) =>
-      blocked.some((b) => c.x < b.right + 6 && c.x + w > b.left - 6 && c.y < b.bottom + 6 && c.y + h > b.top - 6);
-    const fits = (c) => c.x >= 16 && c.x + w <= edge;
-    const chosen = candidates.find((c) => fits(c) && !hits(c)) || candidates.find(fits) || candidates[1];
+    if (hits || chosen.x + w > edge || chosen.y < 0) return false;
     this.side = chosen.side;
     this.box = { x: chosen.x - host.left, y: chosen.y - host.top, w, h };
     this.from = { x: r.left - host.left, y: r.top - host.top, w: r.width, h: r.height };
     Object.assign(this.node.style, { left: `${this.box.x}px`, top: `${this.box.y}px`, width: `${w}px`, height: `${h}px` });
     this.node.dataset.side = chosen.side;
+    return true;
   }
 
   show(icon) {
-    if (!this.usable) return;
+    if (!this.usable || !this.place(icon)) return;
     if (this.detach) this.detach();
     this.owner = icon;
     const clone = icon.svg.cloneNode(true);
@@ -549,7 +548,6 @@ class PopCard {
     clone.querySelectorAll(".a-live, .a-signals, .b-live, .c-live").forEach((node) => node.remove());
     this.node.replaceChildren(clone);
     this.detach = icon.addView(clone);
-    this.place(icon);
     this.node.classList.add("is-showing");
     if (reducedMotion()) {
       this.p.set(1);
@@ -607,7 +605,7 @@ export function initHeroIcons(root = document) {
   const links = Array.from(root.querySelectorAll("[data-hero-icon]"));
   if (!links.length) return [];
   const intro = links[0].closest(".intro");
-  const protectedEls = [intro.querySelector(".intro-art"), intro.querySelector("h1")].filter(Boolean);
+  const protectedEls = [intro.querySelector(".intro-art"), intro.querySelector(".bio")].filter(Boolean);
   const figure = new PopCard(intro, protectedEls);
   const icons = links
     .map((link) => {

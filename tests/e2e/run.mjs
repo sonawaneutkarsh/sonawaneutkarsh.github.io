@@ -317,7 +317,7 @@ const suites = {
     await page.click('[data-mode="list"]');
     check("explore: list view shows every detail inline", await until(() => document.querySelectorAll(".bench-item > .bench-detail").length === 8 && document.getElementById("bench").classList.contains("is-list")));
 
-    for (const width of [1024, 768]) {
+    for (const width of [1024, 900, 768]) {
       await open("/explore/", { width });
       check(`explore ${width}: no overflow`, (await overflow()) <= 0);
       await page.eval(() => document.getElementById("bench").scrollIntoView({ behavior: "instant" }));
@@ -663,8 +663,9 @@ const suites = {
     }
 
     // Preview frames and hero icons: drawings stay inside their frames.
-    for (const width of [1440, 1024, 768, 390, 320]) {
+    for (const width of [1440, 1280, 1024, 900, 768, 390, 320]) {
       await open("/", { width, height: 900, touch: width < 720 });
+      if ([1024, 900, 768].includes(width)) await shot(`home-${width}`);
       const p = await page.eval(() => {
         const out = [];
         document.querySelectorAll(".hero-link").forEach((a) => {
@@ -682,14 +683,32 @@ const suites = {
         for (const icon of ["software", "ai", "research"]) {
           await page.hover(`[data-hero-icon="${icon}"] .hero-word`);
           await page.wait(700);
-          const q = await page.eval(() => {
-            const card = document.querySelector(".hero-pop").getBoundingClientRect();
-            const art = document.querySelector(".intro-art").getBoundingClientRect();
-            const h1 = document.querySelector(".intro h1").getBoundingClientRect();
+          const q = await page.eval((ic) => {
+            const pop = document.querySelector(".hero-pop");
+            const shown = pop.classList.contains("is-showing");
+            const card = pop.getBoundingClientRect();
             const hit = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
-            return { side: document.querySelector(".hero-pop").dataset.side, art: hit(card, art), h1: hit(card, h1), out: card.right > document.documentElement.clientWidth || card.left < 0 };
-          });
-          check(`layout ${width}: ${icon} pop card (${q.side}) clears the notebook, heading and viewport`, !q.art && !q.h1 && !q.out, JSON.stringify(q));
+            const blocked = [
+              document.querySelector(".intro-art"),
+              ...document.querySelectorAll(".bio > *"),
+              ...[...document.querySelectorAll(".hero-link .hero-icon")].filter((el) => !el.closest(`[data-hero-icon="${ic}"]`)),
+            ];
+            return {
+              shown,
+              side: pop.dataset.side || null,
+              covers: shown ? blocked.filter((el) => hit(card, el.getBoundingClientRect())).map((el) => el.tagName + "." + el.className).slice(0, 3) : [],
+              out: shown && (card.right > document.documentElement.clientWidth || card.left < 0),
+              iconLit: document.querySelector(`[data-hero-icon="${ic}"]`).classList.contains("is-lit"),
+              // The 176px card plus its 24px gap must fit right of the text column.
+              room: document.documentElement.clientWidth - 16 - document.querySelector(".bio").getBoundingClientRect().right - 24 >= 176,
+            };
+          }, icon);
+          const wide = q.room;
+          check(
+            `layout ${width}: ${icon} ${wide ? "card opens in the right margin" : "has no card (inline icon only)"} and covers nothing`,
+            q.iconLit && (wide ? q.shown && q.side === "right" : !q.shown) && q.covers.length === 0 && !q.out,
+            JSON.stringify(q),
+          );
           await page.mouseMove(2, 880);
           await page.wait(500);
         }
