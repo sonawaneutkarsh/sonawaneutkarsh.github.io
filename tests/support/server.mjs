@@ -1,6 +1,8 @@
-// Minimal static file server that behaves like GitHub Pages for local tests:
+// Minimal static file server that behaves like GitHub Pages for local tests
+// (used by Playwright's webServer and the V3/Svelte comparison runs):
 // directory URLs serve index.html, unknown paths serve 404.html with status
-// 404, and byte-range requests work so videos can stream.
+// 404, and byte-range requests work so videos can stream. Responses are not
+// compressed; size comparisons gzip the files separately.
 
 import { createServer } from "node:http";
 import { createReadStream, statSync, existsSync } from "node:fs";
