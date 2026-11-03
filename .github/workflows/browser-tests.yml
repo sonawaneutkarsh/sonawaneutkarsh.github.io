@@ -1,8 +1,11 @@
 name: Browser tests
 
-# Runs the zero-dependency browser regression suites against the static site.
-# Read-only: no Pages permissions, no deployment, no artifacts published to
-# the site. Uses the Chrome and Firefox that ship on GitHub's Ubuntu runners.
+# Playwright against the production build (npm run build), served the way
+# GitHub Pages serves it (tests/support/serve.mjs). Chromium runs every suite
+# at every width; Firefox runs the suites tagged @firefox. The compare job
+# measures and photographs vanilla V3 (36fe033) and this build side by side.
+# Read-only: no Pages permissions, no deployment; screenshots and reports are
+# uploaded as short-lived workflow artifacts.
 
 on:
   pull_request:
@@ -17,67 +20,109 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  chrome:
+  playwright:
+    name: Playwright (${{ matrix.browser }})
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-
-      - name: Set up Node 22 (global WebSocket for the DevTools client)
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Browser and font versions
-        run: |
-          google-chrome --version
-          echo "Fonts covering U+2190/U+2192 (arrows):"
-          fc-list ':charset=2190 2192' family | sort -u | head
-
-      - name: Chrome regression suite
-        env:
-          CHROME_PATH: /usr/bin/google-chrome
-          REQUIRE_GLYPHS: "1"
-          SCREENSHOTS: "1"
-        run: node tests/e2e/run.mjs
-
-      - name: Upload screenshots
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: chrome-screenshots
-          path: docs/portfolio-v3/screenshots/
-          retention-days: 14
-
-  firefox:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
 
       - name: Set up Node 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
+          cache: npm
 
-      - name: Firefox smoke suite (WebDriver BiDi)
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Install ${{ matrix.browser }} for Playwright
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Fonts the screenshots fall back to
+        run: |
+          for family in Georgia serif sans-serif monospace; do printf '%-11s -> ' "$family"; fc-match "$family"; done
+          echo "Fonts covering → ↗ − (U+2192, U+2197, U+2212):"
+          fc-list ':charset=2192 2197 2212' family | sort -u | head
+
+      - name: Build the static site
+        run: npm run build
+
+      - name: Playwright (${{ matrix.browser }})
         env:
           SCREENSHOTS: "1"
-        run: |
-          firefox --version
-          node tests/e2e/firefox.mjs
+        run: npx playwright test --project=${{ matrix.browser }}
 
       - name: Upload screenshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: firefox-screenshots
-          path: docs/portfolio-v3/screenshots/firefox-*.png
+          name: screenshots-${{ matrix.browser }}
+          path: docs/portfolio-v3-svelte/screenshots/
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Upload report and traces
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report-${{ matrix.browser }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  compare:
+    name: Vanilla V3 vs Svelte (bytes, timings, screenshots)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Build the static site
+        run: npm run build
+
+      - name: Check out vanilla V3 (36fe033) beside the build
+        run: |
+          git cat-file -e '36fe0335d65c38e7ef23a9ccd1c9cc0d332f118c^{commit}' 2>/dev/null || git fetch --no-tags origin 36fe0335d65c38e7ef23a9ccd1c9cc0d332f118c
+          git worktree add --detach "$RUNNER_TEMP/v3" 36fe0335d65c38e7ef23a9ccd1c9cc0d332f118c
+
+      - name: Measure and photograph both
+        env:
+          SCREENSHOTS: "1"
+          VANILLA_ROOT: ${{ runner.temp }}/v3
+          RUNS: "5"
+        run: node tests/compare/compare.mjs
+
+      - name: Upload comparison
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: compare
+          path: docs/portfolio-v3-svelte/compare/
           if-no-files-found: ignore
           retention-days: 14
