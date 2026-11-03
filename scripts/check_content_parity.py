@@ -179,13 +179,18 @@ def compare(path, site):
                 notes.append(f'{path}: not prerendered by design: "{block[:60]}…" ({removed[block]})')
             else:
                 failures.append(f'{path}: text from V3 is missing: "{block[:120]}"')
+    seen_added = {}
     for block in sorted(set(after.blocks)):
         if block not in before.main_text:
-            if any(block == a or block.endswith(a) for a in added):
-                reason = next(r for a, r in added.items() if block == a or block.endswith(a))
-                notes.append(f'{path}: added by design: "{block[:60]}…" ({reason})')
+            key = next((a for a in added if block == a or block.endswith(a) or block.endswith(a + block[-1:])), None)
+            if key is None:
+                key = next((a for a in added if a in block), None)
+            if key is not None:
+                seen_added[key] = seen_added.get(key, 0) + 1
             else:
                 failures.append(f'{path}: text not in V3: "{block[:120]}"')
+    for key, count in seen_added.items():
+        notes.append(f'{path}: added by design ({count} blocks contain it): "{key}" ({added[key]})')
     for href, text in sorted(before.links - after.links):
         failures.append(f'{path}: link from V3 is missing: {href} "{text[:60]}"')
     for src in sorted(before.images - after.images):

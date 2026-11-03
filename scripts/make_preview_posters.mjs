@@ -1,28 +1,30 @@
 #!/usr/bin/env node
-// Regenerate the small WebP poster frames used by the homepage video previews.
-// The full-size JPEG posters under images/projects/ are left untouched; these
-// are 640px-wide derivatives drawn through headless Chrome's canvas encoder.
+// Regenerate the small WebP poster frames shown in the /explore/ project
+// panels (src/lib/content/projects.ts). The full-size JPEG posters
+// under static/images/projects/ are left untouched; these are 640px-wide
+// derivatives drawn through headless Chromium's canvas encoder.
 //
 //   node scripts/make_preview_posters.mjs
 
-import { writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { launch } from "../tests/e2e/lib/browser.mjs";
-import { serve } from "../tests/e2e/lib/server.mjs";
+import { chromium } from "@playwright/test";
+import { serve } from "../tests/support/server.mjs";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const STATIC = join(dirname(fileURLToPath(import.meta.url)), "..", "static");
 const JOBS = [
   ["images/projects/nytr/nytr-demo-poster.jpg", "images/previews/nytr-demo-poster-640.webp"],
   ["images/projects/clage/clage-studio-demo-poster.jpg", "images/previews/clage-studio-demo-poster-640.webp"],
 ];
 
-const server = await serve(ROOT);
+const server = await serve(STATIC);
 const origin = `http://127.0.0.1:${server.address().port}`;
-const page = await launch();
+const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH });
+const page = await browser.newPage();
 await page.goto(`${origin}/404.html`);
 for (const [source, target] of JOBS) {
-  const data = await page.eval(async (src) => {
+  const data = await page.evaluate(async (src) => {
     const img = new Image();
     img.src = src;
     await img.decode();
@@ -37,10 +39,9 @@ for (const [source, target] of JOBS) {
     return canvas.toDataURL("image/webp", 0.82);
   }, `/${source}`);
   const bytes = Buffer.from(data.split(",")[1], "base64");
-  const { mkdirSync } = await import("node:fs");
-  mkdirSync(join(ROOT, dirname(target)), { recursive: true });
-  writeFileSync(join(ROOT, target), bytes);
-  console.log(`${target}: ${bytes.length} bytes`);
+  mkdirSync(join(STATIC, dirname(target)), { recursive: true });
+  writeFileSync(join(STATIC, target), bytes);
+  console.log(`static/${target}: ${bytes.length} bytes`);
 }
-await page.close();
+await browser.close();
 server.close();
