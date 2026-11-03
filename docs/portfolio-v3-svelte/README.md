@@ -115,7 +115,7 @@ The comparison script (`tests/compare/compare.mjs`) serves a checkout of `36fe03
 
 "Ready" is when the page's scripts have run: DOMContentLoaded for V3 (its modules are deferred), the end of hydration for Svelte. CSS is about 7 KB gzip on the interactive pages in both builds. CLS on V3's walkthrough and on the case studies, which are byte-identical in both builds, varies between 0 and 0.016 from run to run with image load timing; the Svelte explorer and walkthrough measured 0 in every run.
 
-Idle cost: with the page left alone (a 2 s window starting 3 s after load), both builds request 0 animation frames on every route, with at most 1 ms of main-thread work.
+Idle cost: with the page left alone (a 2 s window starting 3 s after load), both builds request 0 animation frames on every route, with at most 1 ms of main-thread work. Neither build has an infinite CSS animation, so an idle page gives the GPU nothing to redraw. On the homepage the only idle difference is memory: 2.5 MB of JS heap against 1.4 MB.
 
 ### Phone profile
 
