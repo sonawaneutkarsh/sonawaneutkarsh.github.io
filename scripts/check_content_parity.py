@@ -18,7 +18,9 @@ homepage's Writing rows must be the newest three records in posts.json and
 the same list).
 
 Files copied from static/ must be byte-identical to V3 (sitemap.xml may only
-gain entries, which the Sunday publisher appends). No dependencies.
+gain entries, which the Sunday publisher appends), and every file V3's deploy
+workflow published must still be in the build, except V3's own JavaScript and
+CSS modules, which the SvelteKit bundles replace. No dependencies.
 """
 import argparse
 import json
@@ -56,6 +58,14 @@ ADDED = {
 }
 HEAD_META = ['description', 'author', 'og:title', 'og:description', 'og:url', 'og:type', 'og:site_name', 'og:image',
              'og:image:width', 'og:image:height', 'og:image:alt', 'twitter:card', 'robots']
+# What V3's deploy workflow staged for GitHub Pages (.github/workflows/deploy.yml at 36fe033).
+V3_DEPLOYED = ['index.html', '404.html', 'robots.txt', 'sitemap.xml', 'styles.css', 'script.js', 'avatar.jpg', 'resume.pdf',
+               '.nojekyll', 'favicon.svg', 'favicon.ico', 'favicon-16x16.png', 'favicon-32x32.png', 'apple-touch-icon.png',
+               'icons', 'images', 'videos', 'projects', 'blog', 'notebook', 'explore', 'css', 'js', 'feed.xml']
+# V3's interactive modules. The SvelteKit bundles under /_app/ replace them; no
+# page references them, and they were never on main (the live site).
+REPLACED_BY_BUNDLES = {'css/adr-demo.css', 'css/explore.css', 'css/interactive.css', 'js/explore.js', 'js/hero-icons.js',
+                       'js/home.js', 'js/motion.js', 'js/preview-diagrams.js', 'js/project-previews.js', 'js/research-demo.js'}
 
 
 def norm(text):
@@ -251,6 +261,16 @@ def static_files_unchanged(site):
     return failures, checked
 
 
+def deployed_files_kept(site):
+    """Every URL V3 deployed still resolves to a file in the build."""
+    listed = subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', V3, '--', *V3_DEPLOYED], cwd=REPO).decode()
+    files = [f for f in listed.splitlines() if f]
+    failures = [f'{f} was deployed by V3 but is not in the build' for f in files if f not in REPLACED_BY_BUNDLES and not (site / f).is_file()]
+    stale = sorted(f for f in REPLACED_BY_BUNDLES if f not in files)
+    failures += [f'{f} is listed as replaced but V3 never deployed it' for f in stale]
+    return failures, len(files)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--root', default='build', help='site directory to check (default: build)')
@@ -270,6 +290,9 @@ def main():
     f, checked = static_files_unchanged(site)
     failures += f
     print(f'{checked} files copied from static/ compared byte for byte with V3.')
+    f, deployed = deployed_files_kept(site)
+    failures += f
+    print(f'{deployed} files deployed by V3 looked up in the build ({len(REPLACED_BY_BUNDLES)} JS/CSS modules are replaced by the bundles).')
     for note in notes:
         print('note:', note)
     for failure in failures:
