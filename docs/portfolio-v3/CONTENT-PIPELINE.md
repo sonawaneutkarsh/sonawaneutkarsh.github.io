@@ -200,10 +200,23 @@ Node 22):
 | `python3 -m unittest discover -s tests/content` | | 83 run: 82 pass, 1 skipped (html-validate not installable in the sandbox) |
 | Mutation check: 23 deliberate breakages of the generator, publisher, workflows and content | | 23 caught |
 
-Not run in the sandbox, so pull-request CI is the evidence:
+The sandbox's Chrome suite has 245 checks. The runner has 4 more glyph
+checks because it has the arrow fonts that the sandbox lacks. The 249 after
+the rehearsal is a different +4: route checks for the two new posts.
 
-- `html-validate`: the sandbox cannot reach the npm registry.
-- The Firefox suite: Firefox is not installed in the sandbox.
+`html-validate` (the sandbox cannot reach the npm registry) and the Firefox
+suite (no Firefox in the sandbox) ran only in pull-request CI. On PR #10's
+head, compared with the CI run of PR #8's head `36fe033`:
+
+| CI job | V3 `36fe033` | This branch |
+| --- | --- | --- |
+| `check`: `build_writing.py --check`, html-validate, links, feed, preservation | pass | pass |
+| `check`: `tests/content` (html-validate installed, so nothing skipped) | | 83 tests, OK |
+| `chrome` (Chrome 156, `REQUIRE_GLYPHS=1`) | 249/249 | 249/249, the same check list |
+| `firefox` (Firefox 159) | 39/39 | 39/39, the same check list |
+
+The content tests ran html-validate on the writing pages and after every
+rehearsed release, real and synthetic.
 
 **Same output as the old publisher.** A copy of V3 was released with its old
 publisher, and a copy of this branch with the new one, for 2026-11-08 and
