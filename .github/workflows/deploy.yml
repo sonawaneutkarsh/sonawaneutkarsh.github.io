@@ -16,7 +16,7 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -24,8 +24,11 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
+      - name: Check writing lists, feed and sitemap against content/posts.json
+        run: python3 scripts/build_writing.py --check
+
       - name: Validate HTML
-        run: npm install -g html-validate@10 && html-validate index.html 404.html projects/*/index.html blog/index.html blog/*/index.html notebook/index.html
+        run: npm install -g html-validate@10 && html-validate index.html 404.html projects/*/index.html blog/index.html blog/*/index.html notebook/index.html notebook/*/index.html explore/index.html
 
       - name: Check internal links and assets
         run: python3 scripts/check_links.py
@@ -35,6 +38,11 @@ jobs:
 
       - name: Check content preservation
         run: python3 scripts/check_preservation.py
+
+      # Publisher and generator tests on scratch copies; the rehearsals run
+      # html-validate (installed above) on every simulated Sunday release.
+      - name: Content pipeline tests
+        run: python3 -m unittest discover -s tests/content -v
 
   deploy:
     needs: check
@@ -59,7 +67,7 @@ jobs:
           mkdir -p _site
           cp -r index.html 404.html robots.txt sitemap.xml styles.css script.js avatar.jpg resume.pdf .nojekyll \
             favicon.svg favicon.ico favicon-16x16.png favicon-32x32.png apple-touch-icon.png \
-            icons images videos projects blog notebook feed.xml _site/
+            icons images videos projects blog notebook explore css js feed.xml _site/
 
       - name: Setup Pages
         uses: actions/configure-pages@v6

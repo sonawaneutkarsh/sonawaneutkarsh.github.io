@@ -28,6 +28,12 @@
     <meta content="summary_large_image" name="twitter:card">
 
     <link href="styles.css" rel="stylesheet">
+    <link href="/css/interactive.css" rel="stylesheet">
+    <link href="/js/home.js" rel="modulepreload">
+    <link href="/js/motion.js" rel="modulepreload">
+    <link href="/js/project-previews.js" rel="modulepreload">
+    <link href="/js/preview-diagrams.js" rel="modulepreload">
+    <link href="/js/hero-icons.js" rel="modulepreload">
     <link href="/favicon.svg" rel="icon" type="image/svg+xml">
     <link href="/favicon.ico" rel="icon" sizes="any">
     <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
@@ -52,14 +58,76 @@
     </header>
     <main class="container" id="content">
       <section class="intro" id="hero">
-        <img
-          alt=""
-          class="illustration"
-          height="435"
-          src="/images/illustrations/notebook.webp"
-          width="550">
+        <div class="intro-art">
+          <!-- Future illustrated self-portrait (not yet drawn). Add
+               images/brand/portrait.webp (square, about 360px, cream or
+               transparent background, same ink line as the notebook) and
+               uncomment; it takes this slot and the notebook moves below it.
+          <img
+            alt="Illustrated portrait of Utkarsh Sonawane"
+            class="intro-portrait"
+            height="360"
+            src="/images/brand/portrait.webp"
+            width="360">
+          -->
+          <img
+            alt=""
+            class="illustration"
+            height="435"
+            src="/images/illustrations/notebook.webp"
+            width="550">
+        </div>
         <div class="bio">
           <h1>Utkarsh Sonawane</h1>
+          <p class="hero-lede">
+            I build
+            <a class="hero-link" data-hero-icon="software" href="/#projects"><span class="hero-icon"
+              ><svg aria-hidden="true" class="hero-icon-svg" focusable="false" viewBox="0 0 60 42">
+                <g class="b-laptop" fill="none" stroke="#282d27" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                  <rect fill="#fcfaf0" height="20" rx="2" width="28" x="16" y="8"/>
+                  <path d="M12 30.5 H48 L45.5 34 H14.5 Z" fill="#edf0e5"/>
+                  <path d="M24.5 14.5 L21.5 17.8 L24.5 21 M35.5 14.5 L38.5 17.8 L35.5 21 M31.6 13.6 L28.4 22" stroke="#455c47" stroke-width="1.25"/>
+                </g></svg></span
+            ><span class="hero-word">software</span></a>,
+            explore
+            <a class="hero-link" data-hero-icon="ai" href="/explore/?filter=ai"><span class="hero-icon"
+              ><svg aria-hidden="true" class="hero-icon-svg" focusable="false" viewBox="0 0 60 42">
+                <g class="a-edges" stroke="#6b745d" stroke-linecap="round" stroke-width="1">
+                  <line class="a-edge" x1="21" y1="15" x2="30" y2="12"/>
+                  <line class="a-edge" x1="21" y1="15" x2="30" y2="21"/>
+                  <line class="a-edge" x1="21" y1="27" x2="30" y2="21"/>
+                  <line class="a-edge" x1="21" y1="27" x2="30" y2="30"/>
+                  <line class="a-edge" x1="30" y1="12" x2="39" y2="21"/>
+                  <line class="a-edge" x1="30" y1="21" x2="39" y2="21"/>
+                  <line class="a-edge" x1="30" y1="30" x2="39" y2="21"/>
+                </g>
+                <g class="a-nodes" fill="#fcfaf0" stroke="#282d27" stroke-width="1.5">
+                  <rect class="a-node" x="18.3" y="12.3" width="5.4" height="5.4" rx="2.7"/>
+                  <rect class="a-node" x="18.3" y="24.3" width="5.4" height="5.4" rx="2.7"/>
+                  <rect class="a-node" x="27.3" y="9.3" width="5.4" height="5.4" rx="2.7"/>
+                  <rect class="a-node" x="27.3" y="18.3" width="5.4" height="5.4" rx="2.7"/>
+                  <rect class="a-node" x="27.3" y="27.3" width="5.4" height="5.4" rx="2.7"/>
+                  <rect class="a-node" x="36.3" y="18.3" width="5.4" height="5.4" rx="2.7"/>
+                </g></svg></span
+            ><span class="hero-word">AI systems</span></a>,
+            do
+            <a class="hero-link" data-hero-icon="research" href="/#research"><span class="hero-icon hero-icon-narrow"
+              ><svg aria-hidden="true" class="hero-icon-svg" focusable="false" viewBox="12 0 42 42">
+                <g class="c-paper">
+                  <path d="M19 5 H36 L42 11 V37 H19 Z" fill="#fcfaf0" stroke="#282d27" stroke-linejoin="round" stroke-width="1.5"/>
+                  <path d="M36 5 V11 H42" fill="none" stroke="#282d27" stroke-linejoin="round" stroke-width="1.5"/>
+                    <rect class="c-faint" fill="#d8ddcf" height="1.3" rx="0.65" width="13" x="23" y="14.2"/>
+                    <rect class="c-faint" fill="#d8ddcf" height="1.3" rx="0.65" width="11" x="23" y="19.2"/>
+                    <rect class="c-faint" fill="#d8ddcf" height="1.3" rx="0.65" width="14" x="23" y="24.2"/>
+                    <rect class="c-faint" fill="#d8ddcf" height="1.3" rx="0.65" width="8" x="23" y="29.2"/>
+                    <rect class="c-text" fill="#6b745d" height="1.3" opacity="0" rx="0.65" width="0" x="23" y="14.2"/>
+                    <rect class="c-text" fill="#6b745d" height="1.3" opacity="0" rx="0.65" width="0" x="23" y="19.2"/>
+                    <rect class="c-text" fill="#6b745d" height="1.3" opacity="0" rx="0.65" width="0" x="23" y="24.2"/>
+                    <rect class="c-text" fill="#6b745d" height="1.3" opacity="0" rx="0.65" width="0" x="23" y="29.2"/>
+                </g></svg></span
+            ><span class="hero-word">research</span></a>,
+            and <a href="/blog/">write</a> about what I learn.
+          </p>
           <p>
             I study computer science at Penn State. I’m fascinated
             by how large language models (LLMs) work under the hood — from
@@ -128,15 +196,18 @@
         <h2>Selected projects</h2>
         <p class="section-lede">
           Things I’ve built, and what I learned from them.
+          <a class="explore-link" href="/explore/">Explore my work <span aria-hidden="true">↗</span></a>
         </p>
         <article class="project-row">
-          <img
-            alt=""
-            class="illustration"
-            height="433"
-            loading="lazy"
-            src="/images/illustrations/nytr-v2.webp"
-            width="645">
+          <div class="project-media" data-preview="diagram" data-diagram="nytr" data-name="Nytr">
+            <img
+              alt=""
+              class="illustration"
+              height="433"
+              loading="lazy"
+              src="/images/illustrations/nytr-v2.webp"
+              width="645">
+          </div>
           <div>
             <h3><a href="/projects/nytr/">Nytr</a></h3>
             <p>
@@ -184,13 +255,15 @@
           </div>
         </article>
         <article class="project-row">
-          <img
-            alt=""
-            class="illustration"
-            height="308"
-            loading="lazy"
-            src="/images/illustrations/clage.webp"
-            width="386">
+          <div class="project-media" data-preview="diagram" data-diagram="clage" data-name="Clage">
+            <img
+              alt=""
+              class="illustration"
+              height="308"
+              loading="lazy"
+              src="/images/illustrations/clage.webp"
+              width="386">
+          </div>
           <div>
             <h3><a href="/projects/clage/">Clage</a></h3>
             <p>
@@ -230,13 +303,15 @@
           </div>
         </article>
         <article class="project-row">
-          <img
-            alt=""
-            class="illustration"
-            height="371"
-            loading="lazy"
-            src="/images/illustrations/talks-v2.webp"
-            width="486">
+          <div class="project-media" data-preview="diagram" data-diagram="talks" data-name="Talks">
+            <img
+              alt=""
+              class="illustration"
+              height="371"
+              loading="lazy"
+              src="/images/illustrations/talks-v2.webp"
+              width="486">
+          </div>
           <div>
             <h3><a href="/projects/talks/">Talks</a></h3>
             <p>
@@ -273,13 +348,15 @@
           </div>
         </article>
         <article class="project-row">
-          <img
-            alt=""
-            class="illustration"
-            height="357"
-            loading="lazy"
-            src="/images/illustrations/devvy.webp"
-            width="464">
+          <div class="project-media" data-preview="diagram" data-diagram="devvy" data-name="Devvy">
+            <img
+              alt=""
+              class="illustration"
+              height="357"
+              loading="lazy"
+              src="/images/illustrations/devvy.webp"
+              width="464">
+          </div>
           <div>
             <h3><a href="/projects/devvy/">Devvy</a></h3>
             <p>
@@ -411,7 +488,7 @@
       </section>
       <section id="research">
         <h2>Research</h2>
-        <div class="research-entry">
+        <div class="research-entry" data-reveal>
           <img
             alt=""
             class="illustration"
@@ -437,6 +514,7 @@
               Evaluation focuses on precision, recall, F1, and error analysis.
             </p>
             <p class="notebook-crosslink"><a href="/notebook/">Read the research notebook →</a></p>
+            <p class="notebook-crosslink"><a href="/notebook/adr-extraction-demo/">Step through an illustrated extraction workflow →</a></p>
             <details>
               <summary>Research plan</summary>
               <p>
@@ -458,7 +536,7 @@
         <p class="research-crosslink">
           <a href="/#research">Undergraduate Research Assistant → Research</a>
         </p>
-        <div class="experience-list">
+        <div class="experience-list" data-reveal>
           <div class="exp-item">
             <div class="exp-header">
               <h3 class="exp-role-org">
@@ -510,6 +588,7 @@
           <h2>Writing</h2>
           <a href="/blog/">All posts →</a>
         </div>
+        <!-- BEGIN writing:latest (generated from content/posts.json by scripts/build_writing.py; edit that file, not this list) -->
         <ul class="post-list">
           <li class="post-row">
             <time class="post-date" datetime="2026-11-01">Nov 1, 2026</time>
@@ -521,27 +600,10 @@
           </li>
           <li class="post-row">
             <time class="post-date" datetime="2026-10-15">Oct 15, 2026</time>
-            <a
-              class="post-title"
-              href="/blog/why-i-stopped-working-on-nytr-problems-and-lessons/"
-              >why i stopped working on nytr — problems and lessons.</a
-            >
-          </li>
-          <li class="post-row">
-            <time class="post-date" datetime="2026-10-13">Oct 13, 2026</time>
-            <a
-              class="post-title"
-              href="/blog/code-is-cheap-execution-is-everything/"
-              >code is cheap, execution is everything.</a
-            >
-          </li>
-          <li class="post-row">
-            <time class="post-date" datetime="2026-10-03">Oct 3, 2026</time>
-            <a class="post-title" href="/blog/thoughts-on-slms-for-businesses/"
-              >thoughts on slm’s for businesses</a
-            >
+            <a class="post-title" href="/blog/why-i-stopped-working-on-nytr-problems-and-lessons/">why i stopped working on nytr — problems and lessons.</a>
           </li>
         </ul>
+        <!-- END writing:latest -->
         <p class="feed-link"><a href="/feed.xml">Subscribe via RSS →</a></p>
       </section>
     </main>
@@ -555,5 +617,6 @@
       </nav>
     </footer>
     <script src="/script.js"></script>
+    <script src="/js/home.js" type="module"></script>
   </body>
 </html>
