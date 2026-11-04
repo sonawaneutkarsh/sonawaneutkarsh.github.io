@@ -947,8 +947,7 @@ const suites = {
     await page.touchGesture([[startAt, { x: startAt.x + 3, y: startAt.y - 200 }]]);
     await page.wait(500);
     check("touch: a swipe that starts on the portrait still scrolls the page", (await page.eval(() => scrollY)) > y0 + 100);
-    // Let the swipe's fling finish: a touch during a fling only stops it and
-    // never becomes a click.
+    // Let the swipe's fling finish before tapping.
     for (let last = -1, i = 0; i < 40; i++) {
       const now = await page.eval(() => scrollY);
       if (now === last) break;
@@ -966,7 +965,7 @@ const suites = {
     const tapAt = await page.eval(() => document.querySelector("svg.portrait").getBoundingClientRect().toJSON());
     const greeted = await until(() => window.__pt.some((w) => w[1] === "pt-pupil"), 1500);
     const tapLog = await page.eval(() => `${window.__taps.join(" ")} | scrollY ${scrollY} | writes ${window.__pt.length}`);
-    check("touch: tapping the portrait plays the greeting and does not navigate", greeted && (await page.eval(() => location.href)) === href, process.env.TAP_LOG || !greeted ? `${JSON.stringify(tapAt)} ${tapLog}` : "");
+    check("touch: tapping the portrait plays the greeting and does not navigate", greeted && (await page.eval(() => location.href)) === href, greeted ? "" : `${JSON.stringify(tapAt)} ${tapLog}`);
     check("touch: no console errors", page.errors.length === 0, page.errors.join("; "));
 
     // Layout at every width: visible, inside the page, clear of the text, the

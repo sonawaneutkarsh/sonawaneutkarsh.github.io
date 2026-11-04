@@ -281,9 +281,11 @@ class Portrait {
       this.rest();
     });
     // A tap is a click whose pointer was a finger; scrolling never fires one.
+    // Clicks are pointer events in current browsers; older ones only say so
+    // on the pointerdown before them.
     let lastPointer = "";
     svg.addEventListener("pointerdown", (event) => (lastPointer = event.pointerType));
-    svg.addEventListener("click", () => lastPointer === "touch" && this.greet());
+    svg.addEventListener("click", (event) => (event.pointerType || lastPointer) === "touch" && this.greet());
     onReducedMotionChange((reduce) => reduce && this.halt());
   }
 }
