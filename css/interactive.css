@@ -74,24 +74,24 @@
   overflow: visible;
 }
 
+/* The illustrated self-portrait leads the left column, its hair level with
+   the name; the notebook drawing sits smaller beneath it. The SVG's width
+   and height attributes reserve its box before CSS loads, and its motion
+   (js/portrait.js) is transforms only, so nothing around it moves. Rotated
+   hair may draw a few pixels past the box. */
 .intro-art {
   position: relative;
-  margin-top: 32px;
+  margin-top: 6px;
+}
+.portrait {
+  display: block;
+  width: 180px;
+  height: auto;
+  overflow: visible;
 }
 .intro > .intro-art > .illustration {
-  width: 180px;
-}
-/* Reserved for a future illustrated portrait (see the comment in index.html):
-   portrait on top, the notebook drawing shrinks beneath it. */
-.intro-portrait {
-  display: block;
-  width: 150px;
-  height: auto;
-  margin: 0 auto 16px;
-}
-.intro-portrait ~ .illustration {
-  width: 120px !important;
-  margin-inline: auto;
+  width: 120px;
+  margin: 22px 0 0 30px;
 }
 .intro {
   position: relative;
@@ -284,12 +284,38 @@
     font-size: 19px;
     max-width: none;
   }
+  /* Phones: the portrait becomes a small byline beside the name, so the
+     biography starts only a little lower. The notebook keeps its V2 place
+     after the contact links: it is taken out of the floated column and
+     placed in room reserved at the bottom of the introduction. */
+  .intro {
+    display: flow-root;
+    padding-bottom: calc(112px * 435 / 550 + 16px);
+  }
   .intro > .intro-art {
-    order: 2;
-    margin: 0;
+    position: static;
+    float: left;
+    width: 92px;
+    margin: 0 14px 14px -4px;
+  }
+  .portrait {
+    width: 92px;
+  }
+  .bio h1 {
+    display: flex;
+    align-items: center;
+    min-height: 97px;
+    margin-bottom: 14px;
+  }
+  .hero-lede {
+    clear: left;
   }
   .intro > .intro-art > .illustration {
+    position: absolute;
+    left: 0;
+    bottom: 0;
     width: 112px;
+    margin: 0;
   }
   .hero-pop {
     display: none !important;
