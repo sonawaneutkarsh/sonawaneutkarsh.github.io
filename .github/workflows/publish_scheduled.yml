@@ -1,5 +1,11 @@
 name: Publish scheduled Sunday blog posts
 
+# scripts/publish_scheduled.py moves each due draft from .publishing/ to
+# blog/<slug>/, adds its record to content/posts.json (the single list of
+# published posts) and regenerates the homepage's latest three, /blog/,
+# feed.xml and the sitemap from it. Every check runs before the commit, and
+# nothing is pushed or deployed unless all of them pass.
+
 on:
   schedule:
     # Sundays at 12:17 EST (17:17 UTC) for November 2026.
@@ -34,6 +40,9 @@ jobs:
       - name: Release Sunday posts due in New York
         run: python3 scripts/publish_scheduled.py
 
+      - name: Check writing lists, feed and sitemap against content/posts.json
+        run: python3 scripts/build_writing.py --check
+
       - name: Validate HTML
         run: npm install -g html-validate@10 && html-validate index.html 404.html projects/*/index.html blog/index.html blog/*/index.html notebook/index.html notebook/*/index.html explore/index.html
 
@@ -49,7 +58,7 @@ jobs:
       - name: Commit and publish due posts
         id: release
         run: |
-          git add -A index.html blog/ feed.xml sitemap.xml .publishing/
+          git add -A index.html blog/ feed.xml sitemap.xml .publishing/ content/
           if git diff --cached --quiet; then
             echo "published=false" >> "$GITHUB_OUTPUT"
             echo "No unpublished posts due."
@@ -57,6 +66,11 @@ jobs:
             git -c user.name='github-actions[bot]' \
                 -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
                 commit -m 'blog: publish scheduled Sunday essay'
+            if [ -n "$(git status --porcelain)" ]; then
+              echo "::error::The release changed files that the commit does not include."
+              git status --porcelain
+              exit 1
+            fi
             git push origin HEAD:main
             echo "published=true" >> "$GITHUB_OUTPUT"
           fi

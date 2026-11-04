@@ -1,0 +1,38 @@
+[
+  {
+    "slug": "were-building-agents-to-manage-agents-where-does-it-end",
+    "title": "we're building agents to manage agents. where does it end?",
+    "date": "2026-11-01",
+    "pubDate": "2026-11-01T17:00:00Z",
+    "description": "from copy-pasting prompts between chats to building an AI supervisor for AI workers. who supervises the supervisor?"
+  },
+  {
+    "slug": "80-percent-sleep",
+    "title": "80% sleep?",
+    "date": "2026-10-25",
+    "pubDate": "2026-10-25T16:00:00Z",
+    "description": "is two extra hours of being awake really two extra hours of being productive?"
+  },
+  {
+    "slug": "why-i-stopped-working-on-nytr-problems-and-lessons",
+    "title": "why i stopped working on nytr — problems and lessons.",
+    "date": "2026-10-15",
+    "pubDate": "2026-10-15T00:00:00Z",
+    "description": "What building a campus nutrition app taught me about data, distribution, and validating an idea."
+  },
+  {
+    "slug": "code-is-cheap-execution-is-everything",
+    "title": "code is cheap, execution is everything.",
+    "date": "2026-10-13",
+    "pubDate": "2026-10-13T00:00:00Z",
+    "description": "Why choosing a useful problem and getting people to use a product matter alongside writing the code."
+  },
+  {
+    "slug": "thoughts-on-slms-for-businesses",
+    "title": "thoughts on slm’s for businesses",
+    "date": "2026-10-03",
+    "updated": "2026-10-06",
+    "pubDate": "2026-10-03T00:00:00Z",
+    "description": "Thinking aloud about smaller models and narrow business workflows."
+  }
+]
