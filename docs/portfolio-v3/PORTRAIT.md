@@ -15,6 +15,7 @@ video or extra request.
 | `tests/e2e/run.mjs` | New `portrait` suite |
 | `tests/e2e/firefox.mjs` | Portrait smoke checks |
 | `docs/portfolio-v3/portrait/` | This design record: `portrait.svg` (a copy of the drawing for viewing), the composition experiments and motion frames |
+| `docs/portfolio-v3/screenshots/` | CI renders: new `portrait-*.png` and `firefox-portrait-hover.png`; the `home-*` and `firefox-home-*` shots that show the introduction, refreshed |
 
 `styles.css`, `hero-icons.js`, `motion.js`, the project previews, all
 writing, `content/`, `.publishing/`, the publishing scripts and both
@@ -107,7 +108,9 @@ Final layout at the seven tested widths:
 
 These local renders use Gelasio and Arimo, which are metric-compatible with
 Georgia and Arial, so line breaks match most visitors' screens. The CI
-screenshots in `screenshots/portrait-*.png` use the runner's DejaVu fonts.
+screenshots in `screenshots/` (`portrait-*.png`, and the refreshed
+`home-*.png` and `firefox-home-*.png` that show the introduction) use the
+runner's fonts.
 
 ## Interaction
 
@@ -138,6 +141,14 @@ fails above 4°.
 The blink and the glint are short timed curves rather than springs, because
 each is a fixed gesture. Every part moves by an SVG `transform` attribute,
 and the glint also by `opacity`, so the page layout never changes.
+
+Static and animated states, rendered in CI by the `portrait` suite at 2×
+(rest, mid-blink with the glint on the left lens, looking toward a pointer
+on the right, looking left, and with JavaScript disabled):
+
+| Rest | Noticing | Looking right | Looking left | No JavaScript |
+| --- | --- | --- | --- | --- |
+| ![Rest](screenshots/portrait-rest.png) | ![Noticing](screenshots/portrait-hover-notice.png) | ![Looking right](screenshots/portrait-hover-looking.png) | ![Looking left](screenshots/portrait-hover-left.png) | ![No JavaScript](screenshots/portrait-no-js.png) |
 
 Motion frames at 1440 px (each frame is a fresh load, frozen at that time):
 
@@ -196,11 +207,29 @@ the interaction.
 pointer (tilt 2–4°, pupils turn), springs back to the rest drawing, no
 console errors.
 
+Results on the branch (November 4, 2026):
+
+| Check | Where | Result |
+| --- | --- | --- |
+| Chrome suites (`run.mjs`, with `REQUIRE_GLYPHS=1`) | CI, Google Chrome 156 | 292/292 |
+| Chrome suites (`run.mjs`) | Sandbox, Chrome headless shell and Chrome for Testing 151 | 288/288 (no glyph checks there) |
+| Firefox smoke (`firefox.mjs`) | CI, Firefox 159 | 43/43 |
+| html-validate, writing lists, links (537 references), RSS, preservation | CI `check` job; all but html-validate also in the sandbox | Pass |
+| Content pipeline and Sunday publisher tests, including the real-draft rehearsal with html-validate | CI | 83 passed |
+| `publish_scheduled.py --dry-run` | Sandbox | 0 due, nothing changed |
+
+The first CI run found one real problem: Chrome 156 delivered the emulated
+tap as a `click` with `pointerType: "touch"` and no `pointerdown` before it,
+so the tap greeting did not run. The click handler now reads the click's own
+pointer type.
+
 ## Limitations
 
 - Tested in Chrome locally and in CI, and in Firefox in CI only (no Firefox
   in the build sandbox). Firefox checks use script-dispatched pointer
-  events. Safari/WebKit was not tested, as for the rest of V3.
+  events. Safari/WebKit was not tested, as for the rest of V3. The tap
+  greeting relies on clicks carrying `pointerType` (current Chrome, Firefox
+  and Safari) or on the `pointerdown` before them.
 - Touch behavior was tested with Chrome's touch emulation, not on a phone.
 - The character reacts only while the pointer is over the drawing. Keyboard
   and screen-reader users get the still portrait and its name, by design.
