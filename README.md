@@ -39,6 +39,7 @@ python3 -m http.server 8000
 
 V3 adds motion on top of V2 without changing its content or architecture. See [docs/portfolio-v3/README.md](docs/portfolio-v3/README.md) for the full design and implementation notes.
 
+- **Illustrated portrait**: an original inline SVG drawing of me leads the introduction (a small byline beside the name on phones). On mouse hover it notices the pointer: the eyes follow, the head tilts slightly, the hair follows, it blinks, and the glasses catch a glint. It springs back when the pointer leaves. Touch screens get one greeting; reduced motion and no-JS visitors see the still drawing. See [docs/portfolio-v3/PORTRAIT.md](docs/portfolio-v3/PORTRAIT.md).
 - **Hero icons**: "software", "AI systems" and "research" in the introduction carry small original SVG drawings that animate on hover or keyboard focus. On wide screens a larger copy appears beside the intro, so the text never moves. Touch screens play each icon once, and a tap follows the link.
 - **Project previews**: Nytr and Clage play their existing demo videos, muted, on hover, focus or the Preview button. Talks and Devvy show animated architecture diagrams. Videos are created only on demand.
 - **`/explore/`**: an optional workbench of the published projects by area.

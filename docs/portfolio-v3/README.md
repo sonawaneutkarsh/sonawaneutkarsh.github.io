@@ -5,6 +5,26 @@ structure and every case study, and adds motion where it explains something.
 Plain HTML, CSS and ES modules. There is still no framework, build step,
 backend, analytics or third-party runtime dependency.
 
+## Illustrated portrait (November 4, 2026)
+
+The portrait slot is filled. An original, animated vector drawing of
+Utkarsh now leads the introduction's left column at 180 px, and the notebook
+drawing sits beneath it at 120 px. On phones the portrait is a 92 px byline
+beside the name, and the notebook keeps its place after the contact links.
+On mouse or pen hover the character notices the pointer: the eyes follow it,
+the head tilts 2–3°, the hair follows a beat later, it blinks once and a
+glint crosses the glasses. It springs back to the rest drawing when the
+pointer leaves. Touch screens get one short greeting, reduced motion gets a
+still drawing, and without JavaScript it is the same still drawing. The
+frame loop sleeps when nothing moves.
+
+Design record, placement experiments, motion frames, measurements and
+limitations: [PORTRAIT.md](PORTRAIT.md). New files: `js/portrait.js`,
+`docs/portfolio-v3/PORTRAIT.md`, `docs/portfolio-v3/portrait/`. Changed:
+`index.html` (inline SVG, one `modulepreload`), `js/home.js`,
+`css/interactive.css`, `tests/e2e/run.mjs` (`portrait` suite) and
+`tests/e2e/firefox.mjs`. The "Portrait slot" note below is superseded.
+
 ## Refinement pass (November 3, 2026)
 
 These changes replace the earlier descriptions further down where they
@@ -269,6 +289,7 @@ into failures. `SUITE_TIMEOUT_MS` (default 240 s) stops a stuck suite.
 | `glyphs` | Whether ← → ↗ − · — – × ’ “ ” é render in the page fonts (canvas comparison against an unassigned code point) |
 | `layout` | Connector labels vs cards, zone captions and other labels; cards vs zones; card text overflow; every detail panel; hero icons vs their words; diagram labels vs caption, chip and frame |
 | `demo` | ADR stepping, keyboard, reset, example switching, connectors attached to their marks with no badge collisions, reduced motion, same-origin-only requests |
+| `portrait` | Illustrated portrait: inline vector parts, identical without JS, hover sequence (tilt 2–4°, gaze, hair lag, blink, glint), bounded tracking, exact return to rest, no jumps on quick passes, idle frames, reduced motion, touch greeting and scrolling, layout at seven widths (see [PORTRAIT.md](PORTRAIT.md)) |
 
 **CI.** `.github/workflows/browser-tests.yml` runs on every pull request and
 on pushes to `main`. It has read-only permissions and no deploy step, and it
