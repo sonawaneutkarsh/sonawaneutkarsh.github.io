@@ -947,6 +947,14 @@ const suites = {
     await page.touchGesture([[startAt, { x: startAt.x + 3, y: startAt.y - 200 }]]);
     await page.wait(500);
     check("touch: a swipe that starts on the portrait still scrolls the page", (await page.eval(() => scrollY)) > y0 + 100);
+    // Let the swipe's fling finish: a touch during a fling only stops it and
+    // never becomes a click.
+    for (let last = -1, i = 0; i < 40; i++) {
+      const now = await page.eval(() => scrollY);
+      if (now === last) break;
+      last = now;
+      await page.wait(150);
+    }
     await record();
     const href = await page.eval(() => location.href);
     await page.tap("svg.portrait");
