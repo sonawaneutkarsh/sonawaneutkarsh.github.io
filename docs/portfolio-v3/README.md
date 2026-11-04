@@ -40,8 +40,9 @@ conflict.
   state of every example and checks that the controls never move.
 - **Research notebook** lists the walkthrough as its first entry, dated
   Nov 2026, and its introduction now mentions it.
-- **Homepage Writing** shows the newest 3 posts plus "All posts →".
-  `publish_scheduled.py` trims the list back to 3 after each Sunday release.
+- **Homepage Writing** shows the newest 3 posts plus "All posts →". The
+  list is generated from `content/posts.json` by `scripts/build_writing.py`
+  (see [CONTENT-PIPELINE.md](CONTENT-PIPELINE.md)).
 - **Nytr:** "Development paused" was removed from the homepage and explorer.
   The "lessons from building it" link stays.
 - **Portrait slot:** a commented-out `<img class="intro-portrait">` in the
@@ -232,15 +233,20 @@ Unchanged: every case study and article, `feed.xml`, `resume.pdf`, the
 wordmark, illustrations, videos and posters. The preservation check confirms
 this. The homepage markup that `scripts/publish_scheduled.py` depends on
 (`<section id="blog">` and `<ul class="post-list">`) is untouched. A
-simulated 2026-11-08 release on the branch passed all checks.
+simulated 2026-11-08 release on the branch passed all checks. (Since the
+content pipeline, the publisher writes `content/posts.json` and the lists are
+regenerated between `writing:*` markers; see
+[CONTENT-PIPELINE.md](CONTENT-PIPELINE.md).)
 
 ## Testing
 
 ```bash
+python3 scripts/build_writing.py --check   # writing lists, feed and sitemap match content/posts.json
 python3 scripts/check_links.py
 python3 scripts/check_feed.py
 python3 scripts/check_preservation.py
 npx --yes html-validate@10 index.html 404.html projects/*/index.html blog/index.html blog/*/index.html notebook/index.html notebook/*/index.html explore/index.html
+python3 -m unittest discover -s tests/content -v   # content pipeline and Sunday publisher
 node tests/e2e/run.mjs                 # Chrome/Chromium over the DevTools protocol
 node tests/e2e/run.mjs history touch   # selected suites
 FIREFOX_PATH=/usr/bin/firefox node tests/e2e/firefox.mjs   # Firefox over WebDriver BiDi
