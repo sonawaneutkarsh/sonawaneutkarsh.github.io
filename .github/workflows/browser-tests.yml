@@ -2,7 +2,8 @@ name: Browser tests
 
 # Playwright against the production build (npm run build), served the way
 # GitHub Pages serves it (tests/support/serve.mjs). Chromium runs every suite
-# at every width; Firefox runs the suites tagged @firefox. The compare job
+# at every width; Firefox runs the suites tagged @firefox. The Chromium job
+# also runs the navigation suite against `npm run dev`. The compare job
 # measures and photographs vanilla V3 (36fe033) and this build side by side.
 # Read-only: no Pages permissions, no deployment; screenshots and reports are
 # uploaded as short-lived workflow artifacts.
@@ -27,7 +28,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: [chromium, firefox]
+        include:
+          # Chromium also runs the navigation suite against `npm run dev`
+          # (Playwright starts the dev server), which routes differently
+          # from the static build.
+          - browser: chromium
+            projects: --project=chromium --project=dev
+          - browser: firefox
+            projects: --project=firefox
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -55,10 +63,10 @@ jobs:
       - name: Build the static site
         run: npm run build
 
-      - name: Playwright (${{ matrix.browser }})
+      - name: Playwright (${{ matrix.projects }})
         env:
           SCREENSHOTS: "1"
-        run: npx playwright test --project=${{ matrix.browser }}
+        run: npx playwright test ${{ matrix.projects }}
 
       - name: Upload screenshots
         if: always()
