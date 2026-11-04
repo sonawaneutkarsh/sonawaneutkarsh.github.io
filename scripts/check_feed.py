@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Validate the static RSS feed against the blog index, with no dependencies."""
+"""Validate the RSS feed against the blog index, with no dependencies.
+
+Both are generated from src/lib/content/posts.json by the build, so this runs
+against the build output (`--root build`, the default).
+"""
+import argparse
 from datetime import date
 from email.utils import parsedate_to_datetime
 from html.parser import HTMLParser
@@ -7,7 +12,7 @@ from pathlib import Path
 from urllib.parse import urljoin
 import xml.etree.ElementTree as ET
 
-ROOT = Path(__file__).resolve().parent.parent
+REPO = Path(__file__).resolve().parent.parent
 ORIGIN = "https://sonawaneutkarsh.github.io"
 
 class Posts(HTMLParser):
@@ -44,6 +49,9 @@ class Posts(HTMLParser):
             self.current = None
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--root", default="build", help="site directory to check (default: build)")
+    ROOT = (REPO / parser.parse_args().root).resolve()
     posts = Posts()
     posts.feed((ROOT / "blog/index.html").read_text(encoding="utf-8"))
     rss = ET.parse(ROOT / "feed.xml").getroot()

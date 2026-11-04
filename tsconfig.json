@@ -1,0 +1,12 @@
+{
+	"extends": "$app/tsconfig",
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true,
+		"strict": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true
+	},
+	"include": ["src", "vite.config.js"],
+	"exclude": ["node_modules", "build", ".svelte-kit"]
+}

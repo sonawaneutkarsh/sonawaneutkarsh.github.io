@@ -1,0 +1,138 @@
+/* Ink and fills shared by the hero objects and the project drawings.
+   Strokes are set here rather than as attributes so one drawing can be shown
+   at two sizes: `--k` thins the lines in the larger margin copy. */
+
+.hero-drawing,
+.preview-drawing {
+	--ink-c: #282d27;
+	--sage-c: #455c47;
+	--line-c: #6b745d;
+	--paper-c: #fcfaf0;
+	--soft-c: #e6ebdd;
+	--wash-c: #edf0e5;
+	--rule-c: #c9cfbf;
+	--muted-c: #62685e;
+	--k: 1;
+	display: block;
+	overflow: visible;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+.hero-drawing .w15 { stroke-width: calc(1.5px * var(--k)); }
+.hero-drawing .w125 { stroke-width: calc(1.25px * var(--k)); }
+.hero-drawing .w11 { stroke-width: calc(1.1px * var(--k)); }
+.hero-drawing .w1 { stroke-width: calc(1px * var(--k)); }
+.hero-drawing .w075 { stroke-width: calc(0.75px * var(--k)); }
+
+.hero-drawing .line-ink { stroke: var(--line-c); }
+.hero-drawing .sage { stroke: var(--sage-c); }
+.hero-drawing .paper-ink { stroke: var(--paper-c); }
+.hero-drawing .dash-tight { stroke-dasharray: 1.2 1.4; }
+.hero-drawing .node,
+.hero-drawing .device,
+.hero-drawing .page,
+.hero-drawing .slip { fill: var(--paper-c); stroke: var(--ink-c); }
+.hero-drawing .cover { fill: var(--paper-c); stroke: var(--ink-c); }
+.hero-drawing .cover.inside { fill: var(--wash-c); }
+.hero-drawing .spine { fill: var(--soft-c); }
+.hero-drawing .pages { fill: var(--wash-c); stroke: var(--ink-c); }
+.hero-drawing .label { fill: var(--paper-c); stroke: var(--line-c); }
+.hero-drawing .strap { fill: var(--wash-c); stroke: var(--ink-c); }
+.hero-drawing .signal,
+.hero-drawing .rec,
+.hero-drawing .badge,
+.hero-drawing .packet,
+.hero-drawing .dot-drug { fill: var(--sage-c); }
+.hero-drawing .rec-ring { stroke: var(--sage-c); }
+.hero-drawing .dot-reaction { fill: var(--paper-c); stroke: var(--ink-c); stroke-width: calc(0.6px * var(--k)); }
+.hero-drawing .dot { fill: var(--line-c); }
+.hero-drawing .notch { fill: var(--ink-c); }
+.hero-drawing .code-line,
+.hero-drawing .screen-line { fill: var(--line-c); }
+.hero-drawing .text-line { fill: var(--line-c); fill-opacity: 0.85; }
+.hero-drawing .mark-drug { fill: var(--soft-c); stroke: var(--sage-c); }
+.hero-drawing .mark-reaction { fill: var(--wash-c); fill-opacity: 0.6; stroke: var(--ink-c); stroke-dasharray: 1.4 1; }
+.hero-drawing .slip-stack { fill: var(--soft-c); }
+.hero-drawing .stage-labels text {
+	font: 2.7px/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+	fill: var(--muted-c);
+	text-anchor: middle;
+	stroke: none;
+}
+.hero-drawing .stage-labels .aside { text-anchor: start; }
+
+/* ---- project drawings (280×175) ---- */
+.preview-drawing {
+	width: 100%;
+	height: 100%;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+}
+.preview-drawing .p-card,
+.preview-drawing .p-device { fill: var(--paper-c); stroke: var(--ink-c); stroke-width: 1.5; }
+.preview-drawing .p-box { fill: var(--wash-c); stroke: var(--sage-c); stroke-width: 1.5; }
+.preview-drawing .p-screen { fill: var(--wash-c); }
+.preview-drawing .p-strap { fill: var(--wash-c); stroke: var(--ink-c); stroke-width: 1.5; }
+.preview-drawing .p-notch { fill: var(--ink-c); }
+.preview-drawing .p-fold { fill: none; stroke: var(--ink-c); stroke-width: 1.25; }
+.preview-drawing .p-page { fill: var(--paper-c); stroke: var(--sage-c); stroke-width: 1.25; }
+.preview-drawing .p-rule { stroke: var(--rule-c); stroke-width: 1; }
+.preview-drawing .p-wire {
+	fill: none;
+	stroke: var(--rule-c);
+	stroke-width: 1.25;
+	stroke-dasharray: 3 4;
+	transition: stroke 200ms, stroke-width 200ms;
+}
+.preview-drawing .p-wire.on { stroke: var(--sage-c); stroke-width: 1.75; stroke-dasharray: none; }
+.preview-drawing .p-line,
+.preview-drawing .p-dot,
+.preview-drawing .p-tick { fill: var(--line-c); }
+.preview-drawing .p-strong { fill: var(--ink-c); }
+.preview-drawing .p-track { fill: var(--rule-c); }
+.preview-drawing .p-fill { fill: var(--sage-c); }
+.preview-drawing .p-fill.soft { fill: var(--line-c); }
+.preview-drawing .p-pick { fill: var(--soft-c); }
+.preview-drawing .p-rec,
+.preview-drawing .p-packet,
+.preview-drawing .p-signal,
+.preview-drawing .p-badge { fill: var(--sage-c); }
+.preview-drawing .p-rec-ring { fill: none; stroke: var(--sage-c); stroke-width: 1; }
+.preview-drawing .p-ack { fill: var(--paper-c); stroke: var(--sage-c); stroke-width: 1.5; }
+.preview-drawing .p-check { fill: none; stroke: var(--sage-c); stroke-width: 2; }
+.preview-drawing .p-check.paper { stroke: var(--paper-c); stroke-width: 1.75; }
+.preview-drawing .p-check.thin { stroke-width: 1.1; }
+.preview-drawing .p-ring-track { fill: none; stroke: var(--rule-c); stroke-width: 4; }
+.preview-drawing .p-ring { fill: none; stroke: var(--sage-c); stroke-width: 4; stroke-linecap: round; }
+.preview-drawing .p-rec { stroke: none; }
+.preview-drawing .p-pill { fill: var(--soft-c); }
+.preview-drawing .p-wave { stroke: var(--sage-c); stroke-width: 2; }
+.preview-drawing .p-node { fill: var(--wash-c); stroke: var(--ink-c); stroke-width: 1.5; transition: fill 240ms; }
+.preview-drawing .p-node.lit { fill: var(--soft-c); }
+.preview-drawing .p-node.hidden { fill: var(--soft-c); stroke: var(--sage-c); }
+.preview-drawing .p-edge { stroke: var(--line-c); stroke-width: 1.5; fill: none; }
+.preview-drawing .p-edge.new { stroke: var(--sage-c); }
+.preview-drawing .p-edge.vine { stroke: var(--sage-c); }
+.preview-drawing .p-select { fill: none; stroke: var(--sage-c); stroke-width: 1.75; }
+.preview-drawing .p-status { fill: var(--sage-c); stroke: var(--sage-c); stroke-width: 1.25; }
+.preview-drawing .p-status.off { fill: var(--paper-c); }
+.preview-drawing .p-ttl { fill: none; stroke: var(--line-c); stroke-width: 1.25; }
+.preview-drawing .p-avatar { fill: var(--soft-c); stroke: var(--sage-c); stroke-width: 1.25; }
+.preview-drawing .p-rec { fill: var(--sage-c); }
+.preview-drawing text { stroke: none; }
+.preview-drawing .p-label { font-size: 9px; fill: var(--ink-c); }
+.preview-drawing .p-label.small { font-size: 8.5px; }
+.preview-drawing .p-label.mid { text-anchor: middle; font-size: 10px; }
+.preview-drawing .p-sigma { font-size: 11px; text-anchor: middle; fill: var(--ink-c); transition: fill 160ms; }
+.preview-drawing .p-sigma.on { fill: var(--sage-c); }
+.preview-drawing .p-caption { font-size: 9px; fill: var(--muted-c); text-anchor: middle; }
+.preview-drawing .p-caption.sage { fill: var(--sage-c); font-size: 8.5px; }
+.preview-drawing .p-caption.soft { fill: var(--sage-c); font-size: 8px; }
+.preview-drawing .p-tiny { font-size: 6.5px; fill: var(--sage-c); text-anchor: middle; }
+.preview-drawing .p-state { font-size: 8px; fill: var(--sage-c); }
+
+@media (prefers-reduced-motion: reduce) {
+	.preview-drawing .p-wire,
+	.preview-drawing .p-node,
+	.preview-drawing .p-sigma { transition: none; }
+}

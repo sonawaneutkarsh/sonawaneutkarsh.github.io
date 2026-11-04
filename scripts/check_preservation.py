@@ -1,9 +1,17 @@
 #!/usr/bin/env python3
-"""Compare Portfolio V2 with its immutable, pre-redesign Git baseline.
+"""Compare the site with its immutable, pre-redesign Git baseline.
 
 No network or third-party dependencies. Template/navigation changes are intentional;
 article prose, evidence, dates, original targets and source assets must survive.
+
+Since the SvelteKit migration the site is the build output, so every baseline file
+that GitHub Pages serves is checked where it is deployed (`--root build`, the
+default): case studies and articles (copied from static/), the prerendered
+homepage, media, the résumé and the wordmark. Repository files from the baseline
+(README, workflow, validator config, link checker) are checked in the repository.
+The assertions are the same as before the migration.
 """
+import argparse
 import hashlib
 import json
 import re
@@ -13,9 +21,12 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urljoin
 
-ROOT = Path(__file__).resolve().parent.parent
-BASELINE = json.loads((ROOT / 'docs/portfolio-v2/preservation-baseline.json').read_text())
+REPO = Path(__file__).resolve().parent.parent
+BASELINE = json.loads((REPO / 'docs/portfolio-v2/preservation-baseline.json').read_text())
 BASE_REF = BASELINE['baseline_commit']
+# Baseline files that are not part of the deployed site.
+REPOSITORY_FILES = {'.github/workflows/deploy.yml', '.gitignore', '.htmlvalidate.json', 'README.md', 'scripts/check_links.py'}
+
 
 class Content(HTMLParser):
     def __init__(self):
@@ -72,29 +83,35 @@ def normalized(parts):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--root', default='build', help='deployed site directory (default: build)')
+    site = (REPO / parser.parse_args().root).resolve()
+    if not (site / 'index.html').is_file():
+        print(f'No site at {site}: run `npm run build` first.')
+        return True
     failures = []
     articles = assets = anchors = 0
     for item in BASELINE['files']:
-        p = ROOT / item['path']
+        p = (REPO if item['path'] in REPOSITORY_FILES else site) / item['path']
         if not p.exists():
-            failures.append(f"Missing {item['path']}")
+            failures.append(f"Missing {item['path']} (looked in {p.parent})")
             continue
         if p.suffix == '.html':
-            before = parse(subprocess.check_output(['git', 'show', f"{BASE_REF}:{item['path']}"], cwd=ROOT).decode())
+            before = parse(subprocess.check_output(['git', 'show', f"{BASE_REF}:{item['path']}"], cwd=REPO).decode())
             after = parse(p.read_text())
             missing = before.ids - after.ids
             anchors += len(before.ids)
             if missing:
-                failures.append(f'{p.relative_to(ROOT)} missing IDs: {missing}')
+                failures.append(f"{item['path']} missing IDs: {missing}")
             if item['path'].startswith(('blog/', 'projects/')) and before.prose:
                 articles += 1
                 for label in ('prose', 'title', 'h1'):
                     original = normalized(getattr(before, label))
                     updated = normalized(getattr(after, label))
                     if original != updated:
-                        failures.append(f'{p.relative_to(ROOT)} changed {label}')
+                        failures.append(f"{item['path']} changed {label}")
                 if before.dates != after.dates:
-                    failures.append(f'{p.relative_to(ROOT)} changed dates')
+                    failures.append(f"{item['path']} changed dates")
                 # All source/evidence links and media survive; only the old blog back-link changes.
                 def resolved(targets):
                     base = 'https://sonawaneutkarsh.github.io/' + item['path']
@@ -103,15 +120,15 @@ def main():
                 for tag, key, target in missing_targets:
                     if target.endswith('favicon.ico') or target.endswith('favicon-32x32.png') or target.endswith('apple-touch-icon.png') or target == 'https://sonawaneutkarsh.github.io/#blog':
                         continue
-                    failures.append(f'{p.relative_to(ROOT)} missing original target {target}')
+                    failures.append(f"{item['path']} missing original target {target}")
         elif p.suffix in ('.jpg', '.png', '.mp4', '.pdf') and p.name not in ('favicon-32x32.png','apple-touch-icon.png'):
             assets += 1
             if hashlib.sha256(p.read_bytes()).hexdigest() != item['sha256']:
-                failures.append(f'Changed immutable asset {p.relative_to(ROOT)}')
+                failures.append(f"Changed immutable asset {item['path']}")
     master = BASELINE['wordmark']
-    if hashlib.sha256((ROOT / master['saved_path']).read_bytes()).hexdigest() != master['sha256']:
+    if hashlib.sha256((REPO / master['saved_path']).read_bytes()).hexdigest() != master['sha256']:
         failures.append('Changed original wordmark master')
-    print(f'Compared {articles} complete article/case-study bodies; {anchors} original IDs; {assets} immutable assets and wordmark master.')
+    print(f'Compared {articles} complete article/case-study bodies; {anchors} original IDs; {assets} immutable assets and wordmark master (site: {site.relative_to(REPO)}).')
     for failure in failures:
         print('FAIL:', failure)
     if not failures:

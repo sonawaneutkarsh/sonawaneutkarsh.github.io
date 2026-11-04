@@ -1,5 +1,9 @@
 name: Deploy to GitHub Pages
 
+# Checks and builds the SvelteKit site (adapter-static, output in build/) on
+# every pull request and on main. Only a push to main (or a manual run on
+# main) deploys, and only the build that passed the checks is uploaded.
+
 on:
   push:
     branches: [main]
@@ -15,26 +19,50 @@ concurrency:
 
 jobs:
   check:
+    name: Check and build
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+          # check_preservation.py and check_content_parity.py read their
+          # reference commits (V2 baseline, V3 at 36fe033) from history.
           fetch-depth: 0
 
-      - name: Validate HTML
-        run: npm install -g html-validate@10 && html-validate index.html 404.html projects/*/index.html blog/index.html blog/*/index.html notebook/index.html notebook/*/index.html explore/index.html
+      - name: Make sure the V3 reference commit is available
+        run: git cat-file -e '36fe0335d65c38e7ef23a9ccd1c9cc0d332f118c^{commit}' 2>/dev/null || git fetch --no-tags origin 36fe0335d65c38e7ef23a9ccd1c9cc0d332f118c
 
-      - name: Check internal links and assets
-        run: python3 scripts/check_links.py
+      - name: Set up Node 22
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
 
-      - name: Check RSS feed
-        run: python3 scripts/check_feed.py
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
 
-      - name: Check content preservation
-        run: python3 scripts/check_preservation.py
+      - name: Type-check (svelte-check)
+        run: npm run check
+
+      - name: Build the static site
+        run: npm run build
+
+      - name: Validate HTML, links and assets, RSS, preserved pages, V3 content parity
+        run: npm run validate
+
+      - name: Unit tests
+        run: npm run test:unit
+
+      - name: Publishing tests (Sunday publisher, then a full build)
+        run: npm run test:publishing
+
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: build
 
   deploy:
     needs: check
@@ -49,25 +77,8 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-
-      - name: Stage site files
-        run: |
-          mkdir -p _site
-          cp -r index.html 404.html robots.txt sitemap.xml styles.css script.js avatar.jpg resume.pdf .nojekyll \
-            favicon.svg favicon.ico favicon-16x16.png favicon-32x32.png apple-touch-icon.png \
-            icons images videos projects blog notebook explore css js feed.xml _site/
-
       - name: Setup Pages
         uses: actions/configure-pages@v6
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment

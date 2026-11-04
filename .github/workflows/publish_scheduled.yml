@@ -1,5 +1,11 @@
 name: Publish scheduled Sunday blog posts
 
+# scripts/publish_scheduled.py moves each due draft from .publishing/ to
+# static/blog/<slug>/ and adds its record to src/lib/content/posts.json and
+# its URL to static/sitemap.xml. The build then regenerates the homepage's
+# latest three posts, /blog/ and /feed.xml from posts.json. Nothing is pushed
+# or deployed unless the build and every site check pass.
+
 on:
   schedule:
     # Sundays at 12:17 EST (17:17 UTC) for November 2026.
@@ -19,67 +25,73 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout main with write access
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: main
+          # The parity and preservation checks read reference commits from history.
           fetch-depth: 0
           persist-credentials: true
 
       - name: Release Sunday posts due in New York
-        run: python3 scripts/publish_scheduled.py
-
-      - name: Validate HTML
-        run: npm install -g html-validate@10 && html-validate index.html 404.html projects/*/index.html blog/index.html blog/*/index.html notebook/index.html notebook/*/index.html explore/index.html
-
-      - name: Check internal links and assets
-        run: python3 scripts/check_links.py
-
-      - name: Check RSS feed
-        run: python3 scripts/check_feed.py
-
-      - name: Check content preservation
-        run: python3 scripts/check_preservation.py
-
-      - name: Commit and publish due posts
         id: release
         run: |
-          git add -A index.html blog/ feed.xml sitemap.xml .publishing/
-          if git diff --cached --quiet; then
+          python3 scripts/publish_scheduled.py
+          if [ -n "$(git status --porcelain -- static/blog src/lib/content/posts.json static/sitemap.xml .publishing)" ]; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          else
             echo "published=false" >> "$GITHUB_OUTPUT"
             echo "No unpublished posts due."
-          else
-            git -c user.name='github-actions[bot]' \
-                -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
-                commit -m 'blog: publish scheduled Sunday essay'
-            git push origin HEAD:main
-            echo "published=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Stage site files
+      - name: Make sure the V3 reference commit is available
+        if: steps.release.outputs.published == 'true'
+        run: git cat-file -e '36fe0335d65c38e7ef23a9ccd1c9cc0d332f118c^{commit}' 2>/dev/null || git fetch --no-tags origin 36fe0335d65c38e7ef23a9ccd1c9cc0d332f118c
+
+      # No dependency cache in this job: it can push to main and deploy.
+      - name: Set up Node 22
+        if: steps.release.outputs.published == 'true'
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        if: steps.release.outputs.published == 'true'
+        run: npm ci --no-audit --no-fund
+
+      - name: Build the site with the new posts
+        if: steps.release.outputs.published == 'true'
+        run: npm run build
+
+      - name: Validate HTML, links and assets, RSS, preserved pages, content parity
+        if: steps.release.outputs.published == 'true'
+        run: npm run validate
+
+      - name: Commit and push the published posts
         if: steps.release.outputs.published == 'true'
         run: |
-          mkdir -p _site
-          cp -r index.html 404.html robots.txt sitemap.xml styles.css script.js avatar.jpg resume.pdf .nojekyll \
-            favicon.svg favicon.ico favicon-16x16.png favicon-32x32.png apple-touch-icon.png \
-            icons images videos projects blog notebook explore css js feed.xml _site/
+          git add -A static/blog src/lib/content/posts.json static/sitemap.xml .publishing
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -m 'blog: publish scheduled Sunday essay'
+          git push origin HEAD:main
 
       - name: Set up GitHub Pages
         if: steps.release.outputs.published == 'true'
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Upload GitHub Pages artifact
         if: steps.release.outputs.published == 'true'
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
-          path: _site
+          path: build
 
       - name: Deploy published site to GitHub Pages
         if: steps.release.outputs.published == 'true'
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

@@ -1,17 +1,21 @@
 #!/usr/bin/env python3
 """Check every internal link, asset, and in-page anchor in the site's HTML files.
 
-External URLs are not fetched (no network flakiness in CI). Exit code 1 on any
-broken reference.
+Runs against the deployable output (`--root build`, the default), so the
+prerendered Svelte pages and the copied static pages are checked together,
+exactly as GitHub Pages will serve them. External URLs are not fetched (no
+network flakiness in CI). Exit code 1 on any broken reference.
 """
+import argparse
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit, unquote
 import os
 import sys
 
-ROOT = Path(__file__).resolve().parent.parent
-SKIP_DIRS = {".git", "node_modules", "out", "_site", ".next"}
+REPO = Path(__file__).resolve().parent.parent
+ROOT = REPO / "build"
+SKIP_DIRS = {".git", "node_modules", "out", "_site", ".next", "_app"}
 SKIP_SCHEMES = {"http", "https", "mailto", "tel", "data", "javascript"}
 
 
@@ -53,6 +57,13 @@ def resolve(page, url):
 
 
 def main():
+    global ROOT
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--root", default="build", help="site directory to check (default: build)")
+    ROOT = (REPO / parser.parse_args().root).resolve()
+    if not (ROOT / "index.html").is_file():
+        print(f"No site at {ROOT}: run `npm run build` first.")
+        return 1
     pages = []
     for directory, subdirs, filenames in os.walk(ROOT):
         # Prune generated trees before traversing them, including untracked builds.
