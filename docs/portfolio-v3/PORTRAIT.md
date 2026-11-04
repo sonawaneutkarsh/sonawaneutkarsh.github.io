@@ -1,5 +1,102 @@
 # Illustrated self-portrait
 
+## Revision 2: three concepts for review (November 4, 2026)
+
+The first drawing (described from "The drawing" onward) was judged too
+cartoonish. The hair was a helmet, the beard a filled mask, the brows solid
+blocks and the expression stiff. These three concepts redraw the portrait as
+fine-pen line art from the two photos. They are for choosing one. **The
+homepage still shows the first drawing, and `index.html`, `js/` and `css/`
+are unchanged** until a concept is selected. Nothing is merged or deployed.
+
+Files in [`portrait/revision-2/`](portrait/revision-2/):
+
+| File | What it shows |
+| --- | --- |
+| [`concept-a.svg`](portrait/revision-2/concept-a.svg), [`concept-b.svg`](portrait/revision-2/concept-b.svg), [`concept-c.svg`](portrait/revision-2/concept-c.svg) | The three drawings, standalone (shown at 540 px) |
+| `compare-180-and-92.png` | All three at 180 px and 92 px on the site's cream paper, rendered at 2× |
+| `compare-large.png` | All three larger, for inspecting the line work |
+| `in-context-1440.png`, `in-context-390.png` | Each one in the real introduction, at desktop width and as the phone byline |
+| `animation-states.png` | Rest, noticing (mid-blink, glint), looking right and looking left, for each |
+
+![The three concepts at 180 px and 92 px](portrait/revision-2/compare-180-and-92.png)
+
+**What changed for all three.** The face, eyes, nose, mouth and glasses
+share one geometry, measured again from the front photo.
+- **Face:** longer, with a slightly firmer jaw and the chin visible.
+- **Hair:** about 26% shorter relative to the face. It rose 1.04 × the
+  brow-to-chin distance and now rises 0.77 ×. It is 1.2 × the face width
+  (was 1.5 ×). It sweeps up and to the right from a part on the left, with
+  a loose lock on the forehead and a couple of stray strands. The
+  forehead shows.
+- **Facial hair:** short pen strokes along the jaw and chin and on the upper
+  lip. There is no filled beard; the cheeks are skin.
+- **Brows:** tapered and relaxed, with the right one slightly higher.
+- **Eyes:** smaller, with the upper lids resting on the irises and a soft
+  lower lid.
+- **Nose:** one line and a nostril.
+- **Mouth:** relaxed, with the right corner lifted into a half-smile and a
+  small dimple.
+- **Glasses:** thin angular frames.
+
+Outlines use `vector-effect: non-scaling-stroke`, so they stay about 1 CSS px
+at 180 px and at 92 px. Finer marks (stubble, moustache) scale down and
+fade at the smaller size.
+
+| | A — Minimal line art (preferred direction) | B — Refined flat illustration | C — Ultra-minimal character |
+| --- | --- | --- | --- |
+| Idea | Fine pen lines carry the drawing; closest to the reference avatar | Same face and proportions, drawn with colour shapes | As few marks as possible, built for 92 px |
+| Skin | Light warm tint | Natural medium brown | Natural medium brown |
+| Hair | Dark, broken into locks by paper-white strands | Dark, with soft grey strands | Clean dark outline, two strands |
+| Facial hair | Pen strokes | Pen strokes over a very light jaw shade | A few short strokes |
+| Shading | None | One flat shade (left cheek and under the hairline), neck shadow, lip colour | None |
+| Shirt | Outline only | Maroon tee | Maroon tee |
+| Lines | Ink | Soft brown on the face | Ink, slightly heavier |
+| Size (raw / gzip) | 13.5 / 4.6 KB | 13.6 / 4.9 KB | 7.9 / 2.7 KB |
+
+All three use pale or medium-brown skin. A light wash on the hair (tried for
+A) read as grey hair, and lines with no fill read as blond. So the hair stays
+dark in every concept, broken up by strands.
+
+In the introduction:
+
+![Each concept in the desktop introduction](portrait/revision-2/in-context-1440.png)
+
+![Each concept as the 92 px phone byline](portrait/revision-2/in-context-390.png)
+
+**Animation.** Each drawing keeps the same named groups (`pt-head`,
+`pt-hair`, `pt-face`, `pt-beard`, `pt-features`, `pt-pupil`, `pt-lid`,
+`pt-lash`, `pt-brow`, `pt-glasses`, `pt-glint`, `pt-body`). It carries its
+own pivots and travel in a `data-rig` attribute: neck and crown pivots, eye
+centres, lid travel, pupil range, glint path. For this review, a copy of
+`js/portrait.js` that reads `data-rig` ran each concept on a copy of the
+site. The site's own script is unchanged. Every concept passed the same 19
+checks:
+- renders at 180 px, named image, nothing focusable, no raster, every part
+  present, clear of the biography;
+- no frames while idle;
+- the head tilts 3.2° toward the pointer, the pupils turn and stay in the
+  eye, the lids close once, the hair trails the head by about 1.7°, and the
+  glint stays at or below 0.5 opacity;
+- settles under a still pointer and returns exactly to the rest drawing;
+- reduced motion moves nothing;
+- 92 px phone byline at 390 and 320 px with no overlap or overflow;
+- no console errors.
+
+![Animation states for each concept](portrait/revision-2/animation-states.png)
+
+**After a concept is chosen:**
+1. The inline SVG in `index.html` is replaced.
+2. `js/portrait.js` reads the rig from the drawing, as the review copy does.
+3. The suite's geometry-specific expectations (pupil range, lid travel,
+   markup size) are updated.
+4. Every check is run again and the screenshots are refreshed.
+
+The rest of this document describes the first drawing and the engineering
+around it, which carries over.
+
+---
+
 A small animated character of Utkarsh at the start of the homepage
 introduction. It is an original vector drawing, inline in `index.html`, with
 a vanilla ES module (`js/portrait.js`) that uses the existing springs in

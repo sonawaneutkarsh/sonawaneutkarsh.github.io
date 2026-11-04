@@ -19,7 +19,9 @@ still drawing, and without JavaScript it is the same still drawing. The
 frame loop sleeps when nothing moves.
 
 Design record, placement experiments, motion frames, measurements and
-limitations: [PORTRAIT.md](PORTRAIT.md). New files: `js/portrait.js`,
+limitations: [PORTRAIT.md](PORTRAIT.md). Revision 2 (three redrawn concepts
+for review, A, B and C) is at the top of that file; the homepage keeps the
+first drawing until one is chosen. New files: `js/portrait.js`,
 `docs/portfolio-v3/PORTRAIT.md`, `docs/portfolio-v3/portrait/`. Changed:
 `index.html` (inline SVG, one `modulepreload`), `js/home.js`,
 `css/interactive.css`, `tests/e2e/run.mjs` (`portrait` suite) and
