@@ -12,10 +12,15 @@
 	// it, so nothing jumps when the page hydrates. Without JavaScript the
 	// list stays a list.
 	const early = `(function(){try{var d=document.documentElement,v=new URLSearchParams(location.search).get('view'),n=matchMedia('(max-width: 719px)').matches;if(!(v==='bench'||(v!=='list'&&!n)))return;d.classList.add('explore-bench');var w=Math.min(1160,d.clientWidth-(n?40:64))-2,h=(n?innerHeight*0.72:Math.min(760,Math.max(520,innerHeight*0.72)))-2,b={x:20,y:20,w:1160,h:780},s=Math.min(1.25,Math.max(0.4,Math.min((w-56)/b.w,(h-56)/b.h))),x=(w-b.w*s)/2-b.x*s,y=(h-b.h*s)/2-b.y*s;x=Math.min(w/2,Math.max(w/2-1200*s,x));y=Math.min(h/2,Math.max(h/2-820*s,y));d.style.setProperty('--bench-x',x+'px');d.style.setProperty('--bench-y',y+'px');d.style.setProperty('--bench-s',String(s));}catch(e){}})();`;
+	// The tag is built here, not written in the markup: Vite's dependency
+	// scanner reads every <script> element in a .svelte file as a module,
+	// and a literal one in the template made the scan fail at dev startup.
+	// "<\/script>" keeps this block's own closing tag unambiguous.
+	const prepaint = `<script>${early}<\/script>`;
 </script>
 
 <svelte:head>
-	{@html `<script>${early}</script>`}
+	{@html prepaint}
 </svelte:head>
 
 <Seo {description} path="/explore/" title="Explore my work — Utkarsh Sonawane" />
