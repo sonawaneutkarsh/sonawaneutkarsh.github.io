@@ -956,9 +956,17 @@ const suites = {
       await page.wait(150);
     }
     await record();
-    const href = await page.eval(() => location.href);
+    const href = await page.eval(() => {
+      window.__taps = [];
+      for (const type of ["pointerover", "pointerdown", "pointerup", "pointercancel", "click", "touchstart", "touchend"])
+        document.addEventListener(type, (e) => window.__taps.push(`${type}:${e.pointerType ?? ""}:${(e.target.getAttribute?.("class") || e.target.nodeName).split(" ")[0]}`), true);
+      return location.href;
+    });
     await page.tap("svg.portrait");
-    check("touch: tapping the portrait plays the greeting and does not navigate", await until(() => window.__pt.some((w) => w[1] === "pt-pupil"), 1500) && (await page.eval(() => location.href)) === href);
+    const tapAt = await page.eval(() => document.querySelector("svg.portrait").getBoundingClientRect().toJSON());
+    const greeted = await until(() => window.__pt.some((w) => w[1] === "pt-pupil"), 1500);
+    const tapLog = await page.eval(() => `${window.__taps.join(" ")} | scrollY ${scrollY} | writes ${window.__pt.length}`);
+    check("touch: tapping the portrait plays the greeting and does not navigate", greeted && (await page.eval(() => location.href)) === href, process.env.TAP_LOG || !greeted ? `${JSON.stringify(tapAt)} ${tapLog}` : "");
     check("touch: no console errors", page.errors.length === 0, page.errors.join("; "));
 
     // Layout at every width: visible, inside the page, clear of the text, the
