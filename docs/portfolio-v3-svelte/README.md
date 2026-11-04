@@ -53,6 +53,7 @@ SvelteKit 3 with `adapter-static`. Every page is prerendered to plain HTML in `b
 - **Motion.** `src/lib/motion/springs.ts` defines spring presets for `svelte/motion`'s `Spring` in physical units. `clock.svelte.ts` is a playhead that ticks only while a sequence runs and fires cues that retarget the springs. Every hero object and project drawing is a pure function of its springs and playhead, so nothing runs once they settle.
 - **Without JavaScript** every page reads fully: the prerendered HTML has all the text, the explorer is a list, and the walkthrough shows all six steps. Controls that need JavaScript are not shown until the page is interactive.
 - **Before hydration.** An inline script in `/explore/` sets the camera position before the first paint, so hydration moves nothing (CLS 0 at every width).
+- **Development server.** GitHub Pages serves a directory URL such as `/notebook/` from its `index.html`. SvelteKit's dev server serves only files from `static/`, so the pages kept there (the notebook index, every article, every case study) answered 404 under `npm run dev`. `src/hooks.server.ts` answers those URLs from `static/<path>/index.html` in development only, and only when no route matches; `/notebook` redirects to `/notebook/` as on GitHub Pages. It changes nothing in the build. `tests/unit/routing.test.ts` fails if a route and a file in `static/` would claim the same URL.
 - **URLs.** Every page, image, video and document V3 deployed is still at its URL. The only URLs that went away are V3's own modules (`/js/*.js` and `/css/{interactive,explore,adr-demo}.css`), which the bundles under `/_app/` replace; no page links to them and they were never on `main`. `check_content_parity.py` enforces this.
 - **Kit settings.** `trailingSlash: 'always'` keeps V3's URLs. `prerender.crawl: false` with explicit entries means drafts can never be discovered. `version.pollInterval: 0`, but see Limitations.
 
@@ -235,12 +236,15 @@ Canonical URLs are unchanged. The feed generated from today's `posts.json` is by
 | RSS | 5 posts; links and dates match `/blog/` |
 | V2 preservation | prose, titles, dates, anchors and asset bytes match the V2 baseline |
 | V3 content parity | homepage, explorer, walkthrough and `/blog/` text, links and ids match `36fe033`; 75 files from `static/` byte-identical; all 90 files V3 deployed are in the build except its 10 JS/CSS modules |
-| Unit tests (`node --test`) | 10 pass |
+| Unit tests (`node --test`) | 11 pass |
 | Publishing tests | 13 pass |
-| Playwright, Chromium | 71 pass |
-| Playwright, Firefox (`@firefox` suites) | 12 pass |
+| Playwright, Chromium | 101 pass |
+| Playwright, Firefox (`@firefox` suites) | 41 pass |
+| Playwright, `npm run dev` (navigation suite, Chromium) | 30 pass |
 
 The Playwright suites check content against V3, the hero objects at 1440, 1280, 1024, 900, 768, 390 and 320 px (nothing covered, no text movement, no horizontal overflow), keyboard paths, reduced motion, touch (emulated), the explorer's gestures, URL history and deep links, layout shift, the walkthrough's stable controls, the lab's lazy loading, WebGL fallback and disposal, and zero idle frames.
+
+`tests/e2e/navigation.spec.ts` runs against both the build and `npm run dev`. Every page (the homepage, `/blog/`, each article, `/notebook/`, the walkthrough, `/explore/`, `/lab/motion/` and each case study) must answer 200 to a direct visit and a reload and show its own heading, title and canonical URL. Every header link is clicked from eight kinds of page, each landing is reloaded, and the links from `/blog/`, the homepage and `/notebook/` to every article, case study and notebook entry are followed.
 
 ## Limitations
 

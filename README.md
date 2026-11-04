@@ -35,6 +35,8 @@ npm run build      # static site in build/
 npm run preview    # serve build/ the way GitHub Pages does, on http://127.0.0.1:4173
 ```
 
+Some pages are files in `static/` rather than SvelteKit routes: `/notebook/`, every article and every case study. GitHub Pages and `npm run preview` serve them from their `index.html`; in development `src/hooks.server.ts` does the same, so every URL works in both.
+
 ## Test
 
 ```bash
@@ -48,7 +50,7 @@ npm test                                  # everything below, in order
 | `npm run validate` | HTML validation of `build/`, internal links and assets, the RSS feed, V2 preservation, and content parity with vanilla V3 (`36fe033`) |
 | `npm run test:unit` | Content and feed unit tests (`node --test`) |
 | `npm run test:publishing` | Sunday publisher tests, including publishing a post and building the site |
-| `npm run test:e2e` | Playwright: Chromium runs every suite, Firefox the `@firefox` ones; `SCREENSHOTS=1` saves scenes to `docs/portfolio-v3-svelte/screenshots/` |
+| `npm run test:e2e` | Playwright against the build: Chromium runs every suite, Firefox the `@firefox` ones. The `dev` project runs the navigation suite against `npm run dev`, which Playwright starts. `SCREENSHOTS=1` saves scenes to `docs/portfolio-v3-svelte/screenshots/` |
 
 To compare with vanilla V3:
 
