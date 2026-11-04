@@ -732,6 +732,265 @@ const suites = {
     }
   },
 
+  /* Illustrated self-portrait: the static drawing, the hover sequence, bounded
+     tracking, return to rest, no snapping, idle frames, reduced motion,
+     touch, and its place in the layout at every width. Every transform the
+     script writes is recorded with a MutationObserver, so nothing here adds a
+     frame loop of its own. */
+  async portrait() {
+    // Count frame requests, allow freezing a frame for a screenshot, and log
+    // every transform/opacity write on the drawing from the first moment.
+    const { identifier } = await page.send("Page.addScriptToEvaluateOnNewDocument", {
+      source: `window.__raf = 0; window.__freeze = false; window.__pt = []; window.__t0 = 0;
+        { const r = window.requestAnimationFrame.bind(window);
+          window.requestAnimationFrame = (cb) => (window.__raf++, window.__freeze ? 0 : r(cb)); }
+        document.addEventListener("DOMContentLoaded", () => {
+          const svg = document.querySelector("svg.portrait");
+          if (!svg) return;
+          new MutationObserver((list) => {
+            for (const m of list) window.__pt.push([performance.now() - window.__t0, m.target.getAttribute("class").split(" ")[0], m.attributeName, m.target.getAttribute(m.attributeName)]);
+          }).observe(svg, { attributes: true, subtree: true, attributeFilter: ["transform", "opacity"] });
+        });`,
+    });
+    const frames = async (ms) => {
+      const before = await page.eval(() => window.__raf);
+      await page.wait(ms);
+      return (await page.eval(() => window.__raf)) - before;
+    };
+    const record = () => page.eval(() => ((window.__pt = []), (window.__t0 = performance.now()), true));
+    const writes = async (part, attr = "transform") => (await page.eval(() => window.__pt)).filter((w) => w[1] === part && w[2] === attr);
+    const num = (re) => (w) => Number((re.exec(w[3] || "") || [])[1] || 0);
+    const angle = num(/rotate\((-?[\d.]+)/);
+    const shiftX = num(/translate\((-?[\d.]+)/);
+    const shiftY = num(/translate\(-?[\d.]+ (-?[\d.]+)\)/);
+    const rest = () =>
+      page.eval(() =>
+        Array.from(document.querySelectorAll("svg.portrait [class]"))
+          .filter((el) => /^pt-(head|hair|features|pupil|lid|lash|brow|glint)/.test(el.getAttribute("class")))
+          .map((el) => `${el.getAttribute("class")}|${el.getAttribute("transform")}|${el.getAttribute("opacity")}`)
+          .join(";"),
+      );
+    const portraitShot = async (name, known = null, pad = 24) => {
+      if (!process.env.SCREENSHOTS) return;
+      const r = known || (await page.eval(() => document.querySelector("svg.portrait").getBoundingClientRect().toJSON()));
+      const { data } = await page.send("Page.captureScreenshot", { format: "png", clip: { x: Math.max(0, r.x - pad), y: Math.max(0, r.y - pad), width: r.width + pad * 2, height: r.height + pad * 2, scale: 2 } });
+      mkdirSync(SHOTS, { recursive: true });
+      writeFileSync(join(SHOTS, `${name}.png`), Buffer.from(data, "base64"));
+    };
+
+    // The drawing: inline SVG with named parts, not a picture or a control.
+    await open("/");
+    const drawing = await page.eval(() => {
+      const svg = document.querySelector(".intro-art > svg.portrait");
+      const parts = ["head", "hair", "face", "beard", "eyes", "pupil", "lid", "brow", "glasses", "glint", "body"];
+      return {
+        exists: Boolean(svg),
+        name: svg?.getAttribute("role") === "img" && /portrait of Utkarsh Sonawane/.test(svg.getAttribute("aria-label") || ""),
+        parts: parts.filter((p) => !svg?.querySelector(`.pt-${p}`)),
+        pairs: ["pupil", "lid", "brow", "lash"].every((p) => svg.querySelectorAll(`.pt-${p}`).length === 2),
+        vector: !svg.querySelector("image, foreignObject") && svg.querySelectorAll("path, circle, use").length > 30,
+        notFocusable: svg.tabIndex < 0 && !svg.closest("a, button") && svg.getAttribute("focusable") === "false",
+        bytes: svg.outerHTML.length,
+      };
+    });
+    check("portrait: inline SVG named as an image, with every animated part as its own group", drawing.exists && drawing.name && drawing.parts.length === 0 && drawing.pairs, JSON.stringify(drawing));
+    check("portrait: vector shapes only (no embedded raster) and not a focus stop", drawing.vector && drawing.notFocusable);
+    check("portrait: markup stays small (< 12 KB before compression)", drawing.bytes < 12000, `${drawing.bytes} bytes`);
+    check("portrait: no requests made for it (drawing is in the page)", !requests.some((u) => /portrait/.test(u) && !u.endsWith("/js/portrait.js")), requests.filter((u) => /portrait/.test(u)).join(", "));
+    const atLoad = await rest();
+    check("portrait: no frames requested while idle after load", (await frames(1000)) === 0);
+
+    // Without JavaScript it is the same drawing, pixel for pixel.
+    const clip = await page.eval(() => document.querySelector("svg.portrait").getBoundingClientRect().toJSON());
+    const grab = async () => (await page.send("Page.captureScreenshot", { format: "png", clip: { x: clip.x, y: clip.y, width: clip.width, height: clip.height, scale: 1 } })).data;
+    const withJs = await grab();
+    await page.send("Emulation.setScriptExecutionDisabled", { value: true });
+    await page.goto(`${ORIGIN}/`);
+    const withoutJs = await grab();
+    await portraitShot("portrait-no-js", clip);
+    await page.send("Emulation.setScriptExecutionDisabled", { value: false });
+    check("portrait: renders identically without JavaScript", withJs === withoutJs);
+
+    // Hover: notice, look, tilt, hair lag, blink, glint.
+    await open("/");
+    await shot("portrait-intro-1440");
+    await portraitShot("portrait-rest");
+    await record();
+    const box = await page.box("svg.portrait");
+    const lede = () => page.eval(() => [document.querySelector(".bio").getBoundingClientRect().toJSON(), document.querySelector(".hero-lede").getBoundingClientRect().toJSON()].map((r) => [r.x, r.y, r.width, r.height].join()).join("|"));
+    const before = await lede();
+    const right = { x: box.x + box.width * 0.44, y: box.y - box.height * 0.12 };
+    await page.mouseMove(right.x, right.y);
+    await page.wait(205);
+    await page.eval(() => (window.__freeze = true));
+    await page.wait(40);
+    await portraitShot("portrait-hover-notice");
+    await page.eval(() => (window.__freeze = false));
+    await page.mouseMove(right.x - 1, right.y);
+    await page.wait(900);
+    await portraitShot("portrait-hover-looking");
+    const during = await lede();
+    check("portrait: the text does not move while it animates", before === during, `${before} vs ${during}`);
+    const heads = await writes("pt-head");
+    const tilts = heads.map(angle);
+    const peak = Math.max(...tilts);
+    check("portrait: hover tilts the head toward the pointer by 2–4°", peak >= 2 && peak <= 4 && tilts.every((a) => a >= -0.01), `peak ${peak.toFixed(2)}°`);
+    const pupils = await writes("pt-pupil");
+    check("portrait: pupils turn toward the pointer", pupils.length > 0 && shiftX(pupils.at(-1)) > 0.8 && shiftY(pupils.at(-1)) < 0, pupils.at(-1)?.[3]);
+    const firstHead = heads.find((w) => angle(w) > 0.05)?.[0] ?? Infinity;
+    const firstPupil = pupils.find((w) => shiftX(w) > 0.05)?.[0] ?? Infinity;
+    check("portrait: the eyes move first and the head follows", firstPupil < firstHead, `pupils ${firstPupil.toFixed(0)} ms, head ${firstHead.toFixed(0)} ms`);
+    const hair = (await writes("pt-hair")).map(angle);
+    check("portrait: the hair lags behind the head, then follows", Math.min(...hair) < -0.15 && hair.at(-1) > -0.15, `lag ${Math.min(...hair).toFixed(2)}°, last ${hair.at(-1)?.toFixed(2)}°`);
+    const lids = (await writes("pt-lid")).map(shiftY);
+    check("portrait: it blinks once (the lids close and reopen)", lids.some((y) => y > -0.8) && lids.at(-1) <= -7.3, `lid y ${lids.map((y) => y.toFixed(1)).join(" ")}`);
+    const glint = (await writes("pt-glint", "opacity")).map((w) => Number(w[3]));
+    check("portrait: a brief glint crosses the glasses, then fades", Math.max(0, ...glint) > 0.2 && Math.max(0, ...glint) <= 0.5 && glint.at(-1) === 0, `max ${Math.max(0, ...glint)}`);
+    // (The next idle blink is at least 4 s after the pointer arrived.)
+    check("portrait: once settled under a still pointer, no frames are requested", (await frames(1000)) < 40 && (await frames(600)) === 0);
+
+    // Bounded tracking: the pupils stay in the eye and the tilt under 4°.
+    await page.mouseMove(box.x - box.width * 0.4, box.y + box.height * 0.2);
+    await page.wait(700);
+    await portraitShot("portrait-hover-left");
+    for (const [dx, dy] of [[-0.49, -0.49], [0.49, -0.49], [-0.49, 0.49], [0.49, 0.49]]) {
+      await page.mouseMove(box.x + dx * box.width, box.y + dy * box.height);
+      await page.wait(450);
+    }
+    const tracked = await writes("pt-pupil");
+    const maxX = Math.max(...tracked.map((w) => Math.abs(shiftX(w))));
+    const maxY = Math.max(...tracked.map((w) => Math.abs(shiftY(w))));
+    const maxTilt = Math.max(...(await writes("pt-head")).map((w) => Math.abs(angle(w))));
+    check("portrait: pupil tracking stays inside the eye (≤ 2.4 × 1.2 units)", maxX <= 2.4 && maxY <= 1.2 && maxX > 1.2, `max ${maxX} × ${maxY}`);
+    check("portrait: the head never tilts more than 4°", maxTilt <= 4, `${maxTilt}°`);
+
+    // Leaving: back to the exact rest drawing, then the loop sleeps.
+    const away = { x: box.x - box.width * 1.1, y: box.y };
+    await page.mouseMove(away.x, away.y);
+    check("portrait: returns to the rest drawing after the pointer leaves", await until((s) => {
+      const now = Array.from(document.querySelectorAll("svg.portrait [class]"))
+        .filter((el) => /^pt-(head|hair|features|pupil|lid|lash|brow|glint)/.test(el.getAttribute("class")))
+        .map((el) => `${el.getAttribute("class")}|${el.getAttribute("transform")}|${el.getAttribute("opacity")}`)
+        .join(";");
+      return now === s;
+    }, 3000, atLoad));
+    check("portrait: no frames requested after it settles", (await frames(1000)) === 0);
+
+    // Rapid in and out while the head is still moving: the springs keep their
+    // velocity, so it turns around instead of snapping back.
+    await record();
+    const marks = [];
+    for (let i = 0; i < 3; i++) {
+      await page.mouseMove(right.x, right.y);
+      await page.wait(260);
+      marks.push(await page.eval(() => performance.now() - window.__t0));
+      await page.mouseMove(away.x, away.y);
+      await page.wait(140);
+    }
+    await page.wait(1800);
+    const quick = (await writes("pt-head")).map((w) => [w[0], angle(w)]);
+    const fastest = (series) => {
+      let top = 0;
+      for (let i = 1; i < series.length; i++) top = Math.max(top, Math.abs(series[i][1] - series[i - 1][1]) / Math.max(8, series[i][0] - series[i - 1][0]));
+      return top;
+    };
+    const rate = fastest(quick);
+    const eyeRate = fastest((await writes("pt-pupil")).map((w) => [w[0], shiftX(w)]));
+    const atLeave = marks.map((t) => {
+      const last = quick.filter((w) => w[0] <= t).at(-1);
+      const next = quick.find((w) => w[0] > t);
+      return last && next ? Math.abs(next[1] - last[1]) : 0;
+    });
+    check(
+      "portrait: quick enter/exit turns around smoothly (no jumps)",
+      Math.max(...quick.map((w) => w[1])) > 1 && rate < 0.15 && eyeRate < 0.15 && Math.max(...atLeave) < 0.6,
+      `head ${(rate * 1000).toFixed(0)}°/s, pupils ${(eyeRate * 1000).toFixed(0)} units/s, step at leave ${atLeave.map((d) => d.toFixed(2)).join("/")}°`,
+    );
+    check("portrait: settles back to rest after quick passes", (await rest()) === atLoad);
+    check("portrait: no console errors", page.errors.length === 0, page.errors.join("; "));
+
+    // Hero icons still animate next to it, and their card never covers it.
+    await page.hover('[data-hero-icon="ai"] .hero-word');
+    check("portrait: hero icon still lights beside the portrait", await until(() => document.querySelector('[data-hero-icon="ai"]').classList.contains("is-lit")));
+    await page.wait(700);
+    check("portrait: the hero card does not cover the portrait", await page.eval(() => {
+      const a = document.querySelector(".hero-pop").getBoundingClientRect();
+      const b = document.querySelector("svg.portrait").getBoundingClientRect();
+      return !(a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top);
+    }));
+    await page.mouseMove(5, 880);
+
+    // Reduced motion: hovering changes nothing and requests no frames.
+    await open("/", { reduced: true });
+    await record();
+    const still = await page.box("svg.portrait");
+    await page.mouseMove(still.x + still.width * 0.4, still.y);
+    await page.wait(200);
+    await page.mouseMove(still.x - still.width * 0.4, still.y + 20);
+    const reducedFrames = await frames(600);
+    check("reduced motion: hovering the portrait moves nothing", (await page.eval(() => window.__pt.length)) === 0 && reducedFrames === 0, `${await page.eval(() => window.__pt.length)} writes, ${reducedFrames} frames`);
+
+    // Touch: one greeting when first seen; swipes scroll; a tap greets again.
+    await open("/", { width: 390, height: 844, touch: true });
+    check("touch: the portrait greets once when it comes into view", await until(() => window.__pt.some((w) => w[1] === "pt-lid" && /translate\(0 -?0(\.\d+)?\)/.test(w[3] || "")), 2500));
+    check("touch: the greeting ends at the rest drawing", await until((s) => {
+      const now = Array.from(document.querySelectorAll("svg.portrait [class]"))
+        .filter((el) => /^pt-(head|hair|features|pupil|lid|lash|brow|glint)/.test(el.getAttribute("class")))
+        .map((el) => `${el.getAttribute("class")}|${el.getAttribute("transform")}|${el.getAttribute("opacity")}`)
+        .join(";");
+      return now === s;
+    }, 4000, atLoad));
+    await shot("portrait-mobile-390");
+    const touchBox = await page.eval(() => document.querySelector("svg.portrait").getBoundingClientRect().toJSON());
+    const y0 = await page.eval(() => scrollY);
+    const startAt = { x: touchBox.x + touchBox.width / 2, y: touchBox.y + touchBox.height * 0.6 };
+    await page.touchGesture([[startAt, { x: startAt.x + 3, y: startAt.y - 200 }]]);
+    await page.wait(500);
+    check("touch: a swipe that starts on the portrait still scrolls the page", (await page.eval(() => scrollY)) > y0 + 100);
+    await record();
+    const href = await page.eval(() => location.href);
+    await page.tap("svg.portrait");
+    check("touch: tapping the portrait plays the greeting and does not navigate", await until(() => window.__pt.some((w) => w[1] === "pt-pupil"), 1500) && (await page.eval(() => location.href)) === href);
+    check("touch: no console errors", page.errors.length === 0, page.errors.join("; "));
+
+    // Layout at every width: visible, inside the page, clear of the text, the
+    // icons and the notebook; on phones the biography starts only a little lower.
+    for (const width of [1440, 1280, 1024, 900, 768, 390, 320]) {
+      await open("/", { width, height: width < 720 ? 844 : 900, touch: width < 720 });
+      if (width < 720) await shot(`portrait-mobile-${width}`);
+      const l = await page.eval(() => {
+        const box = (el) => el.getBoundingClientRect();
+        const hit = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+        const svg = box(document.querySelector("svg.portrait"));
+        const notebook = box(document.querySelector(".intro-art > .illustration"));
+        const text = Array.from(document.querySelectorAll(".bio > *")).map(box);
+        const icons = Array.from(document.querySelectorAll(".hero-link .hero-icon")).map(box);
+        const intro = box(document.querySelector(".intro"));
+        return {
+          width: Math.round(svg.width),
+          ratio: +(svg.height / svg.width).toFixed(3),
+          inside: svg.left >= 0 && svg.right <= document.documentElement.clientWidth,
+          text: text.filter((r) => hit(svg, r)).length,
+          icons: icons.filter((r) => hit(svg, r)).length,
+          notebook: Math.round(notebook.width),
+          notebookClear: !hit(notebook, svg) && text.every((r) => !hit(notebook, r)),
+          notebookLast: notebook.top >= box(document.querySelector(".contact-row")).bottom,
+          ledeOffset: Math.round(box(document.querySelector(".hero-lede")).top - intro.top),
+          overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        };
+      });
+      const phone = width < 720;
+      check(
+        `portrait ${width}: ${phone ? "byline beside the name" : "leads the left column"}, clear of text, icons and notebook`,
+        l.width === (phone ? 92 : 180) && Math.abs(l.ratio - 1.06) < 0.01 && l.inside && !l.text && !l.icons && l.notebookClear && l.overflow <= 0,
+        JSON.stringify(l),
+      );
+      if (phone) check(`portrait ${width}: the lede starts within 120px of the intro; the notebook stays after the links`, l.ledeOffset <= 120 && l.notebookLast && l.notebook === 112, JSON.stringify(l));
+      else check(`portrait ${width}: the notebook is the smaller drawing beneath it`, l.notebook === 120);
+    }
+    await page.send("Page.removeScriptToEvaluateOnNewDocument", { identifier });
+  },
+
   async demo() {
     await open("/notebook/adr-extraction-demo/");
     check("demo: no console errors", page.errors.length === 0, page.errors.join("; "));

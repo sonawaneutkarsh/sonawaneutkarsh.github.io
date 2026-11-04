@@ -162,6 +162,33 @@ try {
   check("home: Nytr drawing plays (no video)", await until("document.querySelector('[data-name=\"Nytr\"]').classList.contains('is-active') && !document.querySelector('[data-name=\"Nytr\"] video')"));
   check("home: Talks stopped when Nytr started (one at a time)", await evaluate("!document.querySelector('[data-name=\"Talks\"]').classList.contains('is-active')"));
 
+  // Illustrated portrait: drawn inline, notices a mouse pointer, returns to rest.
+  await open("/");
+  const portraitRest = await evaluate("[...document.querySelectorAll('svg.portrait [class^=\"pt-\"]')].map((el) => el.getAttribute('transform')).join('|')");
+  check("home: portrait is drawn inline at 180px", await evaluate("Math.round(document.querySelector('svg.portrait').getBoundingClientRect().width) === 180 && !document.querySelector('svg.portrait image')"));
+  await evaluate(`(() => {
+    const svg = document.querySelector('svg.portrait');
+    const r = svg.getBoundingClientRect();
+    const at = { pointerType: 'mouse', clientX: r.right - 8, clientY: r.top + r.height * 0.38 };
+    svg.dispatchEvent(new PointerEvent('pointerenter', at));
+    svg.dispatchEvent(new PointerEvent('pointermove', { ...at, bubbles: true }));
+    return true;
+  })()`);
+  const portraitPose = `(() => {
+    const tilt = parseFloat((document.querySelector('.pt-head').getAttribute('transform') || 'rotate(0').split('rotate(')[1]);
+    const pupil = parseFloat((document.querySelector('.pt-pupil').getAttribute('transform') || 'translate(0').split('translate(')[1]);
+    return tilt >= 2 && tilt <= 4 && pupil > 1;
+  })()`;
+  check("home: portrait notices a mouse pointer (head tilts 2–4°, pupils turn toward it)", await until(portraitPose, 2000));
+  await sleep(700);
+  await shot("portrait-hover");
+  await evaluate("(document.querySelector('svg.portrait').dispatchEvent(new PointerEvent('pointerleave', { pointerType: 'mouse' })), true)");
+  check(
+    "home: portrait springs back to its rest drawing",
+    await until(`[...document.querySelectorAll('svg.portrait [class^="pt-"]')].map((el) => el.getAttribute('transform')).join('|') === ${JSON.stringify(portraitRest)}`, 3000),
+  );
+  check("home: no console errors from the portrait", errors.length === 0, errors.join("; "));
+
   await open("/explore/");
   check("explore: workbench enhanced with 4 connectors", await evaluate("document.body.classList.contains('bench-ready') && document.querySelectorAll('.bench-link').length === 4"));
   const lenStart = await evaluate("history.length");
