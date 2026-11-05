@@ -34,10 +34,11 @@ conflict.
   visible. The "Showing …" status is screen-reader only, and the footnote
   about fixed positions was removed.
 - **ADR walkthrough:** the boxed disclaimer is now one muted line. The
-  Previous/Next/Reset controls sit above the example, and the demo reserves
-  its tallest height. It also opts out of scroll anchoring, which was what
-  moved the page when the pair list collapsed. A test steps through every
-  state of every example and checks that the controls never move.
+  Previous/Next/Reset controls sit above the example. The demo uses only
+  the height of its currently visible example and explanation, avoiding a
+  large empty block before the Key. Scroll anchoring is disabled within
+  the demo. A regression test steps through every example and checks both
+  the Key spacing and the controls' position while they are in view.
 - **Research notebook** lists the walkthrough as its first entry, dated
   Nov 2026, and its introduction now mentions it.
 - **Homepage Writing** shows the newest 3 posts plus "All posts →". The
