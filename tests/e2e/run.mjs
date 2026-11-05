@@ -742,15 +742,33 @@ const suites = {
     await page.click('[data-move="1"]');
     check("demo: Next goes to step 2", await stepIs(2));
     {
-      // Scroll so the controls sit low on screen, then step through every
-      // state of every example: the controls must not move.
-      await page.eval(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }));
+      // Keep the controls in view, with headroom for short steps, and step
+      // through every example. The Key should immediately follow the visible
+      // explanation instead of sitting below an invisible max-height spacer.
+      await page.eval(() => {
+        const demo = document.querySelector(".adr-demo");
+        const absoluteTop = demo.getBoundingClientRect().top + scrollY;
+        const safeBottom = document.documentElement.scrollHeight - innerHeight - 150;
+        window.scrollTo({ top: Math.max(0, Math.min(absoluteTop - 80, safeBottom)), behavior: "instant" });
+      });
       await page.wait(100);
       const log = [];
+      const gaps = [];
       const pos = async () => {
-        const v = await page.eval(() => [Math.round(document.querySelector('[data-move="1"]').getBoundingClientRect().top), Math.round(scrollY), document.documentElement.scrollHeight, document.querySelector(".adr-demo").dataset.step]);
-        log.push(v.join("/"));
-        return v[0];
+        const v = await page.eval(() => {
+          const controls = document.querySelector('[data-move="1"]');
+          const visibleExplanation = document.querySelector(".adr-explanations > li:not([hidden])");
+          const legend = document.querySelector(".adr-legend");
+          return {
+            top: Math.round(controls.getBoundingClientRect().top),
+            scroll: Math.round(scrollY),
+            height: document.documentElement.scrollHeight,
+            gap: Math.round(legend.getBoundingClientRect().top - visibleExplanation.getBoundingClientRect().bottom),
+          };
+        });
+        log.push(`${v.top}/${v.scroll}/${v.height}/gap=${v.gap}`);
+        gaps.push(v.gap);
+        return v.top;
       };
       const y0 = await pos();
       const seen = new Set([y0]);
@@ -768,7 +786,8 @@ const suites = {
           seen.add(await pos());
         }
       }
-      check("demo: Next/Previous controls never move while stepping (any example)", seen.size === 1, seen.size === 1 ? "" : log.join(" "));
+      check("demo: controls stay stable while stepping with room to scroll", seen.size === 1, seen.size === 1 ? "" : log.join(" "));
+      check("demo: no oversized gap between illustration and Key (all steps/examples)", gaps.every((g) => g >= 0 && g <= 160), `gaps: ${gaps.join(", ")}`);
       await page.eval(() => {
         document.querySelector('[data-example="0"]').click();
         document.querySelector('[data-goto="2"]').click();

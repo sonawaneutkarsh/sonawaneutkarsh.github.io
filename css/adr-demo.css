@@ -386,9 +386,8 @@ mark[data-kind] {
 .adr-controls {
   margin: 0 0 20px;
 }
-/* Scroll anchoring would pick an element inside the demo and scroll the page
-   to keep it still as steps reveal or hide content, which moves the controls.
-   With a reserved min-height, nothing below the demo moves, so opt out here. */
+/* Avoid scroll anchoring to content that appears and disappears between steps.
+   The illustration is content-sized: do not reserve its tallest possible state. */
 .adr-demo,
 .adr-demo * {
   overflow-anchor: none;
