@@ -7,6 +7,13 @@
     <language>en-us</language>
     <atom:link href="https://sonawaneutkarsh.github.io/feed.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>how my website came into being.</title>
+      <link>https://sonawaneutkarsh.github.io/blog/how-my-website-came-into-being/</link>
+      <guid isPermaLink="true">https://sonawaneutkarsh.github.io/blog/how-my-website-came-into-being/</guid>
+      <pubDate>Sun, 15 Nov 2026 17:00:00 GMT</pubDate>
+      <description>five snapshots from my website&#x27;s Git history, from the first version in August to Portfolio V2 in October 2026.</description>
+    </item>
+    <item>
       <title>the next big ai company might be incredibly boring.</title>
       <link>https://sonawaneutkarsh.github.io/blog/the-next-big-ai-company-might-be-incredibly-boring/</link>
       <guid isPermaLink="true">https://sonawaneutkarsh.github.io/blog/the-next-big-ai-company-might-be-incredibly-boring/</guid>
