@@ -173,6 +173,15 @@
         <h2>Updates</h2>
         <ul class="updates-list">
           <li>
+            <time datetime="2026-11">November 2026</time>
+            <p>
+              Published a
+              <a href="/notebook/">research notebook</a>
+              and an
+              <a href="/notebook/adr-extraction-demo/">illustrated ADR extraction workflow</a>.
+            </p>
+          </li>
+          <li>
             <time datetime="2026-10">October 2026</time>
             <p>
               Started undergraduate research on
@@ -457,6 +466,36 @@
           </li>
           <li class="compact-item">
             <div class="compact-head">
+              <a
+                class="compact-title"
+                href="https://github.com/sonawaneutkarsh/listcraft"
+                rel="noopener"
+                >ListCraft</a
+              >
+              <span class="compact-meta"
+                >Oct 2026 · Qwen3.5-4B, LoRA, Tinker</span
+              >
+            </div>
+            <p>
+              LoRA-tuned a 4B model to write Etsy listing titles that rank:
+              536 pairs (483 train / 53 eval), keyword coverage 0.77 → 0.93,
+              titles in the 120–140 character sweet spot 0% → 83%,
+              blind-judge wins 35–5.
+              <strong>Caveat:</strong> it learned listing format more than
+              better prose, and it over-generates tags (~66 vs 13 in the
+              reference).
+            </p>
+            <div class="project-links">
+              <a
+                class="pill-btn"
+                href="https://github.com/sonawaneutkarsh/listcraft"
+                rel="noopener"
+                >Code</a
+              >
+            </div>
+          </li>
+          <li class="compact-item">
+            <div class="compact-head">
               <a class="compact-title" href="projects/scholarai/">ScholarAI</a>
               <span class="compact-meta"
                 >Jun 2026 · 5-person team · Python, pgvector</span
@@ -542,7 +581,6 @@
               <h3 class="exp-role-org">
                 <strong>Technical Chair</strong>,
                 <span class="exp-org">IEEE Student Branch</span>, Penn State
-                Harrisburg
               </h3>
               <div class="exp-date">Sept 2026 – Present</div>
             </div>
