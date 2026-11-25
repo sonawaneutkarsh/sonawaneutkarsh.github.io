@@ -436,19 +436,25 @@ class HtmlOutputTests(unittest.TestCase):
 
 class PreservationTests(unittest.TestCase):
     def test_original_articles_and_drafts_are_byte_identical(self):
-        """Every article BASELINE had, published or staged, still has the same bytes."""
+        """Every article the approved preservation baseline had still has the same bytes.
+
+        The reference is the preservation baseline
+        (docs/portfolio-v2/preservation-baseline.json), so an approved,
+        re-baselined edit becomes the new reference instead of a failure.
+        """
+        baseline_commit = json.loads(read(REPO, "docs/portfolio-v2/preservation-baseline.json"))["baseline_commit"]
         originals = [
-            rel for rel in git_ls("blog") + git_ls(writing.STAGED)
+            rel for rel in git_ls("blog", baseline_commit) + git_ls(writing.STAGED, baseline_commit)
             if rel.endswith("/index.html") and rel != "blog/index.html"
         ]
-        self.assertEqual(len(originals), len(ORIGINAL_SLUGS) + 1 + 2)  # five posts, hello-world, two drafts
+        self.assertEqual(len(originals), 8)  # seven posts and hello-world; no staged drafts at the baseline
         for rel in originals:
             slug = rel.split("/")[-2]
             published, staged = REPO / "blog" / slug / "index.html", REPO / writing.STAGED / slug / "index.html"
             current = published if published.exists() else staged
             with self.subTest(article=slug):
                 self.assertTrue(current.exists(), f"{slug} is missing")
-                self.assertEqual(current.read_bytes(), git_show(rel))
+                self.assertEqual(current.read_bytes(), git_show(rel, baseline_commit))
 
     def test_the_preservation_check_passes(self):
         result = run_script(REPO, "check_preservation.py")
@@ -495,21 +501,29 @@ class GeneratorCommandTests(ScratchTestCase):
         self.assertEqual(changed_paths(before, snapshot(self.root)), [])
 
     def test_check_reports_a_hand_edited_list_and_the_generator_repairs_it(self):
+        # Hand-edit the newest post row, whatever it currently is: the
+        # homepage only lists the latest three, so a fixed title goes stale
+        # as new posts are published.
+        rows = homepage_rows(read(self.root, "index.html"))
+        title, href = rows[0]["title"], rows[0]["href"]
         index = self.root / "index.html"
-        index.write_text(index.read_text(encoding="utf-8").replace(">80% sleep?<", ">80% sleep!<"), encoding="utf-8")
+        index.write_text(index.read_text(encoding="utf-8").replace(f">{title}<", f">{title}!<", 1), encoding="utf-8")
         result = run_script(self.root, "build_writing.py", "--check")
         self.assertEqual(result.returncode, 1)
         self.assertIn("index.html is out of date", result.stderr)
         diff = [text[0] + text[1:].strip() for text in (line.strip() for line in result.stdout.splitlines()) if text]
-        self.assertIn('-<a class="post-title" href="/blog/80-percent-sleep/">80% sleep!</a>', diff)
-        self.assertIn('+<a class="post-title" href="/blog/80-percent-sleep/">80% sleep?</a>', diff)
+        self.assertIn(f'-<a class="post-title" href="{href}">{title}!</a>', diff)
+        self.assertIn(f'+<a class="post-title" href="{href}">{title}</a>', diff)
         repaired = run_script(self.root, "build_writing.py")
         self.assertEqual(repaired.returncode, 0, repaired.stderr)
         self.assertEqual(read(self.root, "index.html"), read(REPO, "index.html"))
 
     def test_a_record_that_disagrees_with_its_article_is_refused(self):
         posts = self.posts()
-        posts[1]["title"] = "80% sleep, revised"
+        # Find the record by slug: its position in posts.json shifts as new
+        # posts are published.
+        record = next(post for post in posts if post["slug"] == "80-percent-sleep")
+        record["title"] = "80% sleep, revised"
         write_json(self.root, writing.POSTS, posts)
         before = snapshot(self.root)
         result = run_script(self.root, "build_writing.py")
