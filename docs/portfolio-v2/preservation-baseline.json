@@ -1,6 +1,6 @@
 {
   "repository": "sonawaneutkarsh/sonawaneutkarsh.github.io",
-  "baseline_commit": "5f02a2344d3c5a80d3c406a76a3f36b359d28dab",
+  "baseline_commit": "0afd0010c8a1f1329d83ac1f5a6667c1fbcf810b",
   "files": [
     {
       "path": ".github/workflows/deploy.yml",
@@ -193,8 +193,8 @@
     },
     {
       "path": "blog/why-i-stopped-working-on-nytr-problems-and-lessons/index.html",
-      "bytes": 7122,
-      "sha256": "1f071e2c3b0b6725e3525744f7a225e59a837e804fc290b03a6cdc3fdb8a1965",
+      "bytes": 9025,
+      "sha256": "4b91171363dd8c5b91bf395e134878229fd1391af22da9e67d936622063ed97b",
       "ids": [
         "content"
       ],
@@ -957,8 +957,8 @@
     },
     {
       "path": "projects/nytr/index.html",
-      "bytes": 12039,
-      "sha256": "3f678ee2ff6f218c7d725dec87d3079bac829d716749c4953658c2cab321db6d",
+      "bytes": 16761,
+      "sha256": "b9cceb29527765bac793d428886218fbdb33bf35d594d04f236fbc312feea22c",
       "ids": [
         "content",
         "demo",
@@ -1115,8 +1115,8 @@
     },
     {
       "path": "projects/scholarai/index.html",
-      "bytes": 9258,
-      "sha256": "77d9d1e88a42a1fe516e4e93e24e04b661a3606bd64cf5374bdb10a430658579",
+      "bytes": 12827,
+      "sha256": "f779852049a6257c5e2a23309b052ad5fa35c4a4d0aca1e81efc1118de47def7",
       "ids": [
         "content",
         "screens",
